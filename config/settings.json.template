@@ -1,0 +1,130 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-worktree.sh",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/pre-commit-lint.sh",
+            "timeout": 60
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/enforce-worktree-path.sh",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-ci-before-pr.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-worktree.sh",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-cross-worktree.sh",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/database-context-injector.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-worktree.sh",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/check-cross-worktree.sh",
+            "timeout": 3
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/database-context-injector.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash(git worktree remove:*)",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/post-worktree-cleanup.sh",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/database-update-reminder.sh",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/database-update-reminder.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/task-setup-workflow.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/remind-success-prompt.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/qa-review-prompt.sh",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/agent-review-reminder.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

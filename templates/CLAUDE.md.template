@@ -1,0 +1,45 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Project
+
+**[YOUR_PROJECT_NAME]** - [One-line description of your project]
+
+## Development Workflow
+
+**Primary workflow: Feature branches + worktrees**
+- EVERY change goes through a feature branch (never commit directly to main or dev)
+- Use git worktrees for parallel work isolation
+- Push to branch, verify CI/CD passes, then create PR
+
+## Branch Protection
+
+| Rule | Enforcement |
+|------|-------------|
+| Never commit to main/dev directly | Hooks block this |
+| Feature branches from dev | Use git worktree add |
+| PR to dev only | Never PR directly to main |
+| CI must pass before PR | check-ci-before-pr hook enforces this |
+
+## Security
+
+1. **Never expose secrets in client code** - API keys, service keys only in server-side code
+2. **Validate at boundaries** - Always validate user input, JWT claims, external data
+3. **Authentication required** - All protected pages and API routes must verify auth
+
+## Linting
+
+```bash
+scripts/lint-changed.sh          # Lint changed files (oxlint)
+scripts/lint-changed.sh --all    # Lint all files
+scripts/lint-changed.sh --fix    # Auto-fix
+```
+
+## Non-Negotiable Rules
+
+1. Rebase from dev before PR
+2. Zero lint errors before PR
+3. CI/CD must pass before PR
+4. Never bypass git hooks
+5. All changes need documentation updates where relevant

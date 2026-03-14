@@ -1,0 +1,35 @@
+#!/bin/bash
+# Git pre-push hook - PR Review Reminder
+#
+# Install: cp .claude/hooks/generic/pre-push-review-reminder .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+#
+# Shows a reminder to run PR review when pushing feature branches
+
+# Get the current branch
+BRANCH=$(git rev-parse --abbrev-ref HEAD)
+
+# Only show reminder for feature branches
+if [[ "$BRANCH" == feature/* ]]; then
+  # Check if review marker exists
+  MARKER_FILE=".pr-review-completed"
+
+  if [ ! -f "$MARKER_FILE" ]; then
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "PR REVIEW REMINDER"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "Before creating a PR, consider running your code review agents:"
+    echo ""
+    echo "  /security-auditor  - Check for security issues"
+    echo "  /code-reviewer     - Check for code quality"
+    echo "  /bug-finder        - Check for potential bugs"
+    echo ""
+    echo "This runs specialized agents to catch issues before review."
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+  fi
+fi
+
+# Always allow push to proceed
+exit 0
