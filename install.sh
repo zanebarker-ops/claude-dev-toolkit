@@ -50,11 +50,11 @@ for dir in .claude/hooks .claude/commands .claude/plugins .claude/templates scri
   info "$dir/"
 done
 
-section "Installing hooks (14 files)"
+section "Installing hooks (18 files)"
 cp "$TOOLKIT_DIR/hooks/"* "$TARGET/.claude/hooks/"
 info "Hooks installed to .claude/hooks/"
 
-section "Installing agent commands (23 files)"
+section "Installing agent commands (26 files)"
 cp "$TOOLKIT_DIR/commands/"* "$TARGET/.claude/commands/"
 info "Commands installed to .claude/commands/"
 
@@ -95,7 +95,7 @@ else
 fi
 
 section "Installing scripts"
-for script in lint-changed.sh check-deploy.sh claude-session.sh; do
+for script in lint-changed.sh check-deploy.sh claude-session.sh migrate-to-ext4.sh; do
   if [ -f "$TARGET/scripts/$script" ]; then
     warn "Skipped scripts/$script (already exists)"
   else
@@ -106,8 +106,26 @@ for script in lint-changed.sh check-deploy.sh claude-session.sh; do
 done
 
 section "Installing templates"
-cp "$TOOLKIT_DIR/templates/"* "$TARGET/.claude/templates/" 2>/dev/null || true
+cp "$TOOLKIT_DIR/templates/"*.md "$TARGET/.claude/templates/" 2>/dev/null || true
+cp "$TOOLKIT_DIR/templates/"*.template "$TARGET/.claude/templates/" 2>/dev/null || true
 info "Templates installed to .claude/templates/"
+
+section "Installing coordination system"
+mkdir -p "$TARGET/.claude/coordination"
+if [ ! -f "$TARGET/.claude/coordination/state.json" ]; then
+  cp "$TOOLKIT_DIR/templates/coordination/state.json" "$TARGET/.claude/coordination/"
+  cp "$TOOLKIT_DIR/templates/coordination/README.md" "$TARGET/.claude/coordination/"
+  info "Coordination system installed to .claude/coordination/"
+else
+  warn "Skipped coordination system (state.json already exists)"
+fi
+
+section "Installing UX/HCD designer references"
+mkdir -p "$TARGET/.claude/commands/ux-hcd-designer/references"
+for ref in heuristics.md research-questions.md vocabulary.md; do
+  cp "$TOOLKIT_DIR/commands/ux-hcd-designer/references/$ref" "$TARGET/.claude/commands/ux-hcd-designer/references/"
+done
+info "UX/HCD references installed"
 
 section "CLAUDE.md"
 if [ -f "$TARGET/.claude/CLAUDE.md" ] || [ -f "$TARGET/CLAUDE.md" ]; then
@@ -124,6 +142,8 @@ command -v oxlint &>/dev/null && info "oxlint installed" || warn "oxlint not fou
 command -v claude &>/dev/null && info "Claude Code CLI installed" || warn "Claude Code CLI not found. Install: npm install -g @anthropic-ai/claude-code"
 command -v gh &>/dev/null && info "GitHub CLI installed" || warn "GitHub CLI not found. Install: https://cli.github.com"
 command -v tmux &>/dev/null && info "tmux installed" || warn "tmux not found. Install: sudo apt install tmux"
+command -v gitleaks &>/dev/null && info "gitleaks installed" || warn "gitleaks not found (optional). Install: brew install gitleaks"
+command -v jq &>/dev/null && info "jq installed" || warn "jq not found (needed for crash recovery). Install: sudo apt install jq"
 
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"

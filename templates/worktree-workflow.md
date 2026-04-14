@@ -2,7 +2,7 @@
 
 **EVERY request, feature, task, or bug fix MUST follow this workflow. NEVER work directly on `dev` or `main`.**
 
-## ⛔ MANDATORY: Security Review Before Presenting Code
+## MANDATORY: Security Review Before Presenting Code
 
 **ALL code MUST pass security review BEFORE presenting to user. This is non-negotiable.**
 
@@ -45,64 +45,53 @@ When using agents to generate code, the orchestrator MUST:
 
 ---
 
-## Quick Start (Worktree-First)
+## Quick Start
 
-**When you receive ANY task (feature, bug, enhancement, etc.), you immediately know work is involved. The FIRST thing you do is create a worktree.**
+**When you receive ANY task, the FIRST thing you do is create an isolated workspace.**
 
 ```bash
 # Derive project name dynamically
-PROJECT_NAME=$(basename $(git rev-parse --show-toplevel))
+PROJECT=$(basename $(git rev-parse --show-toplevel))
 
 # 1. Check for existing work first
 gh issue list --state open
-git worktree list
 
-# 2. CREATE WORKTREE FIRST (isolation before anything else)
+# 2. CREATE ISOLATED WORKSPACE FIRST
 git pull origin dev
-git worktree add ../${PROJECT_NAME}-worktrees/GH-###-description -b feature/GH-###-description dev
+# git worktree add ../$PROJECT-wt/GH-NNN-desc -b feature/GH-NNN-desc dev
 
-# 3. Optional: Create persistent memory entry (if using Beads or similar)
-# bd create "Brief task description" -p 0
-# Returns: bd-XXXX - save this ID!
+# 3. Create GitHub issue
+gh issue create --title "Title" --body "## Overview"
 
-# 4. Create GitHub issue (linked to tracking system)
-gh issue create --title "Title" --body "## Overview\n\n## Tracking\n- **Branch:** feature/GH-###-description"
+# 4. If planning is needed, create plan INSIDE the workspace
 
-# 5. If planning is needed, create plan INSIDE the worktree
-#    Plans go at: ../${PROJECT_NAME}-worktrees/GH-###-description/.plans/
-#    NEVER store plans in ~/.claude/plans/ or outside the worktree
-
-# 6. CONFIDENCE GATE (mandatory - see section below)
+# 5. CONFIDENCE GATE (mandatory - see section below)
 #    Ask questions until 8/10 confident you can succeed
-#    DO NOT write any code until gate is passed
 
-# 7. Work in worktree (only after Confidence Gate passes)
-cd ../${PROJECT_NAME}-worktrees/GH-###-description
+# 6. Work in workspace (only after Confidence Gate passes)
 
-# 8. Commit with references
-git commit -m "Description (GH-###)"
+# 7. Commit with references
+git commit -m "Description (GH-NNN)"
 
-# 9. MANDATORY: Run lint and typecheck BEFORE push
-scripts/lint-worktree.sh eslint      # Changed files only (if using shared lint tools)
-scripts/lint-worktree.sh typecheck   # Full project type check
-# Or: npm run lint && npx tsc --noEmit
-#    Both MUST pass with zero errors before pushing
+# 8. MANDATORY: Rebase from dev BEFORE push/PR
+git fetch origin
+git rebase origin/dev
+
+# 9. MANDATORY: Run lint and typecheck AFTER rebase
+scripts/lint-changed.sh
 
 # 10. Push and wait for CI/CD
-git push -u origin feature/GH-###-description
-# Wait for preview deployment to succeed
+git push -u origin feature/GH-NNN-desc
 
 # 11. Create PR (only after CI/CD succeeds)
-gh pr create --base dev --body "## Summary\n\n## Tracking\n- Closes #GH-###"
+gh pr create --base dev --body "## Summary"
 
 # 12. Cleanup after merge
-git worktree remove ../${PROJECT_NAME}-worktrees/GH-###-description
-git worktree prune
 ```
 
 ---
 
-## 🚦 Confidence Gate (8/10 Rule)
+## Confidence Gate (8/10 Rule)
 
 **After setup and BEFORE writing any code, the orchestrator MUST pass the Confidence Gate.**
 
@@ -140,9 +129,9 @@ Starting work without sufficient understanding leads to wrong approaches, wasted
 | Dimension | Good Question | Bad Question |
 |-----------|--------------|--------------|
 | Requirements | "Should the notification go to all account members, or just the owner?" | "What do you want?" |
-| Scope | "The config also references this in `config.ts` — should I update that too?" | "Anything else?" |
-| Data model | "The `events` table has no `severity` column yet — should I add one?" | "Is the database ready?" |
-| Security | "This endpoint returns user data — should it require owner role?" | "Is security important?" |
+| Scope | "The config also references this in config.ts - should I update that too?" | "Anything else?" |
+| Data model | "The events table has no severity column yet - should I add one?" | "Is the database ready?" |
+| Security | "This endpoint returns user data - should it require owner role?" | "Is security important?" |
 | Edge cases | "What should happen if the account has no active subscription?" | "What about errors?" |
 
 ### Skipping the Gate
@@ -152,28 +141,18 @@ The gate can ONLY be skipped for:
 - **Comment-only changes** (no functional impact)
 - **Exact reproduction** of user-provided code (user gave you the exact code to write)
 
-Everything else — features, bug fixes, refactors, migrations, config changes — goes through the gate.
+Everything else - features, bug fixes, refactors, migrations, config changes - goes through the gate.
 
 ---
 
 ## Shared Lint Tools (Optional)
 
-If your project uses shared lint tools (recommended for monorepos with worktrees):
+If your project uses shared lint tools (recommended for monorepos):
 
 ```bash
-# From any worktree - lint changed files only (default):
-scripts/lint-worktree.sh eslint
-scripts/lint-worktree.sh typecheck
-
-# Lint all files:
-scripts/lint-worktree.sh eslint --all
-
-# Auto-fix:
-scripts/lint-worktree.sh eslint --fix
-
-# If tools are missing:
-bash .lint/install.sh
-scripts/verify-lint-setup.sh
+scripts/lint-changed.sh                 # Changed files only (default)
+scripts/lint-changed.sh --all           # Lint all files
+scripts/lint-changed.sh --fix           # Auto-fix
 ```
 
 Otherwise use standard npm/pnpm commands:
@@ -185,29 +164,26 @@ npx tsc --noEmit
 ## Directory Structure
 
 ```
-/path/to/your-project/              # Main repo (ALWAYS on dev branch!)
-/path/to/your-project-worktrees/    # Worktrees directory
-├── GH-123-feature-name/            # One worktree per issue
-├── GH-456-another-feature/
+~/repos/your-project/                   # Main repo (ALWAYS on dev branch!)
+~/repos/your-project-wt/                # Isolated workspaces
+  GH-123-feature-name/                 # One per issue
+  GH-456-another-feature/
 ```
 
 ## Rules for Multiple Claude Code Sessions
 
-1. **One session = one worktree** - Never share worktrees between sessions
-2. **One worktree = one issue** - Each worktree maps to exactly one GitHub issue
-3. **Worktree first** - Always create the worktree FIRST, then GitHub issue
-4. **Link everything** - Commits include `(GH-###)`, issues include branch name
-5. **Never switch branches** - Create a new worktree instead
+1. **One session = one workspace** - Never share between sessions
+2. **One workspace = one issue** - Maps to exactly one GitHub issue
+3. **Workspace first** - Always create the workspace FIRST, then GitHub issue
+4. **Link everything** - Commits include (GH-NNN), issues include branch name
+5. **Never switch branches** - Create a new workspace instead
 6. **Commit frequently** - Avoid conflicts between parallel sessions
-7. **Detect your context** - Run `pwd` and `git branch --show-current` at session start
+7. **Detect your context** - Run pwd and git branch at session start
 
 ## Cleanup
 
 ```bash
-# After PR is merged
-PROJECT_NAME=$(basename $(git rev-parse --show-toplevel))
-git worktree remove ../${PROJECT_NAME}-worktrees/GH-###-description
-git worktree prune
+# After PR is merged, remove the workspace and prune
 ```
 
 ---
@@ -219,7 +195,7 @@ git worktree prune
 ## Why This Matters
 
 Without coordination:
-- Two agents edit the same file → merge conflicts
+- Two agents edit the same file and create merge conflicts
 - Agent A's changes break Agent B's work
 - Wasted time resolving conflicts after the fact
 
@@ -228,23 +204,39 @@ Without coordination:
 At the start of every session, run:
 
 ```bash
-pwd                        # Confirm you're in the right worktree
+pwd                        # Confirm you're in the right workspace
 git branch --show-current  # Confirm your branch
-git worktree list          # See all active worktrees
 git status                 # Check for uncommitted changes
 ```
+
+If using the coordination system (`.claude/coordination/state.json`):
+1. Read state.json to see what other agents are doing
+2. Register your session with workspace name and planned files
+3. Check for file lock conflicts before editing
+
+## File Locking (Coordination System)
+
+Before editing a shared file:
+1. Check if file is in fileLocks in state.json
+2. If locked by another session, WARN and coordinate first
+3. If not locked, add a soft lock before editing
+4. Release the lock after committing
+
+After editing:
+1. Log the change to recentChanges in state.json
+2. Release the file lock
 
 ## Conflict Prevention Rules
 
 1. **File ownership** - If you're working on a file, note it in your issue/PR description
 2. **Early commits** - Commit and push early so other agents can see your changes
-3. **Rebase before PR** - Always rebase from dev before creating PR to catch conflicts early
-4. **Communicate** - If you discover another agent is touching the same files, coordinate
+3. **Rebase before PR** - Always rebase from dev before creating PR
+4. **Communicate** - If another agent is touching the same files, coordinate
 
 ## Conflict Resolution
 
 If you discover a conflict:
 1. **Don't force-push** - This destroys other agents' work
-2. **Rebase first** - `git pull --rebase origin dev`
+2. **Rebase first** - git pull --rebase origin dev
 3. **Resolve surgically** - Fix only the conflict, don't refactor
 4. **Re-run tests** - Verify nothing broke after resolution

@@ -16,6 +16,11 @@
           },
           {
             "type": "command",
+            "command": ".claude/hooks/gitleaks-scan.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
             "command": ".claude/hooks/enforce-worktree-path.sh",
             "timeout": 3
           },
@@ -23,6 +28,11 @@
             "type": "command",
             "command": ".claude/hooks/check-ci-before-pr.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": ".claude/hooks/warn-pr-to-main.sh",
+            "timeout": 3
           }
         ]
       },
@@ -63,6 +73,16 @@
             "type": "command",
             "command": ".claude/hooks/database-context-injector.sh",
             "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/block-env-read.sh",
+            "timeout": 3
           }
         ]
       }
@@ -103,6 +123,11 @@
       {
         "matcher": "",
         "hooks": [
+          {
+            "type": "command",
+            "command": ".claude/hooks/wsl-crash-recovery.sh",
+            "timeout": 5
+          },
           {
             "type": "command",
             "command": ".claude/hooks/task-setup-workflow.sh",
