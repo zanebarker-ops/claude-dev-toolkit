@@ -256,7 +256,7 @@ npm install -g @covibes/zeroshot
 
 ```bash
 # Clone the toolkit
-git clone git@github.com:your-org/claude-dev-toolkit.git ~/claude-dev-toolkit
+git clone git@github.com:zanebarker-ops/claude-dev-toolkit.git ~/claude-dev-toolkit
 
 # Install into your project
 ~/claude-dev-toolkit/install.sh /path/to/your-project
