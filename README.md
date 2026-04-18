@@ -156,11 +156,13 @@ Then add it to GitHub:
 
 #### Clone Your Repo
 
+Replace `your-org/your-project` below with your own GitHub org/user and repo name.
+
 ```bash
 # Clone into WSL filesystem (native ext4 — always do this)
 cd ~
 mkdir -p repos && cd repos
-git clone git@github.com:your-org/your-project.git
+git clone git@github.com:your-org/your-project.git  # <-- replace with your repo
 ```
 
 > **Important:** Always clone into `~/repos/`, never `/mnt/c/`. See [Why WSL ext4?](#why-wsl-ext4-clone-into-repos-not-mntc) above.
