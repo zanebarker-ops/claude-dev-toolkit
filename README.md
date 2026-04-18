@@ -2,7 +2,7 @@
 
 A comprehensive development toolkit for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that enforces quality, security, and workflow discipline across any project. Includes hooks, linting, 23 AI agent prompts, crash-proof sessions, and CI gates.
 
-Born from 2000+ hours of real-world development on a production SaaS platform — every hook and rule exists because something went wrong without it.
+Born from 3000+ hours of real-world development on a production SaaS platform — every hook and rule exists because something went wrong without it.
 
 ---
 
