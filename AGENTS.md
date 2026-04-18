@@ -6,6 +6,27 @@ and execute the full installation of the Claude Dev Toolkit on behalf of a user.
 Follow the steps below in order. Do not skip, reorder, or substitute commands
 unless the user explicitly tells you to.
 
+## Rule: when you need input, prompt the user
+
+At any point in this runbook, if you are missing information, unsure of a
+value, or hit a decision that isn't unambiguously specified here — **stop and
+ask the user directly**. Do not guess. Do not invent defaults. Do not pick
+"the most likely" answer.
+
+Ask one focused question at a time, wait for the answer, then continue. If
+the user's answer is ambiguous, ask a follow-up before acting on it.
+
+Examples of moments that require a prompt:
+
+- `$TARGET` path wasn't provided, or the one provided doesn't exist
+- The base branch isn't stated and isn't obviously `dev` or `main`
+- A prerequisite is missing and you'd need to install it
+- `CLAUDE.md` has placeholders and you don't know the product name,
+  tech stack, or conventions
+- The installer skipped a file because it already exists and you're
+  unsure whether to merge or leave it
+- Any command is about to fail or produce destructive output
+
 ---
 
 ## 0. Confirm intent and collect one value from the user
