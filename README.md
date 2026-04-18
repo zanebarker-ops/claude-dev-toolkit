@@ -49,7 +49,7 @@ Born from 3000+ hours of real-world development on a production SaaS platform â€
 | **Agent Commands** | 26 | Specialized AI agent prompts (`/start-task`, `/security-auditor`, etc.) |
 | **PR Review Toolkit** | 6 agents | Automated multi-agent code review before PRs |
 | **Scripts** | 4 | Lint runner, deploy checker, session manager, ext4 migration |
-| **Templates** | 8 | CLAUDE.md, worktree workflow, model selection, agents, PRP, hookify docs, coordination system |
+| **Templates** | 9 | CLAUDE.md, worktree workflow, model selection, agents, PRP, hookify docs, coordination system |
 | **Config** | 2 | `.oxlintrc.json`, `settings.json` template |
 
 ---
@@ -820,6 +820,7 @@ Templates are installed to `.claude/templates/` for reference:
 | `model-selection.md` | Cost optimization guide for Claude model selection |
 | `agents.md` | Agent orchestration strategy and when-to-use guide |
 | `feature-prp-template.md` | Product Requirements Plan template for features |
+| `scaffold-project.md` | Generic full-stack monorepo folder structure prompt for new projects |
 
 ---
 
