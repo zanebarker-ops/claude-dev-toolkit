@@ -822,6 +822,8 @@ Templates are installed to `.claude/templates/` for reference:
 | `feature-prp-template.md` | Product Requirements Plan template for features |
 | `scaffold-project.md` | Generic full-stack monorepo folder structure prompt for new projects |
 
+> **Quick start:** Run `bash scripts/scaffold-project.sh ~/repos/my-new-app` to create the full folder structure instantly, or paste the prompt from `templates/scaffold-project.md` into Claude Code.
+
 ---
 
 ## Customization Guide
