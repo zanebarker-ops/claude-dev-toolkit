@@ -1224,12 +1224,12 @@ A Claude agent that runs<br/>
 <span class="cyan">with no human in the loop.</span>
 </blockquote>
 
-<p class="text-xl muted mt-12 leading-relaxed max-w-3xl mx-auto">
+<p class="text-lg muted mt-8 leading-relaxed max-w-3xl mx-auto">
 It watches production. It verifies deploys.<br/>
 It catches silent failures. It files GitHub issues automatically.
 </p>
 
-<p class="text-2xl mt-12 cyan glow-cyan">
+<p class="text-xl mt-6 cyan glow-cyan">
 Tests verify code. Routines verify <em>outcomes</em>.
 </p>
 
@@ -1277,9 +1277,8 @@ Tests verify code. Routines verify <em>outcomes</em>.
 </tbody>
 </table>
 
-<p class="text-center mt-6 text-lg muted leading-relaxed">
-The question a smart engineer would ask if they had unlimited time<br/>
-and zero distraction. <span class="cyan">After we shipped it, did it actually work?</span>
+<p class="text-center mt-3 text-sm muted leading-snug">
+The question a smart engineer would ask if they had unlimited time and zero distraction. <span class="cyan">After we shipped it, did it actually work?</span>
 </p>
 
 <div class="status-bar">
