@@ -102,7 +102,7 @@ without losing our minds.
 
 <div class="status-bar">
   <span class="left">DISCLOSURE · TOKEN ECONOMICS</span>
-  <span class="right">2 / 43</span>
+  <span class="right">2 / 42</span>
 </div>
 
 <!--
@@ -189,7 +189,7 @@ It falls over inside thirty minutes.
 
 <div class="status-bar">
   <span class="left">CONTEXT</span>
-  <span class="right">4 / 43</span>
+  <span class="right">4 / 42</span>
 </div>
 
 <!--
@@ -303,7 +303,7 @@ Every Claude Code session reads this on startup. The phrase up top forces the mo
 
 <div class="status-bar">
   <span class="left">FILE · CLAUDE.md</span>
-  <span class="right">7 / 43</span>
+  <span class="right">7 / 42</span>
 </div>
 
 <!--
@@ -343,7 +343,7 @@ The rules are heavy. The harness enforces most of them <span class="cyan">automa
 
 <div class="status-bar">
   <span class="left">CLAUDE.md · WORKFLOW RULES</span>
-  <span class="right">8 / 43</span>
+  <span class="right">8 / 42</span>
 </div>
 
 <!--
@@ -374,7 +374,7 @@ The rules are heavy. The harness enforces most of them <span class="cyan">automa
 
 <div class="status-bar">
   <span class="left">.claude/settings.json</span>
-  <span class="right">9 / 43</span>
+  <span class="right">9 / 42</span>
 </div>
 
 <!--
@@ -434,7 +434,7 @@ Two superpowers: <span class="badge bad">block</span> exit 2 · <span class="bad
 
 <div class="status-bar">
   <span class="left">CLAUDE CODE · EVENTS</span>
-  <span class="right">10 / 43</span>
+  <span class="right">10 / 42</span>
 </div>
 
 <!--
@@ -526,7 +526,7 @@ message: |
 
 <div class="status-bar">
   <span class="left">HOOKIFY · DECLARATIVE RULES</span>
-  <span class="right">12 / 43</span>
+  <span class="right">12 / 42</span>
 </div>
 
 <!--
@@ -573,7 +573,7 @@ message: |
 
 <div class="status-bar">
   <span class="left">MCP · MODEL CONTEXT PROTOCOL</span>
-  <span class="right">13 / 43</span>
+  <span class="right">13 / 42</span>
 </div>
 
 <!--
@@ -624,7 +624,7 @@ class: 'section text-center'
 
 <div class="status-bar">
   <span class="left">LIFECYCLE · 13 STEPS</span>
-  <span class="right">15 / 43</span>
+  <span class="right">15 / 42</span>
 </div>
 
 <!--
@@ -695,7 +695,7 @@ A <code>UserPromptSubmit</code> hook fires on every new task and reminds you if 
 
 <div class="status-bar">
   <span class="left">ARTIFACTS · 3</span>
-  <span class="right">16 / 43</span>
+  <span class="right">16 / 42</span>
 </div>
 
 ---
@@ -738,7 +738,7 @@ created bd-1237
 
 <div class="status-bar">
   <span class="left">bd · STEVE YEGGE'S MEMORY SYSTEM</span>
-  <span class="right">17 / 43</span>
+  <span class="right">17 / 42</span>
 </div>
 
 ---
@@ -773,7 +773,7 @@ GH-3303:        1 windows
 
 <div class="status-bar">
   <span class="left">TMUX · BORN 2007 · STILL UNKILLED</span>
-  <span class="right">18 / 43</span>
+  <span class="right">18 / 42</span>
 </div>
 
 ---
@@ -800,7 +800,7 @@ GH-3303:        1 windows
 
 <div class="status-bar">
   <span class="left">FILESYSTEM ECONOMICS</span>
-  <span class="right">19 / 43</span>
+  <span class="right">19 / 42</span>
 </div>
 
 ---
@@ -837,7 +837,7 @@ Before any code is written, the orchestrator must reach <span class="cyan">8 of 
 
 <div class="status-bar">
   <span class="left">QUALITY · GATE</span>
-  <span class="right">20 / 43</span>
+  <span class="right">20 / 42</span>
 </div>
 
 ---
@@ -861,7 +861,7 @@ tmux new-session -d -s demo "cd $(pwd) && claude"
 
 <div class="status-bar">
   <span class="left">DEMO · 60s SPIN-UP</span>
-  <span class="right">21 / 43</span>
+  <span class="right">21 / 42</span>
 </div>
 
 <!--
@@ -893,7 +893,7 @@ What keeps 15 sessions from stomping on each other. <span class="cyan">By defaul
 
 <div class="status-bar">
   <span class="left">HOOK · check-cross-worktree.sh</span>
-  <span class="right">22 / 43</span>
+  <span class="right">22 / 42</span>
 </div>
 
 ---
@@ -945,7 +945,7 @@ What keeps 15 sessions from stomping on each other. <span class="cyan">By defaul
 
 <div class="status-bar">
   <span class="left">DIAGRAM · MULTI-SESSION TOPOLOGY</span>
-  <span class="right">23 / 43</span>
+  <span class="right">23 / 42</span>
 </div>
 
 ---
@@ -994,7 +994,7 @@ class: 'section text-center'
 
 <div class="status-bar">
   <span class="left">PIPELINE V1 · DEPRECATED</span>
-  <span class="right">25 / 43</span>
+  <span class="right">25 / 42</span>
 </div>
 
 ---
@@ -1025,7 +1025,7 @@ Right-sized · parallelized · skipped when not needed.
 
 <div class="status-bar">
   <span class="left">PIPELINE V2 · ADR-042</span>
-  <span class="right">26 / 43</span>
+  <span class="right">26 / 42</span>
 </div>
 
 ---
@@ -1095,7 +1095,7 @@ Each is a markdown file under <code>.claude/commands/</code>.<br/>
 
 <div class="status-bar">
   <span class="left">SPECIALISTS · 26</span>
-  <span class="right">27 / 43</span>
+  <span class="right">27 / 42</span>
 </div>
 
 ---
@@ -1156,7 +1156,7 @@ Per-PRP <code>Recommended Model:</code> field. <span class="cyan">No more burnin
 
 <div class="status-bar">
   <span class="left">MODEL · TIERS</span>
-  <span class="right">28 / 43</span>
+  <span class="right">28 / 42</span>
 </div>
 
 ---
@@ -1210,7 +1210,7 @@ Total wall-clock: <span class="cyan text-xl">~90s</span>
 
 <div class="status-bar">
   <span class="left">DEMO · /start-task</span>
-  <span class="right">29 / 43</span>
+  <span class="right">29 / 42</span>
 </div>
 
 ---
@@ -1260,7 +1260,7 @@ All 5 must approve. Or the PR doesn't open.<br/>
 
 <div class="status-bar">
   <span class="left">/vote-for-pr · 5-AGENT QUORUM</span>
-  <span class="right">30 / 43</span>
+  <span class="right">30 / 42</span>
 </div>
 
 ---
@@ -1291,13 +1291,13 @@ It watches production. It verifies deploys.<br/>
 It catches silent failures. It files GitHub issues automatically.
 </p>
 
-<p class="text-xl mt-6 cyan glow-cyan">
+<p class="text-base mt-3 cyan glow-cyan">
 Tests verify code. Routines verify <em>outcomes</em>.
 </p>
 
 <div class="status-bar">
   <span class="left">DEFINITION · ROUTINE</span>
-  <span class="right">32 / 43</span>
+  <span class="right">32 / 42</span>
 </div>
 
 ---
@@ -1345,7 +1345,7 @@ The question a smart engineer would ask if they had unlimited time and zero dist
 
 <div class="status-bar">
   <span class="left">VERIFICATION LAYERS</span>
-  <span class="right">33 / 43</span>
+  <span class="right">33 / 42</span>
 </div>
 
 ---
@@ -1378,7 +1378,7 @@ flowchart LR
 
 <div class="status-bar">
   <span class="left">FLYWHEEL · POST-DEPLOY VERIFICATION</span>
-  <span class="right">34 / 43</span>
+  <span class="right">34 / 42</span>
 </div>
 
 ---
@@ -1409,7 +1409,7 @@ A unit test mocks the destination. A routine <span class="cyan">queries the actu
 
 <div class="status-bar">
   <span class="left">demo/routines/01-post-merge-verify.md</span>
-  <span class="right">35 / 43</span>
+  <span class="right">35 / 42</span>
 </div>
 
 ---
@@ -1430,60 +1430,16 @@ File one GH issue per failing route.
 
 <div class="hud hud-magenta mt-6">
 <p class="text-base text-center">
-This is the routine that caught <span class="magenta">5 days of zero retention emails.</span><br/>
-<span class="muted text-sm">→ next slide</span>
+The killer test is (b). A unit test mocks the Authorization header and always passes — useless. <span class="magenta">Only a live request with the wrong token reveals broken validation.</span>
 </p>
 </div>
 
 <div class="status-bar">
   <span class="left">demo/routines/03-cron-auth-audit.md</span>
-  <span class="right">36 / 43</span>
+  <span class="right">36 / 42</span>
 </div>
 
----
-layout: center
-class: 'text-center'
----
 
-<div class="eyebrow mb-8"><carbon:warning-alt-filled class="danger" /> case study · silent cron 401</div>
-
-<div class="grid grid-cols-3 gap-8 my-12">
-
-<div>
-<div class="stat" style="font-size:7rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">5</div>
-<div class="kicker mt-2">days of silence</div>
-</div>
-
-<div>
-<div class="stat" style="font-size:7rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">0</div>
-<div class="kicker mt-2">retention emails sent</div>
-</div>
-
-<div>
-<div class="stat" style="font-size:7rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">0</div>
-<div class="kicker mt-2">human alerts fired</div>
-</div>
-
-</div>
-
-<div class="hud max-w-3xl mx-auto" style="padding:1.2rem 1.5rem;">
-<p class="text-base text-left">
-<code>if (!auth) return 401</code> passed when <em>any</em> Authorization header was present.<br/>
-Never validated the value. Middleware higher in the chain returned 401 anyway.<br/>
-Logs showed "middleware OK, handler 401" — looked normal at a glance.
-</p>
-</div>
-
-<p class="text-base mt-4 cyan glow-cyan">
-Routine 03 fired Monday. Found 6 broken routes. <span class="muted text-sm">→ 90 min to fix</span>
-</p>
-
-<div class="status-bar">
-  <span class="left">CASE STUDY · GH-XXXX</span>
-  <span class="right">37 / 43</span>
-</div>
-
----
 layout: center
 class: 'text-center'
 ---
@@ -1520,7 +1476,7 @@ The system patrols itself.
 
 <div class="status-bar">
   <span class="left">META · SELF-AUDITING</span>
-  <span class="right">38 / 43</span>
+  <span class="right">37 / 42</span>
 </div>
 
 ---
@@ -1561,7 +1517,7 @@ One catch pays for <span class="lime glow-cyan">a year</span> of routines.
 
 <div class="status-bar">
   <span class="left">ROUTINE · ECONOMICS</span>
-  <span class="right">39 / 43</span>
+  <span class="right">38 / 42</span>
 </div>
 
 ---
@@ -1613,7 +1569,7 @@ bash install.sh
 
 <div class="status-bar">
   <span class="left">github.com/zanebarker-ops/claude-dev-toolkit</span>
-  <span class="right">41 / 43</span>
+  <span class="right">40 / 42</span>
 </div>
 
 ---
@@ -1652,7 +1608,7 @@ bash install.sh
 
 <div class="status-bar">
   <span class="left">FIN · RECAP</span>
-  <span class="right">42 / 43</span>
+  <span class="right">41 / 42</span>
 </div>
 
 ---
@@ -1679,7 +1635,7 @@ class: 'text-center'
 </div>
 
 <div class="mt-16 flex justify-center gap-3">
-<span class="badge ok"><carbon:checkmark /> 43 slides</span>
+<span class="badge ok"><carbon:checkmark /> 42 slides</span>
 <span class="badge info"><carbon:terminal /> 1 toolkit</span>
 <span class="badge warn"><carbon:bot /> 5 routines</span>
 </div>
