@@ -875,10 +875,10 @@ flowchart LR
   HK[check-cross-worktree.sh] -.-> W1
   HK -.-> W2
 
-  style TMX fill:#0d1117,stroke:#22d3ee
-  style COORD fill:#0d1117,stroke:#ec4899
-  style BEADS fill:#0d1117,stroke:#a3e635
-  style HK fill:#0d1117,stroke:#ef4444
+  style TMX stroke:#22d3ee
+  style COORD stroke:#ec4899
+  style BEADS stroke:#a3e635
+  style HK stroke:#ef4444
 ```
 
 <div class="status-bar">
@@ -952,9 +952,9 @@ flowchart TD
   SE --> V[vote-for-pr<br/>5 reviewers]
   V --> P[Open PR]
 
-  style O fill:#1a2236,stroke:#22d3ee,stroke-width:2px
-  style SE fill:#1a2236,stroke:#ec4899,stroke-width:2px
-  style V fill:#1a2236,stroke:#ec4899,stroke-width:2px
+  style O stroke:#22d3ee,stroke-width:2px
+  style SE stroke:#ec4899,stroke-width:2px
+  style V stroke:#ec4899,stroke-width:2px
 ```
 
 <p class="text-center text-base muted mt-4">
@@ -1308,10 +1308,10 @@ flowchart LR
   V -->|yes| K[Close ticket<br/>Self-terminate]
   V -->|no| F[File GH issue<br/>Tag oncall]
 
-  style C fill:#1a2236,stroke:#ec4899,stroke-width:2px
-  style V fill:#1a2236,stroke:#f59e0b,stroke-width:2px
-  style K fill:#1a2236,stroke:#a3e635
-  style F fill:#1a2236,stroke:#ef4444
+  style C stroke:#ec4899,stroke-width:2px
+  style V stroke:#f59e0b,stroke-width:2px
+  style K stroke:#a3e635
+  style F stroke:#ef4444
 ```
 
 <div class="status-bar">
@@ -1412,8 +1412,8 @@ Logs showed "middleware OK, handler 401" — looked normal at a glance.
 </p>
 </div>
 
-<p class="text-xl mt-8 cyan glow-cyan">
-Routine 03 fired Monday. Found 6 broken routes. <span class="muted text-base">→ 90 min to fix</span>
+<p class="text-base mt-4 cyan glow-cyan">
+Routine 03 fired Monday. Found 6 broken routes. <span class="muted text-sm">→ 90 min to fix</span>
 </p>
 
 <div class="status-bar">
@@ -1450,7 +1450,7 @@ Handler did <code>if (data && data.length &gt; 0)</code>. Skipped the loop. Retu
 </p>
 </div>
 
-<p class="text-xl mt-8 cyan glow-cyan">
+<p class="text-base mt-4 cyan glow-cyan">
 The fix isn't more discipline. <span class="magenta">The fix is more automation.</span>
 </p>
 
