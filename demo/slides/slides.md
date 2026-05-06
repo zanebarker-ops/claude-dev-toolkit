@@ -859,27 +859,46 @@ What keeps 15 sessions from stomping on each other. <span class="cyan">By defaul
 
 # Hard isolation, soft coordination
 
-```mermaid
-flowchart LR
-  subgraph TMX[tmux server · survives crashes]
-    S1[Session 1] --> W1[Worktree<br/>GH-3301]
-    S2[Session 2] --> W2[Worktree<br/>GH-3302]
-    Sx[...12 more] --> Wx[...12 more]
-  end
+<div class="grid grid-cols-3 gap-4 mt-6">
 
-  W1 --> COORD[(state.json<br/>file locks · heartbeats)]
-  W2 --> COORD
-  Wx --> COORD
-  COORD --> BEADS[(.beads/issues.jsonl<br/>shared memory)]
+<div class="hud" style="border-color:#22d3ee;">
+<div class="kicker cyan mb-2">tmux server</div>
+<h3 class="text-base mb-2">Sessions + Worktrees</h3>
+<ul class="text-xs">
+<li>Session 1 ↔ Worktree GH-3301</li>
+<li>Session 2 ↔ Worktree GH-3302</li>
+<li>...12 more pairs</li>
+</ul>
+<div class="kicker mt-3 dim">survives crashes</div>
+</div>
 
-  HK[check-cross-worktree.sh] -.-> W1
-  HK -.-> W2
+<div class="hud hud-magenta">
+<div class="kicker magenta mb-2">state.json</div>
+<h3 class="text-base mb-2">Coordination</h3>
+<ul class="text-xs">
+<li>File locks</li>
+<li>Heartbeats</li>
+<li>Recent changes audit</li>
+</ul>
+<div class="kicker mt-3 dim">shared by all sessions</div>
+</div>
 
-  style TMX stroke:#22d3ee
-  style COORD stroke:#ec4899
-  style BEADS stroke:#a3e635
-  style HK stroke:#ef4444
-```
+<div class="hud hud-lime">
+<div class="kicker lime mb-2">.beads/issues.jsonl</div>
+<h3 class="text-base mb-2">Persistent memory</h3>
+<ul class="text-xs">
+<li>Active tasks per session</li>
+<li>Committed to git</li>
+<li>Read on every startup</li>
+</ul>
+<div class="kicker mt-3 dim">survives PTO</div>
+</div>
+
+</div>
+
+<div class="hud mt-6 text-center" style="padding:0.7rem 1rem;border-color:#ef4444;">
+<p class="text-sm"><carbon:locked class="danger" /> <strong class="danger">check-cross-worktree.sh</strong> hook intercepts every Edit/Write — blocks any session from touching files outside its own worktree.</p>
+</div>
 
 <div class="status-bar">
   <span class="left">DIAGRAM · MULTI-SESSION TOPOLOGY</span>
@@ -952,9 +971,9 @@ flowchart TD
   SE --> V[vote-for-pr<br/>5 reviewers]
   V --> P[Open PR]
 
-  style O stroke:#22d3ee,stroke-width:2px
-  style SE stroke:#ec4899,stroke-width:2px
-  style V stroke:#ec4899,stroke-width:2px
+  style O fill:#06070d,stroke:#22d3ee,stroke-width:2px,color:#e6edf3
+  style SE fill:#06070d,stroke:#ec4899,stroke-width:2px,color:#e6edf3
+  style V fill:#06070d,stroke:#ec4899,stroke-width:2px,color:#e6edf3
 ```
 
 <p class="text-center text-base muted mt-4">
@@ -1308,10 +1327,10 @@ flowchart LR
   V -->|yes| K[Close ticket<br/>Self-terminate]
   V -->|no| F[File GH issue<br/>Tag oncall]
 
-  style C stroke:#ec4899,stroke-width:2px
-  style V stroke:#f59e0b,stroke-width:2px
-  style K stroke:#a3e635
-  style F stroke:#ef4444
+  style C fill:#06070d,stroke:#ec4899,stroke-width:2px,color:#e6edf3
+  style V fill:#06070d,stroke:#f59e0b,stroke-width:2px,color:#e6edf3
+  style K fill:#06070d,stroke:#a3e635,color:#e6edf3
+  style F fill:#06070d,stroke:#ef4444,color:#e6edf3
 ```
 
 <div class="status-bar">
