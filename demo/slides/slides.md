@@ -637,8 +637,8 @@ bd create \
 
 ```bash
 git worktree add \
-  ../worktrees/GH-#### \
-  -b feature/GH-#### dev
+  ../wt/GH-#### \
+  -b feat/GH-####
 ```
 
 <div class="kicker mt-2">for · isolation</div>
