@@ -124,7 +124,7 @@ html, body, #app {
   border-radius: 12px;
   padding: 1.5rem 1.5rem 1.25rem 1.5rem !important;
   font-family: var(--font-mono) !important;
-  font-size: 0.85em !important;
+  font-size: 0.95em !important;
   line-height: 1.55;
   box-shadow:
     0 0 0 1px rgba(34, 211, 238, 0.08),
@@ -631,4 +631,55 @@ html, body, #app {
 /* --- Big inline stats that use gradient inline --- */
 .slidev-layout div[style*="-webkit-background-clip:text"] {
   -webkit-text-fill-color: transparent !important;
+}
+
+
+/* === code legibility boost === */
+.slidev-layout pre code,
+.slidev-layout pre .line,
+.slidev-layout pre span {
+  color: #e6edf3 !important;
+}
+
+/* Override Shiki theme dim opacity on non-highlighted lines */
+.slidev-layout pre .line.dim,
+.slidev-layout pre .line.has-diff:not(.diff),
+.slidev-layout pre .line[class*="dim"] {
+  opacity: 0.85 !important;
+  filter: none !important;
+}
+
+/* Force every shiki span to be at full opacity */
+.slidev-layout pre span[style*="color"],
+.slidev-layout pre code span {
+  opacity: 1 !important;
+}
+
+/* Brighten Shiki syntax tokens */
+.slidev-layout pre .token.string,
+.slidev-layout pre .token.attr-value,
+.slidev-layout pre span[style*="#a7f3d0"],
+.slidev-layout pre span[style*="#10b981"] {
+  color: #6ee7b7 !important;  /* brighter green */
+}
+.slidev-layout pre .token.keyword,
+.slidev-layout pre .token.constant,
+.slidev-layout pre span[style*="#9333ea"],
+.slidev-layout pre span[style*="#a855f7"] {
+  color: #c4b5fd !important;  /* brighter purple */
+}
+.slidev-layout pre .token.function,
+.slidev-layout pre span[style*="#3b82f6"] {
+  color: #93c5fd !important;  /* brighter blue */
+}
+.slidev-layout pre .token.comment,
+.slidev-layout pre span[style*="#6b7280"] {
+  color: #9ca3af !important;  /* brighter gray for comments */
+}
+
+/* Ensure shiki's "background" wrapper doesn't dim */
+.slidev-layout pre .shiki,
+.slidev-layout pre .shiki-themes {
+  background: transparent !important;
+  color: #e6edf3 !important;
 }

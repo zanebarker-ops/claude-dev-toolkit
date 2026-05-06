@@ -316,12 +316,7 @@ The rules are heavy. The harness enforces most of them <span class="cyan">automa
 
 # Wiring the harness
 
-```json {1-2|3-13|14-17|18-21|all}
-{
-  "hooks": {
-    "PreToolUse": [
-      { "matcher": "Edit|Write",
-        "hooks": [{ "command": ".claude/hooks/check-cross-worktree.sh" }]},
+```json]},
       { "matcher": "Bash",
         "hooks": [{ "command": ".claude/hooks/gitleaks-scan.sh" }]},
       { "matcher": "Bash",
@@ -513,12 +508,7 @@ message: |
 
 <div>
 
-```json {all|2-5|6-9}
-{
-  "axiom": {
-    "command": "npx",
-    "args": ["-y", "@axiomhq/mcp-server-axiom"]
-  },
+```json,
   "memory-keeper": {
     "command": "npx",
     "args": ["-y", "memory-keeper"]
@@ -820,7 +810,7 @@ Before any code is written, the orchestrator must reach <span class="cyan">8 of 
 
 # 60-second feature spin-up
 
-```bash {1-2|4-5|7-8|10-11|13-14|all}
+```bash
 # 1. Issue
 gh issue create --title "DEMO: typo on landing hero" --label "demo"
 
