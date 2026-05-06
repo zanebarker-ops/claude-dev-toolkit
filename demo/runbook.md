@@ -29,8 +29,8 @@ cd ~/repos/claude-dev-toolkit/demo/slides
 npm run dev
 # slides at http://localhost:3030
 
-# 5. Open a second terminal pointing at the safegamer (or a clone) repo
-cd ~/repos/safegamer-ai
+# 5. Open a second terminal pointing at the demo (or a clone) repo
+cd ~/repos/<repo>
 
 # 6. Verify .claude/ tooling visible
 ls .claude/hooks/ | head
@@ -65,7 +65,7 @@ If any pre-flight step fails: **swap to the asciinema fallback for that act**. D
 
 **Type:**
 ```bash
-cat ~/repos/safegamer-ai/.claude/CLAUDE.md | head -80
+cat ~/repos/<repo>/.claude/CLAUDE.md | head -80
 ```
 
 **What to say:**
@@ -75,14 +75,14 @@ cat ~/repos/safegamer-ai/.claude/CLAUDE.md | head -80
 
 **Type:**
 ```bash
-cat ~/repos/safegamer-ai/.claude/settings.json | jq '.hooks | keys'
+cat ~/repos/<repo>/.claude/settings.json | jq '.hooks | keys'
 ```
 
 Expected output: `["PreToolUse", "PostToolUse", "UserPromptSubmit", "Stop"]`
 
 **Then:**
 ```bash
-cat ~/repos/safegamer-ai/.claude/settings.json | jq '.hooks.PreToolUse'
+cat ~/repos/<repo>/.claude/settings.json | jq '.hooks.PreToolUse'
 ```
 
 **What to say:**
@@ -111,7 +111,7 @@ BLOCKED: .env file read attempt
 
 **Type:**
 ```bash
-cat ~/repos/safegamer-ai/.claude/settings.json | jq '.mcpServers | keys'
+cat ~/repos/<repo>/.claude/settings.json | jq '.mcpServers | keys'
 ```
 
 **What to say:**
@@ -134,11 +134,11 @@ Show diagram 1 (`demo/diagrams/01-feature-lifecycle.md`).
 
 ### 3b. Live: spin up a feature in 60 seconds (8 min)
 
-**In the second terminal (pointed at safegamer):**
+**In the second terminal (pointed at the demo repo):**
 
 ```bash
 # Step 1: create a GH issue
-gh issue create --title "DEMO: trivial typo fix in landing page" --body "Landing page has 'safegamr' instead of 'safegamer' on hero. Quick fix." --label "demo" 2>&1
+gh issue create --title "DEMO: trivial typo fix in landing page" --body "Landing page has 'exmaple' instead of 'example' on hero. Quick fix." --label "demo" 2>&1
 
 # (Note the issue number, e.g., GH-9999)
 
@@ -147,8 +147,8 @@ bd create "DEMO: typo fix (GH-9999)" -p 3
 # (Note the bead ID, e.g., bd-demo-001)
 
 # Step 3: create the worktree
-git worktree add ../safegamer-ai-worktrees/GH-9999-demo-typo -b feature/GH-9999-demo-typo dev
-cd ../safegamer-ai-worktrees/GH-9999-demo-typo
+git worktree add ../<repo>-worktrees/GH-9999-demo-typo -b feature/GH-9999-demo-typo dev
+cd ../<repo>-worktrees/GH-9999-demo-typo
 
 # Step 4: launch a Claude Code session in tmux
 tmux new-session -d -s demo-typo "cd $(pwd) && claude"
@@ -157,7 +157,7 @@ tmux attach -t demo-typo
 
 **In the Claude session, prompt:**
 ```
-fix the typo "safegamr" → "safegamer" on the landing page hero. small surgical change.
+fix the typo "exmaple" → "example" on the landing page hero. small surgical change.
 ```
 
 **What happens:**

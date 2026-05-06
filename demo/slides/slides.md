@@ -32,7 +32,7 @@ mermaid:
     edgeLabelBackground: '#0a0e1a'
 ---
 
-<div class="eyebrow mb-8">v1.0 // production · safegamer.ai</div>
+<div class="eyebrow mb-8">v1.0 // production</div>
 
 <h1 class="leading-none mb-6" style="font-size:4.5rem;">
 Production-Grade<br/>
@@ -412,7 +412,7 @@ class: 'text-center'
 <div class="font-mono text-sm" style="padding:1.5rem;">
 <div class="muted mb-4">// in claude code session</div>
 
-<div class="text-base"><span class="cyan">user@safegamer</span><span class="muted"> ~ &gt;</span> read the .env file at the root</div>
+<div class="text-base"><span class="cyan">user@example</span><span class="muted"> ~ &gt;</span> read the .env file at the root</div>
 
 <div class="muted my-3">// hook fires...</div>
 
@@ -813,7 +813,7 @@ git worktree add ../worktrees/GH-####-demo -b feature/GH-####-demo dev
 # 4. Tmux session
 tmux new-session -d -s demo "cd $(pwd) && claude"
 # 5. Prompt
-> fix the typo "safegamr" → "safegamer" on the landing hero
+> fix the typo "exmaple" → "example" on the landing hero
 ```
 
 <div class="status-bar">

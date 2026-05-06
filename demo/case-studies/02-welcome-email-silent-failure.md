@@ -60,7 +60,7 @@ After GH-XXXX, two changes:
 
 ## The narrator beat
 
-> "Two months. Every single new family signed up to SafeGamer. Zero of them got a welcome email. The metric we look at — `families.created_at` — went up. The metric we *should* have looked at — `welcome_emails_sent` — wasn't being tracked. The fix wasn't more vigilance. The fix was a routine that audits schema-vs-code drift on every merge. Now this class of bug can't survive past lunch."
+> "Two months. Every single new family signed up. Zero of them got a welcome email. The metric we look at — `families.created_at` — went up. The metric we *should* have looked at — `welcome_emails_sent` — wasn't being tracked. The fix wasn't more vigilance. The fix was a routine that audits schema-vs-code drift on every merge. Now this class of bug can't survive past lunch."
 
 ## What the demo audience should take away
 

@@ -53,7 +53,7 @@ If you read this top-to-bottom, you have the full talk.
 
 ### Live: .env block (slide 9)
 
-[**Switch to terminal. Open a Claude Code session in the safegamer or demo repo.**]
+[**Switch to terminal. Open a Claude Code session in the demo repo.**]
 
 > "Watch this. I'll ask Claude to read the .env file."
 
@@ -155,13 +155,13 @@ If you read this top-to-bottom, you have the full talk.
 ```bash
 gh issue create --title "DEMO: typo on landing hero" --body "..." --label "demo"
 bd create "DEMO: typo fix (GH-####)" -p 3
-git worktree add ../safegamer-ai-worktrees/GH-####-demo-typo -b feature/GH-####-demo-typo dev
-cd ../safegamer-ai-worktrees/GH-####-demo-typo
+git worktree add ../<repo>-worktrees/GH-####-demo-typo -b feature/GH-####-demo-typo dev
+cd ../<repo>-worktrees/GH-####-demo-typo
 tmux new-session -d -s demo-typo "cd $(pwd) && claude"
 tmux attach -t demo-typo
 ```
 
-[**In the Claude session:**] `fix the typo "safegamr" → "safegamer" on the landing page hero`
+[**In the Claude session:**] `fix the typo "exmaple" → "example" on the landing page hero`
 
 > "Sixty seconds from issue to in-progress. Notice the Confidence Gate just nudged me — it wanted to confirm scope before editing. The cross-worktree hook is silently watching. The lint hook will run when I commit. None of this is in the prompt. All of it is in the harness."
 
