@@ -1375,14 +1375,11 @@ A unit test mocks the destination. A routine <span class="cyan">queries the actu
 
 ```text
 For each cron route in apps/web/app/api/cron/**:
+  a) GET with no Auth         → expect 401
+  b) GET with wrong token     → expect 401  ← KILLER TEST
+  c) GET with correct secret  → expect 200
 
-  a) GET <route> with no Authorization      → expect 401
-  b) GET <route> with wrong Bearer token    → expect 401  ← KILLER TEST
-  c) GET <route> with correct Bearer token  → expect 200
-
-If (b) returns 200: SECURITY ISSUE — token validation is broken.
-If (c) returns 401: BROKEN — cron not running for legit calls.
-
+If (b) returns 200: token validation broken (security issue).
 File one GH issue per failing route.
 ```
 
@@ -1585,25 +1582,23 @@ bash install.sh
 <div class="grid grid-cols-2 gap-6 mt-8">
 
 <div class="hud">
-<h3 class="cyan mb-3"><carbon:cube /> What's included</h3>
-<ul class="text-sm">
-<li>18 production-tested hooks</li>
-<li>14 hookify rules</li>
-<li>26 agent commands</li>
-<li>Full PR-review plugin (5 voters)</li>
-<li>Templates: CLAUDE.md, workflow, model-selection, agents, PRP</li>
-<li>4 scripts: lint, deploy-check, session, ext4 migration</li>
-<li><strong class="magenta">5 routine templates</strong></li>
+<h3 class="cyan mb-2"><carbon:cube /> What's included</h3>
+<ul class="text-xs">
+<li>18 hooks · 14 hookify rules · 26 agent commands</li>
+<li>PR-review plugin · 5 voters</li>
+<li>Templates · CLAUDE.md, workflow, agents, PRP</li>
+<li>Scripts · lint, deploy-check, session, ext4 migration</li>
+<li><strong class="magenta">5 routine templates ★</strong></li>
 </ul>
 </div>
 
 <div class="hud hud-magenta">
-<h3 class="magenta mb-3"><carbon:edit /> What you'll customize</h3>
-<ul class="text-sm">
+<h3 class="magenta mb-2"><carbon:edit /> What you'll customize</h3>
+<ul class="text-xs">
 <li>CLAUDE.md — your stack, your incidents</li>
 <li>Hookify rules — your blocking patterns</li>
-<li>Agent commands — strip irrelevant, add domain-specific</li>
-<li>Routine prompts — your prod URLs, channels</li>
+<li>Agents — strip + add domain-specific</li>
+<li>Routine prompts — your prod URLs</li>
 </ul>
 </div>
 

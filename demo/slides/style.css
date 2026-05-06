@@ -79,7 +79,7 @@ html, body, #app {
 }
 
 .slidev-layout h1 {
-  font-size: 3.6rem;
+  font-size: 2.8rem;
   font-weight: 700;
   background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 60%, var(--cyan-bright) 100%);
   -webkit-background-clip: text;
@@ -89,7 +89,7 @@ html, body, #app {
 }
 
 .slidev-layout h2 {
-  font-size: 2.6rem;
+  font-size: 2rem;
   margin-bottom: 1.2rem;
 }
 
@@ -132,7 +132,7 @@ html, body, #app {
     inset 0 1px 0 rgba(255, 255, 255, 0.04);
   position: relative;
   overflow: auto;
-  max-height: 60vh;
+  max-height: 48vh;
   scrollbar-width: thin;
   scrollbar-color: var(--cyan) rgba(15, 22, 38, 0.5);
 }
@@ -189,7 +189,7 @@ html, body, #app {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.92em;
+  font-size: 0.82em;
   margin-top: 0.5rem;
   background: rgba(15, 22, 38, 0.6);
   border: 1px solid var(--line-strong);
@@ -229,7 +229,7 @@ html, body, #app {
 .slidev-layout ul > li {
   position: relative;
   padding-left: 1.5rem;
-  margin-bottom: 0.55rem;
+  margin-bottom: 0.3rem;
 }
 
 .slidev-layout ul > li::before {
@@ -331,7 +331,7 @@ html, body, #app {
   -webkit-backdrop-filter: blur(8px);
   border: 1px solid var(--line-strong);
   border-radius: 12px;
-  padding: 1.5rem 1.75rem;
+  padding: 1rem 1.25rem;
   position: relative;
 }
 
@@ -576,7 +576,7 @@ html, body, #app {
 }
 
 /* --- Cover slide: stop the title from overlapping footer --- */
-.slidev-layout h1 { font-size: 3.6rem !important; }
+.slidev-layout h1 { font-size: 2.8rem !important; }
 
 /* Per-slide override: when a cover h1 is explicitly sized via inline style,
    don't let it grow past 5rem on the cover */
@@ -682,4 +682,23 @@ html, body, #app {
 .slidev-layout pre .shiki-themes {
   background: transparent !important;
   color: #e6edf3 !important;
+}
+
+
+/* === slide 9 fix: hook event cards must be tighter === */
+.slidev-layout .grid.grid-cols-2 > .hud {
+  padding: 0.8rem 1rem !important;
+}
+.slidev-layout .grid.grid-cols-2 > .hud h3 {
+  font-size: 1.1rem !important;
+  margin-bottom: 0.4rem !important;
+}
+.slidev-layout .grid.grid-cols-2 > .hud p {
+  font-size: 0.85rem !important;
+  margin-bottom: 0.3rem !important;
+}
+
+/* Tighten line-height in muted paragraphs everywhere */
+.slidev-layout p.muted, .slidev-layout p.text-base, .slidev-layout p.text-sm {
+  line-height: 1.4;
 }
