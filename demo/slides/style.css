@@ -529,7 +529,7 @@ html, body, #app {
   fill: #e6edf3 !important;
   color: #e6edf3 !important;
   font-family: var(--font-mono) !important;
-  font-size: 14px !important;
+  font-size: 18px !important;
   font-weight: 500 !important;
 }
 
@@ -563,7 +563,7 @@ html, body, #app {
 .slidev-layout svg[id^="mermaid-"] .cluster .nodeLabel,
 .slidev-layout svg[id^="mermaid-"] .cluster text {
   fill: var(--cyan-bright) !important;
-  font-size: 12px !important;
+  font-size: 14px !important;
   text-transform: uppercase !important;
   letter-spacing: 0.1em !important;
 }

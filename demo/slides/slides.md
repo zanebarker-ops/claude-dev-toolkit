@@ -32,28 +32,30 @@ mermaid:
     edgeLabelBackground: '#0a0e1a'
 ---
 
-<div class="absolute inset-0 flex flex-col justify-center px-20 py-12">
+<div class="absolute inset-0 grid" style="grid-template-rows: auto 1fr auto; padding: 3.5rem 5rem;">
 
-<div class="eyebrow mb-6">v1.0 // production · safegamer.ai</div>
+<div class="eyebrow">v1.0 // production · safegamer.ai</div>
 
-<h1 class="leading-none mb-6" style="font-size:5rem;">
-Production-Grade<br/>
-Claude Code
-</h1>
+<div class="flex flex-col justify-center">
+  <h1 class="leading-none mb-6" style="font-size:5rem;">
+    Production-Grade<br/>
+    Claude Code
+  </h1>
 
-<p class="text-2xl muted max-w-3xl leading-snug mb-12">
-How we run a SaaS on AI-assisted development<br/>
-without losing our minds.
-</p>
+  <p class="text-2xl muted max-w-3xl leading-snug mb-10">
+    How we run a SaaS on AI-assisted development<br/>
+    without losing our minds.
+  </p>
 
-<div class="flex gap-3 mb-16">
-  <span class="badge ok"><carbon:checkmark-filled /> 18 hooks</span>
-  <span class="badge info"><carbon:bot /> 26 agents</span>
-  <span class="badge warn"><carbon:time /> 5 routines</span>
-  <span class="badge ok"><carbon:terminal /> 1 toolkit</span>
+  <div class="flex gap-3">
+    <span class="badge ok"><carbon:checkmark-filled /> 18 hooks</span>
+    <span class="badge info"><carbon:bot /> 26 agents</span>
+    <span class="badge warn"><carbon:time /> 5 routines</span>
+    <span class="badge ok"><carbon:terminal /> 1 toolkit</span>
+  </div>
 </div>
 
-<div class="absolute bottom-8 left-20 right-20 flex justify-between items-end">
+<div class="flex justify-between items-end">
   <div>
     <div class="kicker mb-1">repository</div>
     <div class="font-mono text-base cyan">github.com/zanebarker-ops/claude-dev-toolkit</div>
@@ -1469,9 +1471,8 @@ Logs showed "middleware OK, handler 401" — looked normal at a glance.
 </p>
 </div>
 
-<p class="text-2xl mt-10 cyan glow-cyan">
-Routine 03 fired Monday. Found 6 broken routes. Filed an issue.<br/>
-<span class="text-base muted">90 minutes from detection to fix.</span>
+<p class="text-xl mt-8 cyan glow-cyan">
+Routine 03 fired Monday. Found 6 broken routes. <span class="muted text-base">→ 90 min to fix</span>
 </p>
 
 <div class="status-bar">
@@ -1508,7 +1509,7 @@ Handler did <code>if (data && data.length &gt; 0)</code>. Skipped the loop. Retu
 </p>
 </div>
 
-<p class="text-2xl mt-10 cyan glow-cyan">
+<p class="text-xl mt-8 cyan glow-cyan">
 The fix isn't more discipline. <span class="magenta">The fix is more automation.</span>
 </p>
 
