@@ -80,10 +80,9 @@ Every AI coding demo<br/>
 you've seen is a tutorial.
 </blockquote>
 
-<p class="muted text-xl leading-loose mt-10">
-Blank repo. One prompt. Magic. Applause.<br/>
-You go home. You try it on your codebase.
-</p>
+<p class="muted text-xl mt-10">Blank repo. One prompt. Magic. Applause.</p>
+
+<p class="muted text-xl mt-4">You go home. You try it on your codebase.</p>
 
 <p class="text-2xl mt-8 cyan glow-cyan font-semibold">
 It falls over inside thirty minutes.
