@@ -807,19 +807,15 @@ Before any code is written, the orchestrator must reach <span class="cyan">8 of 
 
 ```bash
 # 1. Issue
-gh issue create --title "DEMO: typo on landing hero" --label "demo"
-
+gh issue create --title "DEMO: typo on hero" --label "demo"
 # 2. Bead
 bd create "DEMO: typo (GH-####)" -p 3
-
 # 3. Worktree
 git worktree add ../worktrees/GH-####-demo -b feature/GH-####-demo dev
-
 # 4. Tmux session
 tmux new-session -d -s demo "cd $(pwd) && claude"
-
 # 5. Prompt
-> fix the typo "safegamr" → "safegamer" on the landing page hero
+> fix the typo "safegamr" → "safegamer" on the landing hero
 ```
 
 <div class="status-bar">
