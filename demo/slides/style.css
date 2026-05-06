@@ -702,3 +702,40 @@ html, body, #app {
 .slidev-layout p.muted, .slidev-layout p.text-base, .slidev-layout p.text-sm {
   line-height: 1.4;
 }
+
+
+/* === mermaid edges + arrows: aggressive brightening === */
+.slidev-layout svg[id^="mermaid-"] .edgePath path,
+.slidev-layout svg[id^="mermaid-"] .edgePath line,
+.slidev-layout svg[id^="mermaid-"] .flowchart-link,
+.slidev-layout svg[id^="mermaid-"] path.flowchart-link,
+.slidev-layout svg[id^="mermaid-"] line,
+.slidev-layout svg[id^="mermaid-"] .messageLine0,
+.slidev-layout svg[id^="mermaid-"] .messageLine1 {
+  stroke: var(--cyan-bright) !important;
+  stroke-width: 2px !important;
+  stroke-opacity: 1 !important;
+  fill: none !important;
+}
+
+/* Arrowheads */
+.slidev-layout svg[id^="mermaid-"] marker path,
+.slidev-layout svg[id^="mermaid-"] marker polygon,
+.slidev-layout svg[id^="mermaid-"] .marker,
+.slidev-layout svg[id^="mermaid-"] .arrowMarkerPath,
+.slidev-layout svg[id^="mermaid-"] defs marker * {
+  fill: var(--cyan-bright) !important;
+  stroke: var(--cyan-bright) !important;
+}
+
+/* Edge labels */
+.slidev-layout svg[id^="mermaid-"] .edgeLabel,
+.slidev-layout svg[id^="mermaid-"] .edgeLabel text,
+.slidev-layout svg[id^="mermaid-"] .edgeLabel rect,
+.slidev-layout svg[id^="mermaid-"] .edgeLabel foreignObject *,
+.slidev-layout svg[id^="mermaid-"] .label {
+  background: var(--bg-0) !important;
+  background-color: var(--bg-0) !important;
+  fill: #e6edf3 !important;
+  color: #e6edf3 !important;
+}

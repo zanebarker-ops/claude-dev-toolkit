@@ -69,6 +69,49 @@ without losing our minds.
 -->
 
 ---
+
+<div class="eyebrow mb-4"><carbon:warning-alt /> heads up · token economics</div>
+
+# This setup burns tokens
+
+<div class="grid grid-cols-3 gap-5 mt-8">
+
+<div class="hud" style="border-color:#f59e0b;">
+<div class="kicker amber mb-2">// parallelism</div>
+<div class="text-5xl font-bold cyan">15</div>
+<div class="text-sm muted mt-2">concurrent sessions</div>
+</div>
+
+<div class="hud" style="border-color:#f59e0b;">
+<div class="kicker amber mb-2">// specialists</div>
+<div class="text-5xl font-bold cyan">23</div>
+<div class="text-sm muted mt-2">agents per session, max</div>
+</div>
+
+<div class="hud" style="border-color:#ef4444;">
+<div class="kicker danger mb-2">// monthly burn</div>
+<div class="text-5xl font-bold magenta">3.5–4B</div>
+<div class="text-sm muted mt-2">tokens / month (estimated)</div>
+</div>
+
+</div>
+
+<div class="hud hud-magenta mt-6 text-center" style="padding:1rem 1.2rem;">
+<p class="text-base"><strong>Run this all-in</strong> and you will burn through token budgets at <span class="magenta">record speed</span>. The Confidence Gate, model-tier routing, and right-sized agent dispatch (Acts 2 & 3) are not optional optimizations — they're how you stay under the cost ceiling.</p>
+</div>
+
+<div class="status-bar">
+  <span class="left">DISCLOSURE · TOKEN ECONOMICS</span>
+  <span class="right">2 / 43</span>
+</div>
+
+<!--
+- Be candid. Acknowledge cost upfront before the audience starts wondering.
+- The 3.5-4B/mo number is a real estimate from running this setup at scale.
+- Pivot: cost discipline is baked in via Act 2 (Confidence Gate) and Act 3 (model selection).
+-->
+
+---
 layout: center
 class: 'text-center'
 ---
@@ -1477,7 +1520,7 @@ The system patrols itself.
 
 <div class="status-bar">
   <span class="left">META · SELF-AUDITING</span>
-  <span class="right">37 / 42</span>
+  <span class="right">38 / 43</span>
 </div>
 
 ---
@@ -1518,7 +1561,7 @@ One catch pays for <span class="lime glow-cyan">a year</span> of routines.
 
 <div class="status-bar">
   <span class="left">ROUTINE · ECONOMICS</span>
-  <span class="right">38 / 42</span>
+  <span class="right">39 / 43</span>
 </div>
 
 ---
@@ -1570,7 +1613,7 @@ bash install.sh
 
 <div class="status-bar">
   <span class="left">github.com/zanebarker-ops/claude-dev-toolkit</span>
-  <span class="right">40 / 42</span>
+  <span class="right">41 / 43</span>
 </div>
 
 ---
@@ -1609,7 +1652,7 @@ bash install.sh
 
 <div class="status-bar">
   <span class="left">FIN · RECAP</span>
-  <span class="right">41 / 42</span>
+  <span class="right">42 / 43</span>
 </div>
 
 ---
@@ -1636,7 +1679,7 @@ class: 'text-center'
 </div>
 
 <div class="mt-16 flex justify-center gap-3">
-<span class="badge ok"><carbon:checkmark /> 42 slides</span>
+<span class="badge ok"><carbon:checkmark /> 43 slides</span>
 <span class="badge info"><carbon:terminal /> 1 toolkit</span>
 <span class="badge warn"><carbon:bot /> 5 routines</span>
 </div>
