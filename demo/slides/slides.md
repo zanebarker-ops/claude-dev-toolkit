@@ -1142,7 +1142,7 @@ class: 'text-center'
 
 </div>
 
-<p class="text-base muted mt-12">
+<p class="text-base muted mt-6">
 Total wall-clock: <span class="cyan text-xl">~90s</span>
 </p>
 
