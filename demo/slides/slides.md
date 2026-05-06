@@ -1005,7 +1005,7 @@ class: 'section text-center'
 
 ```mermaid
 flowchart TD
-  T[/start-task] --> O{{Opus<br/>orchestrator}}
+  T["/start-task"] --> O{{Opus<br/>orchestrator}}
   O -->|trivial| D[Direct edit]
   O -->|small bug| Db[debug + security if auth]
   O -->|small feature| M[3-5 specialists in parallel]
