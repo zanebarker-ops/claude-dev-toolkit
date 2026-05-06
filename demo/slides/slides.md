@@ -189,7 +189,7 @@ It falls over inside thirty minutes.
 
 <div class="status-bar">
   <span class="left">CONTEXT</span>
-  <span class="right">02 / 43</span>
+  <span class="right">4 / 43</span>
 </div>
 
 <!--
@@ -303,7 +303,7 @@ Every Claude Code session reads this on startup. The phrase up top forces the mo
 
 <div class="status-bar">
   <span class="left">FILE · CLAUDE.md</span>
-  <span class="right">06 / 43</span>
+  <span class="right">7 / 43</span>
 </div>
 
 <!--
@@ -343,7 +343,7 @@ The rules are heavy. The harness enforces most of them <span class="cyan">automa
 
 <div class="status-bar">
   <span class="left">CLAUDE.md · WORKFLOW RULES</span>
-  <span class="right">07 / 43</span>
+  <span class="right">8 / 43</span>
 </div>
 
 <!--
@@ -374,7 +374,7 @@ The rules are heavy. The harness enforces most of them <span class="cyan">automa
 
 <div class="status-bar">
   <span class="left">.claude/settings.json</span>
-  <span class="right">08 / 43</span>
+  <span class="right">9 / 43</span>
 </div>
 
 <!--
@@ -434,7 +434,7 @@ Two superpowers: <span class="badge bad">block</span> exit 2 · <span class="bad
 
 <div class="status-bar">
   <span class="left">CLAUDE CODE · EVENTS</span>
-  <span class="right">09 / 43</span>
+  <span class="right">10 / 43</span>
 </div>
 
 <!--
@@ -526,7 +526,7 @@ message: |
 
 <div class="status-bar">
   <span class="left">HOOKIFY · DECLARATIVE RULES</span>
-  <span class="right">11 / 43</span>
+  <span class="right">12 / 43</span>
 </div>
 
 <!--
@@ -573,7 +573,7 @@ message: |
 
 <div class="status-bar">
   <span class="left">MCP · MODEL CONTEXT PROTOCOL</span>
-  <span class="right">12 / 43</span>
+  <span class="right">13 / 43</span>
 </div>
 
 <!--
@@ -624,7 +624,7 @@ class: 'section text-center'
 
 <div class="status-bar">
   <span class="left">LIFECYCLE · 13 STEPS</span>
-  <span class="right">14 / 43</span>
+  <span class="right">15 / 43</span>
 </div>
 
 <!--
@@ -695,7 +695,7 @@ A <code>UserPromptSubmit</code> hook fires on every new task and reminds you if 
 
 <div class="status-bar">
   <span class="left">ARTIFACTS · 3</span>
-  <span class="right">15 / 43</span>
+  <span class="right">16 / 43</span>
 </div>
 
 ---
@@ -738,7 +738,7 @@ created bd-1237
 
 <div class="status-bar">
   <span class="left">bd · STEVE YEGGE'S MEMORY SYSTEM</span>
-  <span class="right">16 / 43</span>
+  <span class="right">17 / 43</span>
 </div>
 
 ---
@@ -773,7 +773,7 @@ GH-3303:        1 windows
 
 <div class="status-bar">
   <span class="left">TMUX · BORN 2007 · STILL UNKILLED</span>
-  <span class="right">17 / 43</span>
+  <span class="right">18 / 43</span>
 </div>
 
 ---
@@ -800,7 +800,7 @@ GH-3303:        1 windows
 
 <div class="status-bar">
   <span class="left">FILESYSTEM ECONOMICS</span>
-  <span class="right">18 / 43</span>
+  <span class="right">19 / 43</span>
 </div>
 
 ---
@@ -837,7 +837,7 @@ Before any code is written, the orchestrator must reach <span class="cyan">8 of 
 
 <div class="status-bar">
   <span class="left">QUALITY · GATE</span>
-  <span class="right">19 / 43</span>
+  <span class="right">20 / 43</span>
 </div>
 
 ---
@@ -861,7 +861,7 @@ tmux new-session -d -s demo "cd $(pwd) && claude"
 
 <div class="status-bar">
   <span class="left">DEMO · 60s SPIN-UP</span>
-  <span class="right">20 / 43</span>
+  <span class="right">21 / 43</span>
 </div>
 
 <!--
@@ -893,7 +893,7 @@ What keeps 15 sessions from stomping on each other. <span class="cyan">By defaul
 
 <div class="status-bar">
   <span class="left">HOOK · check-cross-worktree.sh</span>
-  <span class="right">21 / 43</span>
+  <span class="right">22 / 43</span>
 </div>
 
 ---
@@ -945,7 +945,7 @@ What keeps 15 sessions from stomping on each other. <span class="cyan">By defaul
 
 <div class="status-bar">
   <span class="left">DIAGRAM · MULTI-SESSION TOPOLOGY</span>
-  <span class="right">22 / 43</span>
+  <span class="right">23 / 43</span>
 </div>
 
 ---
@@ -994,7 +994,7 @@ class: 'section text-center'
 
 <div class="status-bar">
   <span class="left">PIPELINE V1 · DEPRECATED</span>
-  <span class="right">24 / 43</span>
+  <span class="right">25 / 43</span>
 </div>
 
 ---
@@ -1025,7 +1025,7 @@ Right-sized · parallelized · skipped when not needed.
 
 <div class="status-bar">
   <span class="left">PIPELINE V2 · ADR-042</span>
-  <span class="right">25 / 43</span>
+  <span class="right">26 / 43</span>
 </div>
 
 ---
@@ -1095,7 +1095,7 @@ Each is a markdown file under <code>.claude/commands/</code>.<br/>
 
 <div class="status-bar">
   <span class="left">SPECIALISTS · 26</span>
-  <span class="right">26 / 43</span>
+  <span class="right">27 / 43</span>
 </div>
 
 ---
@@ -1156,7 +1156,7 @@ Per-PRP <code>Recommended Model:</code> field. <span class="cyan">No more burnin
 
 <div class="status-bar">
   <span class="left">MODEL · TIERS</span>
-  <span class="right">27 / 43</span>
+  <span class="right">28 / 43</span>
 </div>
 
 ---
@@ -1210,7 +1210,7 @@ Total wall-clock: <span class="cyan text-xl">~90s</span>
 
 <div class="status-bar">
   <span class="left">DEMO · /start-task</span>
-  <span class="right">28 / 43</span>
+  <span class="right">29 / 43</span>
 </div>
 
 ---
@@ -1260,7 +1260,7 @@ All 5 must approve. Or the PR doesn't open.<br/>
 
 <div class="status-bar">
   <span class="left">/vote-for-pr · 5-AGENT QUORUM</span>
-  <span class="right">29 / 43</span>
+  <span class="right">30 / 43</span>
 </div>
 
 ---
@@ -1297,7 +1297,7 @@ Tests verify code. Routines verify <em>outcomes</em>.
 
 <div class="status-bar">
   <span class="left">DEFINITION · ROUTINE</span>
-  <span class="right">31 / 43</span>
+  <span class="right">32 / 43</span>
 </div>
 
 ---
@@ -1345,7 +1345,7 @@ The question a smart engineer would ask if they had unlimited time and zero dist
 
 <div class="status-bar">
   <span class="left">VERIFICATION LAYERS</span>
-  <span class="right">32 / 43</span>
+  <span class="right">33 / 43</span>
 </div>
 
 ---
@@ -1378,7 +1378,7 @@ flowchart LR
 
 <div class="status-bar">
   <span class="left">FLYWHEEL · POST-DEPLOY VERIFICATION</span>
-  <span class="right">33 / 43</span>
+  <span class="right">34 / 43</span>
 </div>
 
 ---
@@ -1409,7 +1409,7 @@ A unit test mocks the destination. A routine <span class="cyan">queries the actu
 
 <div class="status-bar">
   <span class="left">demo/routines/01-post-merge-verify.md</span>
-  <span class="right">34 / 43</span>
+  <span class="right">35 / 43</span>
 </div>
 
 ---
@@ -1437,7 +1437,7 @@ This is the routine that caught <span class="magenta">5 days of zero retention e
 
 <div class="status-bar">
   <span class="left">demo/routines/03-cron-auth-audit.md</span>
-  <span class="right">35 / 43</span>
+  <span class="right">36 / 43</span>
 </div>
 
 ---
@@ -1480,10 +1480,10 @@ Routine 03 fired Monday. Found 6 broken routes. <span class="muted text-sm">→ 
 
 <div class="status-bar">
   <span class="left">CASE STUDY · GH-XXXX</span>
-  <span class="right">36 / 43</span>
+  <span class="right">37 / 43</span>
 </div>
 
-
+---
 layout: center
 class: 'text-center'
 ---
