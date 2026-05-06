@@ -75,20 +75,17 @@ class: 'text-center'
 
 <div class="eyebrow mb-8">// frame · 01</div>
 
-<blockquote class="text-5xl leading-tight">
+<blockquote class="leading-tight" style="font-size:3.5rem;">
 Every AI coding demo<br/>
 you've seen is a tutorial.
 </blockquote>
 
-<p class="text-2xl mt-12 muted">
-Blank repo. One prompt. Magic. Applause.
-</p>
+<div class="muted text-xl leading-relaxed mt-10 space-y-2">
+  <div>Blank repo. One prompt. Magic. Applause.</div>
+  <div>You go home. You try it on your codebase.</div>
+</div>
 
-<p class="text-2xl mt-2 muted">
-You go home. You try it on your codebase.
-</p>
-
-<p class="text-3xl mt-8 cyan glow-cyan font-semibold">
+<p class="text-2xl mt-8 cyan glow-cyan font-semibold">
 It falls over inside thirty minutes.
 </p>
 
@@ -114,7 +111,7 @@ It falls over inside thirty minutes.
 
 ### <span class="muted">[ tutorial ]</span>
 
-<ul class="text-base">
+<ul class="text-sm">
 <li>Blank repo</li>
 <li>One prompt</li>
 <li>Single feature</li>
@@ -125,7 +122,7 @@ It falls over inside thirty minutes.
 <li>No RLS</li>
 </ul>
 
-<div class="absolute bottom-4 right-4 kicker">controlled · curated</div>
+<div class="kicker mt-3">controlled · curated</div>
 
 </div>
 
@@ -133,18 +130,18 @@ It falls over inside thirty minutes.
 
 ### <span class="magenta">[ production ]</span>
 
-<ul class="text-base">
+<ul class="text-sm">
 <li>3-year codebase</li>
 <li>15 parallel features in flight</li>
 <li>RLS on every table</li>
 <li>Multi-stage deploy gate</li>
 <li>5-agent PR review</li>
 <li>Migrations that break prod silently</li>
-<li>Cron jobs whose silent failures cost money</li>
-<li>A team that has to coordinate</li>
+<li>Silent cron failures that cost money</li>
+<li>Team coordination overhead</li>
 </ul>
 
-<div class="absolute bottom-4 right-4 kicker">chaos · entropy</div>
+<div class="kicker mt-3">chaos · entropy</div>
 
 </div>
 
@@ -165,42 +162,42 @@ It falls over inside thirty minutes.
 
 <div class="eyebrow mb-4"><carbon:roadmap /> agenda</div>
 
-# Tonight's path
+# Agenda
 
-<div class="mt-8 space-y-3 text-2xl">
+<div class="mt-6 space-y-2 text-xl">
 
-<div class="flex items-baseline gap-6 hud" style="padding:1rem 1.5rem;">
-  <span class="cyan font-mono text-base">01</span>
+<div class="flex items-baseline gap-5 hud" style="padding:0.7rem 1.2rem;">
+  <span class="cyan font-mono text-sm">01</span>
   <strong class="flex-1">The setup</strong>
-  <span class="muted text-base">CLAUDE.md, hooks, MCPs</span>
+  <span class="muted text-sm">CLAUDE.md, hooks, MCPs</span>
   <span class="badge info">12 min</span>
 </div>
 
-<div class="flex items-baseline gap-6 hud" style="padding:1rem 1.5rem;">
-  <span class="cyan font-mono text-base">02</span>
+<div class="flex items-baseline gap-5 hud" style="padding:0.7rem 1.2rem;">
+  <span class="cyan font-mono text-sm">02</span>
   <strong class="flex-1">The workflow</strong>
-  <span class="muted text-base">issue · bead · worktree · gate · PR</span>
+  <span class="muted text-sm">issue · bead · worktree · gate · PR</span>
   <span class="badge info">15 min</span>
 </div>
 
-<div class="flex items-baseline gap-6 hud" style="padding:1rem 1.5rem;">
-  <span class="cyan font-mono text-base">03</span>
+<div class="flex items-baseline gap-5 hud" style="padding:0.7rem 1.2rem;">
+  <span class="cyan font-mono text-sm">03</span>
   <strong class="flex-1">The agents</strong>
-  <span class="muted text-base">orchestrator + 26 specialists</span>
+  <span class="muted text-sm">orchestrator + 26 specialists</span>
   <span class="badge info">10 min</span>
 </div>
 
-<div class="flex items-baseline gap-6 hud hud-magenta" style="padding:1rem 1.5rem;">
-  <span class="magenta font-mono text-base">04</span>
+<div class="flex items-baseline gap-5 hud hud-magenta" style="padding:0.7rem 1.2rem;">
+  <span class="magenta font-mono text-sm">04</span>
   <strong class="flex-1">Claude Routines</strong>
-  <span class="muted text-base">cron agents · the headline</span>
+  <span class="muted text-sm">cron agents · the headline</span>
   <span class="badge warn">15 min</span>
 </div>
 
-<div class="flex items-baseline gap-6 hud hud-lime" style="padding:1rem 1.5rem;">
-  <span class="lime font-mono text-base">05</span>
+<div class="flex items-baseline gap-5 hud hud-lime" style="padding:0.7rem 1.2rem;">
+  <span class="lime font-mono text-sm">05</span>
   <strong class="flex-1">Take-home</strong>
-  <span class="muted text-base">the toolkit, yours to keep</span>
+  <span class="muted text-sm">the toolkit, yours to keep</span>
   <span class="badge ok">3 min</span>
 </div>
 
@@ -482,21 +479,21 @@ message: |
 
 </div>
 
-<div class="space-y-4">
+<div class="space-y-3">
 
-<div class="hud">
-<h3 class="text-base mb-2"><carbon:cube /> No code to write</h3>
-<p class="text-sm muted">Markdown files. Regex matchers. Action verbs.</p>
+<div class="hud" style="padding:0.7rem 1rem;">
+<h3 class="text-sm mb-1"><carbon:cube /> No code to write</h3>
+<p class="text-xs muted">Markdown files. Regex matchers. Action verbs.</p>
 </div>
 
-<div class="hud">
-<h3 class="text-base mb-2"><carbon:add /> Add a rule = add a file</h3>
-<p class="text-sm muted">No deploy. No restart. Hot-loaded.</p>
+<div class="hud" style="padding:0.7rem 1rem;">
+<h3 class="text-sm mb-1"><carbon:add /> Add a rule = add a file</h3>
+<p class="text-xs muted">No deploy. No restart. Hot-loaded.</p>
 </div>
 
-<div class="hud">
-<h3 class="text-base mb-2"><carbon:fire /> 14 rules in production</h3>
-<p class="text-sm muted">Each one written after a specific incident.</p>
+<div class="hud" style="padding:0.7rem 1rem;">
+<h3 class="text-sm mb-1"><carbon:fire /> 14 rules in production</h3>
+<p class="text-xs muted">Each one written after a specific incident.</p>
 </div>
 
 </div>
@@ -952,25 +949,32 @@ class: 'section text-center'
 
 # 8-agent pipeline · always · sequential
 
-```mermaid
-flowchart LR
-  T[Task] --> A[architect]
-  A --> B[backend]
-  B --> F[frontend]
-  F --> Te[test]
-  Te --> S[security]
-  S --> R[review]
-  R --> D[docs]
-  D --> O[devops]
-  O --> P[PR]
-  style T fill:#0d1117,stroke:#7d8590
-  style P fill:#0d1117,stroke:#7d8590
-```
+<div class="flex items-center gap-2 my-8 text-xs justify-center" style="font-family: var(--font-mono);">
+  <div class="hud" style="padding:0.5rem 0.7rem;">task</div>
+  <span class="dim">→</span>
+  <div class="hud" style="padding:0.5rem 0.7rem;">architect</div>
+  <span class="dim">→</span>
+  <div class="hud" style="padding:0.5rem 0.7rem;">backend</div>
+  <span class="dim">→</span>
+  <div class="hud" style="padding:0.5rem 0.7rem;">frontend</div>
+  <span class="dim">→</span>
+  <div class="hud" style="padding:0.5rem 0.7rem;">test</div>
+  <span class="dim">→</span>
+  <div class="hud" style="padding:0.5rem 0.7rem;">security</div>
+  <span class="dim">→</span>
+  <div class="hud" style="padding:0.5rem 0.7rem;">review</div>
+  <span class="dim">→</span>
+  <div class="hud" style="padding:0.5rem 0.7rem;">docs</div>
+  <span class="dim">→</span>
+  <div class="hud" style="padding:0.5rem 0.7rem;">devops</div>
+  <span class="dim">→</span>
+  <div class="hud" style="padding:0.5rem 0.7rem;">PR</div>
+</div>
 
-<div class="grid grid-cols-3 gap-4 mt-8 text-sm text-center">
-<div class="hud" style="border-color:#ef4444;"><strong class="danger">CSS fix?</strong><br/><span class="muted">8 agents</span></div>
-<div class="hud" style="border-color:#ef4444;"><strong class="danger">Typo?</strong><br/><span class="muted">8 agents</span></div>
-<div class="hud" style="border-color:#ef4444;"><strong class="danger">Quota?</strong><br/><span class="muted">obliterated</span></div>
+<div class="grid grid-cols-3 gap-4 mt-6 text-sm text-center">
+<div class="hud" style="border-color:#ef4444;padding:0.8rem 1rem;"><strong class="danger">CSS fix?</strong><br/><span class="muted">8 agents</span></div>
+<div class="hud" style="border-color:#ef4444;padding:0.8rem 1rem;"><strong class="danger">Typo?</strong><br/><span class="muted">8 agents</span></div>
+<div class="hud" style="border-color:#ef4444;padding:0.8rem 1rem;"><strong class="danger">Quota?</strong><br/><span class="muted">obliterated</span></div>
 </div>
 
 <div class="status-bar">
