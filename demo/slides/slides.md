@@ -222,11 +222,6 @@ class: 'section text-center'
 Operating manual. Hooks. Hookify rules. MCPs.
 </p>
 
-<div class="status-bar">
-  <span class="left">ACT 01 OF 05</span>
-  <span class="right">SETUP</span>
-</div>
-
 <!-- Transition into the setup. -->
 
 ---
@@ -569,11 +564,6 @@ class: 'section text-center'
 <div class="act-number mb-4">02</div>
 <h2 class="text-5xl mb-6 cyan glow-cyan">The workflow</h2>
 <p class="text-2xl muted">issue · bead · worktree · confidence gate · PR</p>
-
-<div class="status-bar">
-  <span class="left">ACT 02 OF 05</span>
-  <span class="right">WORKFLOW</span>
-</div>
 
 ---
 
@@ -937,11 +927,6 @@ class: 'section text-center'
 <h2 class="text-5xl mb-6 cyan glow-cyan">The agents</h2>
 <p class="text-2xl muted">orchestrator · 26 specialists · model economics</p>
 
-<div class="status-bar">
-  <span class="left">ACT 03 OF 05</span>
-  <span class="right">AGENTS</span>
-</div>
-
 ---
 
 <div class="eyebrow mb-4"><carbon:close-large class="danger" /> the old way</div>
@@ -1256,11 +1241,6 @@ class: 'section text-center'
 <div class="act-number mb-4 magenta" style="-webkit-text-stroke-color:#ec4899;background:linear-gradient(180deg,#ec4899 0%,transparent 100%);-webkit-background-clip:text;background-clip:text;">04</div>
 <h2 class="text-5xl mb-6 magenta glow-magenta">Claude Routines</h2>
 <p class="text-2xl muted">cron agents that verify outcomes — not code</p>
-
-<div class="status-bar">
-  <span class="left">ACT 04 OF 05 · HEADLINE</span>
-  <span class="right">ROUTINES</span>
-</div>
 
 ---
 layout: center
@@ -1604,11 +1584,6 @@ class: 'section text-center'
 <div class="act-number mb-4 lime" style="-webkit-text-stroke-color:#a3e635;background:linear-gradient(180deg,#a3e635 0%,transparent 100%);-webkit-background-clip:text;background-clip:text;">05</div>
 <h2 class="text-5xl mb-6 lime">Take-home</h2>
 <p class="text-2xl muted">the toolkit · yours to keep</p>
-
-<div class="status-bar">
-  <span class="left">ACT 05 OF 05</span>
-  <span class="right">TAKE-HOME</span>
-</div>
 
 ---
 
