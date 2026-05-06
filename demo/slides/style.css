@@ -521,8 +521,8 @@ html, body, #app {
 
 /* --- Mermaid: force readable text and proper sizing --- */
 .slidev-layout svg[id^="mermaid-"] {
-  max-height: 70vh !important;
-  width: 95% !important;
+  max-height: 58vh !important;
+  width: 92% !important;
   height: auto !important;
   margin: 1.5rem auto !important;
   display: block !important;
