@@ -839,26 +839,16 @@ tmux new-session -d -s demo "cd $(pwd) && claude"
 
 # Cross-worktree block in action
 
-<div class="hud max-w-4xl mx-auto" style="padding:0;">
-
 ```bash
-# Session A is in worktree GH-3301
-# It tries to edit a file in worktree GH-3302
+# Session A is in worktree GH-3301, tries to edit a file in GH-3302
 
 PreToolUse:Edit hook fires →
 
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-      BLOCKED · CROSS-WORKTREE MODIFICATION
-    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-      Current worktree: ~/repos/x-worktrees/GH-3301
-      Target file:      ~/repos/x-worktrees/GH-3302/file.ts
-
-      You can only modify files within
-      your current worktree.
+  ━━ BLOCKED · CROSS-WORKTREE MODIFICATION ━━
+  Current: ~/repos/x-worktrees/GH-3301
+  Target:  ~/repos/x-worktrees/GH-3302/file.ts
+  You can only modify files within your current worktree.
 ```
-
-</div>
 
 <p class="text-center text-sm muted mt-3">
 What keeps 15 sessions from stomping on each other. <span class="cyan">By default.</span>
