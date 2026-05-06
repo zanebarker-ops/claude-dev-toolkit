@@ -32,30 +32,26 @@ mermaid:
     edgeLabelBackground: '#0a0e1a'
 ---
 
-<div class="absolute inset-0 grid" style="grid-template-rows: auto 1fr auto; padding: 3.5rem 5rem;">
+<div class="eyebrow mb-8">v1.0 // production · safegamer.ai</div>
 
-<div class="eyebrow">v1.0 // production · safegamer.ai</div>
+<h1 class="leading-none mb-6" style="font-size:4.5rem;">
+Production-Grade<br/>
+Claude Code
+</h1>
 
-<div class="flex flex-col justify-center">
-  <h1 class="leading-none mb-6" style="font-size:5rem;">
-    Production-Grade<br/>
-    Claude Code
-  </h1>
+<p class="text-xl muted max-w-3xl leading-snug mb-8">
+How we run a SaaS on AI-assisted development<br/>
+without losing our minds.
+</p>
 
-  <p class="text-2xl muted max-w-3xl leading-snug mb-10">
-    How we run a SaaS on AI-assisted development<br/>
-    without losing our minds.
-  </p>
-
-  <div class="flex gap-3">
-    <span class="badge ok"><carbon:checkmark-filled /> 18 hooks</span>
-    <span class="badge info"><carbon:bot /> 26 agents</span>
-    <span class="badge warn"><carbon:time /> 5 routines</span>
-    <span class="badge ok"><carbon:terminal /> 1 toolkit</span>
-  </div>
+<div class="flex gap-3 mb-12">
+  <span class="badge ok"><carbon:checkmark-filled /> 18 hooks</span>
+  <span class="badge info"><carbon:bot /> 26 agents</span>
+  <span class="badge warn"><carbon:time /> 5 routines</span>
+  <span class="badge ok"><carbon:terminal /> 1 toolkit</span>
 </div>
 
-<div class="flex justify-between items-end">
+<div class="flex justify-between items-end pt-4" style="border-top: 1px solid var(--line-strong);">
   <div>
     <div class="kicker mb-1">repository</div>
     <div class="font-mono text-base cyan">github.com/zanebarker-ops/claude-dev-toolkit</div>
@@ -64,8 +60,6 @@ mermaid:
     <div class="kicker mb-1">presented by</div>
     <div class="font-mono text-base">zane barker · 2026</div>
   </div>
-</div>
-
 </div>
 
 <!--
@@ -591,34 +585,33 @@ class: 'section text-center'
 
 # From issue to verified prod
 
-```mermaid
-flowchart LR
-  A[Issue] --> B[bd<br/>create]
-  B --> C[git<br/>worktree]
-  C --> D{8/10<br/>gate?}
-  D -->|ask| D
-  D -->|yes| F[Code]
-  F --> G[Hooks]
-  G --> I[Lint]
-  I --> J[Push]
-  J --> K[security-<br/>auditor]
-  K --> M[vote-<br/>for-pr]
-  M --> O[PR]
-  O --> Q[Merge]
-  Q --> R[Routine<br/>verifies prod]
+<div class="grid grid-cols-4 gap-3 mt-4 text-xs">
 
-  style D fill:#1a2236,stroke:#f59e0b,stroke-width:2px
-  style K fill:#1a2236,stroke:#ef4899,stroke-width:2px
-  style M fill:#1a2236,stroke:#ef4899,stroke-width:2px
-  style R fill:#1a2236,stroke:#a3e635,stroke-width:2px
-```
+<div class="hud" style="padding:0.6rem 0.8rem;"><span class="cyan font-mono">01</span> <strong>Issue</strong> — gh issue create</div>
+<div class="hud" style="padding:0.6rem 0.8rem;"><span class="cyan font-mono">02</span> <strong>Bead</strong> — bd create -p N</div>
+<div class="hud" style="padding:0.6rem 0.8rem;"><span class="cyan font-mono">03</span> <strong>Worktree</strong> — git worktree add</div>
+<div class="hud" style="padding:0.6rem 0.8rem;border-color:#f59e0b;"><span class="amber font-mono">04</span> <strong>Confidence Gate</strong> — 8/10</div>
+
+<div class="hud" style="padding:0.6rem 0.8rem;"><span class="cyan font-mono">05</span> <strong>Code</strong> — in worktree</div>
+<div class="hud" style="padding:0.6rem 0.8rem;"><span class="cyan font-mono">06</span> <strong>Hooks fire</strong> — every tool call</div>
+<div class="hud" style="padding:0.6rem 0.8rem;"><span class="cyan font-mono">07</span> <strong>Lint + typecheck</strong></div>
+<div class="hud" style="padding:0.6rem 0.8rem;"><span class="cyan font-mono">08</span> <strong>Push</strong> — Vercel preview</div>
+
+<div class="hud hud-magenta" style="padding:0.6rem 0.8rem;"><span class="magenta font-mono">09</span> <strong>security-auditor</strong> ★</div>
+<div class="hud hud-magenta" style="padding:0.6rem 0.8rem;"><span class="magenta font-mono">10</span> <strong>vote-for-pr</strong> · 5 voters</div>
+<div class="hud" style="padding:0.6rem 0.8rem;"><span class="cyan font-mono">11</span> <strong>Open PR</strong> — gh pr create</div>
+<div class="hud" style="padding:0.6rem 0.8rem;"><span class="cyan font-mono">12</span> <strong>Human review</strong> + merge</div>
+
+<div class="hud hud-lime col-span-4" style="padding:0.7rem 1rem;"><span class="lime font-mono">13</span> <strong class="lime">Scheduled routine fires 24-72h post-merge</strong> — verifies the user-visible signal in prod</div>
+
+</div>
 
 <p class="text-center text-base muted mt-4">
   Every box is enforced by a hook, hookify rule, or non-negotiable.
 </p>
 
 <div class="status-bar">
-  <span class="left">DIAGRAM · LIFECYCLE</span>
+  <span class="left">LIFECYCLE · 13 STEPS</span>
   <span class="right">14 / 43</span>
 </div>
 
