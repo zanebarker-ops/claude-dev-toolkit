@@ -1,0 +1,41 @@
+/* Custom styles for the demo deck */
+
+.slidev-layout {
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+.slidev-layout h1 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.slidev-layout h2 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.slidev-code, code {
+  font-feature-settings: 'liga', 'calt', 'ss01', 'ss02';
+}
+
+/* Tighter table styles */
+.slidev-layout table {
+  font-size: 0.85em;
+}
+
+.slidev-layout table th {
+  background: rgba(255, 255, 255, 0.04);
+  font-weight: 600;
+}
+
+/* Mermaid container */
+.mermaid {
+  background: transparent !important;
+}
+
+/* Highlight classes */
+.green { color: #4ade80; }
+.red { color: #f87171; }
+.blue { color: #60a5fa; }
+.amber { color: #fbbf24; }
+.dim { color: #9ca3af; }

@@ -6,8 +6,42 @@ Born from 3000+ hours of real-world development on a production SaaS platform �
 
 ---
 
+## Demo
+
+A complete **60-minute presentation** for showing this toolkit to a technical audience lives in [`demo/`](demo/).
+
+| Asset | Path |
+|---|---|
+| Slidev presentation (~30 slides, 5 acts) | [`demo/slides/`](demo/slides/) |
+| Live demo runbook (commands + fallbacks) | [`demo/runbook.md`](demo/runbook.md) |
+| Full narrator script + Q&A | [`demo/talking-points.md`](demo/talking-points.md) |
+| 5 Mermaid system diagrams | [`demo/diagrams/`](demo/diagrams/) |
+| 3 sanitized RCA case studies | [`demo/case-studies/`](demo/case-studies/) |
+| **5 Claude Routine prompt templates** | [`demo/routines/`](demo/routines/) |
+
+The deck is auto-deployed to GitHub Pages on every push to `master`:
+
+**[zanebarker-ops.github.io/claude-dev-toolkit](https://zanebarker-ops.github.io/claude-dev-toolkit/)**
+
+The arc:
+
+1. **Setup** — CLAUDE.md, hooks, hookify, MCPs *(12 min)*
+2. **Workflow** — issue → bead → worktree → confidence gate → PR *(15 min)*
+3. **Agents** — orchestrator + 26 specialists, model economics *(10 min)*
+4. **Claude Routines** — cron agents that verify outcomes, not code *(15 min, the headline)*
+5. **Take-home** — `git clone && bash install.sh` *(3 min)*
+
+To run locally:
+
+```bash
+cd demo/slides
+npm install
+npm run dev
+```
+
 ## Table of Contents
 
+- [Demo](#demo)
 - [What's Included](#whats-included)
 - [Prerequisites](#prerequisites)
   - [WSL2 Setup (Windows)](#wsl2-setup-windows)
@@ -51,6 +85,7 @@ Born from 3000+ hours of real-world development on a production SaaS platform �
 | **Scripts** | 4 | Lint runner, deploy checker, session manager, ext4 migration |
 | **Templates** | 9 | CLAUDE.md, worktree workflow, model selection, agents, PRP, hookify docs, coordination system |
 | **Config** | 2 | `.oxlintrc.json`, `settings.json` template |
+| **Demo Materials** | 1 deck + 5 routines + 3 case studies + 5 diagrams | Slidev presentation, runbook, talking points, sanitized case studies, routine templates — see [`demo/`](demo/) |
 
 ---
 
