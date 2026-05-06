@@ -88,9 +88,7 @@ you've seen is a tutorial.
 It falls over inside thirty minutes.
 </p>
 
-<div class="absolute bottom-12 left-0 right-0 text-center">
-  <div class="eyebrow inline-block">// today is not that demo</div>
-</div>
+<div class="eyebrow mt-10">// today is not that demo</div>
 
 <!--
 - Pause. Let it land.
