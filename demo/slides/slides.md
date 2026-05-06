@@ -1291,10 +1291,6 @@ It watches production. It verifies deploys.<br/>
 It catches silent failures. It files GitHub issues automatically.
 </p>
 
-<p class="text-base mt-3 cyan glow-cyan">
-Tests verify code. Routines verify <em>outcomes</em>.
-</p>
-
 <div class="status-bar">
   <span class="left">DEFINITION · ROUTINE</span>
   <span class="right">32 / 42</span>
