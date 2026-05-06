@@ -1421,45 +1421,7 @@ Routine 03 fired Monday. Found 6 broken routes. <span class="muted text-sm">→ 
   <span class="right">36 / 43</span>
 </div>
 
----
-layout: center
-class: 'text-center'
----
 
-<div class="eyebrow mb-8"><carbon:warning-alt-filled class="danger" /> case study · welcome email</div>
-
-<div class="grid grid-cols-2 gap-12 my-12">
-
-<div>
-<div class="stat" style="font-size:7rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">2 mo</div>
-<div class="kicker mt-2">duration</div>
-</div>
-
-<div>
-<div class="stat" style="font-size:7rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">0</div>
-<div class="kicker mt-2">welcome emails delivered</div>
-</div>
-
-</div>
-
-<div class="hud max-w-3xl mx-auto" style="padding:1.2rem 1.5rem;">
-<p class="text-base text-left">
-Migration renamed <code>welcome_email_sent</code> → <code>onboarding_state</code>.<br/>
-Cron query still referenced the old column. Supabase wrapped the error in <code>{ data: null }</code>.<br/>
-Handler did <code>if (data && data.length &gt; 0)</code>. Skipped the loop. Returned 200. Forever.
-</p>
-</div>
-
-<p class="text-base mt-4 cyan glow-cyan">
-The fix isn't more discipline. <span class="magenta">The fix is more automation.</span>
-</p>
-
-<div class="status-bar">
-  <span class="left">CASE STUDY · GH-XXXX</span>
-  <span class="right">37 / 43</span>
-</div>
-
----
 layout: center
 class: 'text-center'
 ---
@@ -1471,7 +1433,7 @@ A routine whose only job is to verify<br/>
 that the <span class="cyan">registry of routines</span> is correct.
 </blockquote>
 
-<div class="grid grid-cols-3 gap-4 mt-12 max-w-3xl mx-auto">
+<div class="grid grid-cols-3 gap-4 mt-8 max-w-3xl mx-auto">
 
 <div class="hud" style="padding:1rem;">
 <carbon:document class="cyan text-2xl mb-2" />
@@ -1490,13 +1452,13 @@ that the <span class="cyan">registry of routines</span> is correct.
 
 </div>
 
-<p class="text-2xl mt-12 magenta glow-magenta">
+<p class="text-xl mt-6 magenta glow-magenta">
 The system patrols itself.
 </p>
 
 <div class="status-bar">
   <span class="left">META · SELF-AUDITING</span>
-  <span class="right">38 / 43</span>
+  <span class="right">37 / 42</span>
 </div>
 
 ---
@@ -1537,7 +1499,7 @@ One catch pays for <span class="lime glow-cyan">a year</span> of routines.
 
 <div class="status-bar">
   <span class="left">ROUTINE · ECONOMICS</span>
-  <span class="right">39 / 43</span>
+  <span class="right">38 / 42</span>
 </div>
 
 ---
@@ -1589,7 +1551,7 @@ bash install.sh
 
 <div class="status-bar">
   <span class="left">github.com/zanebarker-ops/claude-dev-toolkit</span>
-  <span class="right">41 / 43</span>
+  <span class="right">40 / 42</span>
 </div>
 
 ---
@@ -1628,7 +1590,7 @@ bash install.sh
 
 <div class="status-bar">
   <span class="left">FIN · RECAP</span>
-  <span class="right">42 / 43</span>
+  <span class="right">41 / 42</span>
 </div>
 
 ---
@@ -1655,7 +1617,7 @@ class: 'text-center'
 </div>
 
 <div class="mt-16 flex justify-center gap-3">
-<span class="badge ok"><carbon:checkmark /> 43 slides</span>
+<span class="badge ok"><carbon:checkmark /> 42 slides</span>
 <span class="badge info"><carbon:terminal /> 1 toolkit</span>
 <span class="badge warn"><carbon:bot /> 5 routines</span>
 </div>
