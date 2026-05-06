@@ -62,21 +62,8 @@ html, body, #app {
   z-index: 0;
 }
 
-/* Scanline texture (very faint) */
-.slidev-layout::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: repeating-linear-gradient(
-    180deg,
-    transparent 0px,
-    transparent 3px,
-    rgba(255, 255, 255, 0.012) 3px,
-    rgba(255, 255, 255, 0.012) 4px
-  );
-  pointer-events: none;
-  z-index: 1;
-}
+/* Scanline texture removed — was creating moiré with text anti-aliasing
+   making characters look doubled at certain font sizes. */
 
 .slidev-layout > * { position: relative; z-index: 2; }
 
