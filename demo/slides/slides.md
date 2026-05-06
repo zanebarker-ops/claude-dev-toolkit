@@ -316,23 +316,18 @@ The rules are heavy. The harness enforces most of them <span class="cyan">automa
 
 # Wiring the harness
 
-```json]},
-      { "matcher": "Bash",
-        "hooks": [{ "command": ".claude/hooks/gitleaks-scan.sh" }]},
-      { "matcher": "Bash",
-        "hooks": [{ "command": ".claude/hooks/check-vercel-before-pr.sh" }]},
-      { "matcher": "Read",
-        "hooks": [{ "command": ".claude/hooks/block-env-read.sh" }]}
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      { "matcher": "Edit|Write", "hooks": [{ "command": "...check-cross-worktree.sh" }] },
+      { "matcher": "Bash",       "hooks": [{ "command": "...gitleaks-scan.sh" }] },
+      { "matcher": "Read",       "hooks": [{ "command": "...block-env-read.sh" }] }
     ],
-    "UserPromptSubmit": [...],
-    "PostToolUse":      [...],
-    "Stop":             [...]
+    "UserPromptSubmit": [ ... ], "PostToolUse": [ ... ], "Stop": [ ... ]
   },
-  "mcpServers": {
-    "axiom":         { ... },
-    "memory-keeper": { ... }
-  },
-  "permissions": { "allow": ["Bash(git:*)", "Bash(gh:*)", ...] }
+  "mcpServers":  { "axiom": { ... }, "memory-keeper": { ... } },
+  "permissions": { "allow": ["Bash(git:*)", "Bash(gh:*)", "..."] }
 }
 ```
 
