@@ -36,7 +36,7 @@ mermaid:
 
 <div class="eyebrow mb-6">v1.0 // production · safegamer.ai</div>
 
-<h1 class="leading-none mb-6" style="font-size:6.5rem;">
+<h1 class="leading-none mb-6" style="font-size:5rem;">
 Production-Grade<br/>
 Claude Code
 </h1>
@@ -1445,17 +1445,17 @@ class: 'text-center'
 <div class="grid grid-cols-3 gap-8 my-12">
 
 <div>
-<div class="stat" style="font-size:9rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">5</div>
+<div class="stat" style="font-size:7rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">5</div>
 <div class="kicker mt-2">days of silence</div>
 </div>
 
 <div>
-<div class="stat" style="font-size:9rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">0</div>
+<div class="stat" style="font-size:7rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">0</div>
 <div class="kicker mt-2">retention emails sent</div>
 </div>
 
 <div>
-<div class="stat" style="font-size:9rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">0</div>
+<div class="stat" style="font-size:7rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">0</div>
 <div class="kicker mt-2">human alerts fired</div>
 </div>
 
@@ -1489,12 +1489,12 @@ class: 'text-center'
 <div class="grid grid-cols-2 gap-12 my-12">
 
 <div>
-<div class="stat" style="font-size:9rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">2 mo</div>
+<div class="stat" style="font-size:7rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">2 mo</div>
 <div class="kicker mt-2">duration</div>
 </div>
 
 <div>
-<div class="stat" style="font-size:9rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">0</div>
+<div class="stat" style="font-size:7rem;background:linear-gradient(135deg,#ef4444 0%,#ec4899 100%);-webkit-background-clip:text;background-clip:text;color:transparent;">0</div>
 <div class="kicker mt-2">welcome emails delivered</div>
 </div>
 

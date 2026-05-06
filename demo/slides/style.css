@@ -507,3 +507,121 @@ html, body, #app {
   gap: 1.5rem;
   margin-top: 1rem;
 }
+
+
+/* ===================================================================
+   v2 fixes — verified against live deploy
+   =================================================================== */
+
+/* --- Mermaid: force readable text and proper sizing --- */
+.slidev-layout svg[id^="mermaid-"] {
+  max-height: 70vh !important;
+  min-width: 60% !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+.slidev-layout svg[id^="mermaid-"] .nodeLabel,
+.slidev-layout svg[id^="mermaid-"] foreignObject *,
+.slidev-layout svg[id^="mermaid-"] .label,
+.slidev-layout svg[id^="mermaid-"] tspan,
+.slidev-layout svg[id^="mermaid-"] text {
+  fill: #e6edf3 !important;
+  color: #e6edf3 !important;
+  font-family: var(--font-mono) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+}
+
+/* Make node fills transparent so border + text dominate */
+.slidev-layout svg[id^="mermaid-"] .node rect,
+.slidev-layout svg[id^="mermaid-"] .node polygon,
+.slidev-layout svg[id^="mermaid-"] .node circle,
+.slidev-layout svg[id^="mermaid-"] .node ellipse,
+.slidev-layout svg[id^="mermaid-"] .node path {
+  fill: rgba(15, 22, 38, 0.85) !important;
+  stroke-width: 1.5px !important;
+}
+
+.slidev-layout svg[id^="mermaid-"] .edgePath path,
+.slidev-layout svg[id^="mermaid-"] .flowchart-link {
+  stroke: var(--cyan) !important;
+  stroke-width: 1.5px !important;
+}
+
+.slidev-layout svg[id^="mermaid-"] .arrowMarkerPath {
+  fill: var(--cyan) !important;
+  stroke: var(--cyan) !important;
+}
+
+.slidev-layout svg[id^="mermaid-"] .cluster rect {
+  fill: rgba(34, 211, 238, 0.04) !important;
+  stroke: rgba(125, 133, 144, 0.5) !important;
+  stroke-dasharray: 4 4 !important;
+}
+
+.slidev-layout svg[id^="mermaid-"] .cluster .nodeLabel,
+.slidev-layout svg[id^="mermaid-"] .cluster text {
+  fill: var(--cyan-bright) !important;
+  font-size: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+}
+
+/* --- Cover slide: stop the title from overlapping footer --- */
+.slidev-layout h1 { font-size: 4.2rem !important; }
+
+/* Per-slide override: when a cover h1 is explicitly sized via inline style,
+   don't let it grow past 5rem on the cover */
+.slidev-layout[class*="cover"] h1[style*="font-size:6.5rem"],
+.slidev-layout[class*="cover"] h1[style*="font-size: 6.5rem"] {
+  font-size: 5rem !important;
+}
+
+/* --- Blockquote: override seriph theme background, make text crisp --- */
+.slidev-layout blockquote,
+.slidev-layout blockquote *,
+.slidev-layout blockquote p {
+  background: transparent !important;
+  background-image: none !important;
+  -webkit-text-fill-color: var(--text) !important;
+  color: var(--text) !important;
+  text-shadow: none !important;
+}
+.slidev-layout blockquote span.cyan,
+.slidev-layout blockquote .cyan {
+  -webkit-text-fill-color: var(--cyan-bright) !important;
+  color: var(--cyan-bright) !important;
+}
+.slidev-layout blockquote span.magenta,
+.slidev-layout blockquote .magenta {
+  -webkit-text-fill-color: var(--magenta) !important;
+  color: var(--magenta) !important;
+}
+
+/* --- Layout: reserve space for status bar at bottom --- */
+.slidev-layout {
+  padding-bottom: 4rem !important;
+}
+
+/* Cover and section don't need status bar reserve */
+.slidev-layout--cover, .slidev-layout--section,
+.slidev-page[data-class~="cover"], .slidev-page[data-class~="section"] {
+  padding-bottom: 3rem !important;
+}
+
+/* --- Eyebrow tag: ensure visible always --- */
+.eyebrow {
+  -webkit-text-fill-color: var(--cyan-bright) !important;
+  color: var(--cyan-bright) !important;
+}
+
+/* --- Stat numbers: ensure gradient survives any theme override --- */
+.stat, .act-number {
+  -webkit-text-fill-color: transparent !important;
+}
+
+/* --- Big inline stats that use gradient inline --- */
+.slidev-layout div[style*="-webkit-background-clip:text"] {
+  -webkit-text-fill-color: transparent !important;
+}
