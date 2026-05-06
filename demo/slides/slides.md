@@ -753,8 +753,8 @@ GH-3303:        1 windows
 </tbody>
 </table>
 
-<div class="hud hud-magenta mt-6 text-center" style="padding:1rem;">
-<p class="text-lg">15 worktrees × every operation =<br/><span class="text-2xl magenta">death on NTFS</span> · <span class="text-2xl lime">trivial on ext4</span></p>
+<div class="hud hud-magenta mt-4 text-center" style="padding:0.7rem;">
+<p class="text-base">15 worktrees × every operation = <span class="text-xl magenta">death on NTFS</span> · <span class="text-xl lime">trivial on ext4</span></p>
 </div>
 
 <div class="status-bar">
@@ -860,8 +860,8 @@ PreToolUse:Edit hook fires →
 
 </div>
 
-<p class="text-center text-base muted mt-6">
-This is what keeps 15 sessions from stomping on each other. <span class="cyan">By default.</span>
+<p class="text-center text-sm muted mt-3">
+What keeps 15 sessions from stomping on each other. <span class="cyan">By default.</span>
 </p>
 
 <div class="status-bar">
@@ -1358,7 +1358,7 @@ Constraints:
 - DO NOT retry deliveries — that is the human's call.
 ```
 
-<p class="text-base muted mt-6 text-center">
+<p class="text-sm muted mt-4 text-center">
 A unit test mocks the destination. A routine <span class="cyan">queries the actual destination.</span>
 </p>
 
