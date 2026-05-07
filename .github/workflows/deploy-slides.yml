@@ -1,12 +1,18 @@
 name: Deploy demo slides to GitHub Pages
 
+# Source for the slides lives in a private repo (zanebarker-ops/toolkit-demo-private).
+# This workflow checks it out at build time using the DEMO_REPO_PAT secret,
+# builds the Slidev SPA, and deploys to the public toolkit's GitHub Pages.
+
 on:
   push:
     branches: [master]
     paths:
-      - 'demo/slides/**'
       - '.github/workflows/deploy-slides.yml'
   workflow_dispatch:
+  # Allow the private demo repo to trigger this workflow via repository_dispatch
+  repository_dispatch:
+    types: [demo-source-updated]
 
 permissions:
   contents: read
@@ -20,27 +26,31 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: demo/slides
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout private demo source
+        uses: actions/checkout@v4
+        with:
+          repository: zanebarker-ops/toolkit-demo-private
+          token: ${{ secrets.DEMO_REPO_PAT }}
+          path: demo-source
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
 
       - name: Install
+        working-directory: demo-source/slides
         run: npm ci --no-audit --no-fund
 
       - name: Build Slidev SPA
+        working-directory: demo-source/slides
         run: npm run build
 
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: demo/slides/dist
+          path: demo-source/slides/dist
 
   deploy:
     needs: build
