@@ -378,7 +378,7 @@ There are two scripts:
 
 | Script | What it does | When to use |
 |---|---|---|
-| **`bootstrap.sh`** | Full host setup: tmux, Node, Claude Code CLI, gh, oxlint, gitleaks, jq, fzf, TPM + 16 plugins, baseline `~/.tmux.conf`, the WSL session launcher, the token-counter status script. Idempotent. | First time on a new machine (WSL / Linux / macOS) |
+| **`bootstrap.sh`** | Full host setup: tmux, Node, Claude Code CLI, gh, oxlint, gitleaks, jq, fzf, TPM + 16 plugins, baseline `~/.tmux.conf`, the WSL session launcher, the token-counter status script, **and the `memory-keeper` MCP server (user-level)**. Idempotent. | First time on a new machine (WSL / Linux / macOS) |
 | **`install.sh`** | Project-level file drop: hooks, commands, settings template, hookify rules, scripts, templates, plugins. | Every time you want the toolkit added to a specific project |
 
 ### Quick paths
@@ -405,6 +405,36 @@ After `bootstrap.sh` finishes:
 1. Run `claude auth login` to authenticate the Claude Code CLI.
 2. (WSL only) Copy the Windows Terminal `settings.json` from [`docs/wsl-tmux-terminal-setup.md`](docs/wsl-tmux-terminal-setup.md) Step 7 into `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json` to expose the 15 named session profiles.
 3. Inside any tmux session, press `prefix + I` (default: `Ctrl-b I`) to fetch all the plugins (`bootstrap.sh` tries to do this automatically, but if it didn't work this is the manual fallback).
+
+### MCP servers configured by `bootstrap.sh`
+
+`bootstrap.sh` also wires up the [`memory-keeper`](https://www.npmjs.com/package/memory-keeper) MCP server at the **user level** (in `~/.claude.json`), so it's available to Claude Code across every project on the box.
+
+```json
+{
+  "mcpServers": {
+    "memory-keeper": {
+      "command": "npx",
+      "args": ["-y", "memory-keeper"]
+    }
+  }
+}
+```
+
+What it does: persists facts between Claude conversations (e.g. "engineer X is on PTO this week", "this repo's lint runner lives at scripts/lint-worktree.sh"). Cross-session memory.
+
+The merge into `~/.claude.json` is **idempotent** — re-running `bootstrap.sh` won't duplicate the entry, and won't touch any other MCP servers you've added manually. The actual `memory-keeper` package is lazy-installed by Claude Code via `npx` the first time you use it; you don't need to `npm install` it yourself.
+
+To add other MCP servers later, edit `~/.claude.json` directly. Common patterns:
+
+```json
+{
+  "mcpServers": {
+    "memory-keeper": { "command": "npx", "args": ["-y", "memory-keeper"] },
+    "my-other-mcp":  { "command": "npx", "args": ["-y", "@some-org/some-mcp"] }
+  }
+}
+```
 
 ### Manual install path
 

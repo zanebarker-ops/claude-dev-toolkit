@@ -11,7 +11,8 @@
 #   7. Installs Tmux Plugin Manager (TPM)
 #   8. Installs the wsl-session.sh launcher to ~/scripts/ (WSL only)
 #   9. Installs the tmux-claude-tokens.sh status script to ~/scripts/
-#   10. Optionally chains into install.sh for the project-level file drop
+#   10. Configures the memory-keeper MCP server in ~/.claude.json (user-level, cross-session memory)
+#   11. Optionally chains into install.sh for the project-level file drop
 #
 # Idempotent — safe to re-run; each step skips if already installed.
 #
@@ -395,6 +396,43 @@ TOKENS_EOF
   info "tmux-claude-tokens.sh installed."
 }
 
+setup_memory_keeper_mcp() {
+  # Idempotently add memory-keeper as a user-level MCP server in ~/.claude.json.
+  # Uses jq to merge instead of overwrite — preserves any existing user config.
+  local cfg="$HOME/.claude.json"
+  if ! command -v jq >/dev/null 2>&1; then
+    warn "jq not found — cannot configure memory-keeper MCP. Install jq and re-run."
+    return
+  fi
+
+  # Bootstrap the file if missing
+  if [ ! -f "$cfg" ]; then
+    info "Creating $cfg with memory-keeper MCP entry..."
+    cat > "$cfg" <<'JSON'
+{
+  "mcpServers": {
+    "memory-keeper": {
+      "command": "npx",
+      "args": ["-y", "memory-keeper"]
+    }
+  }
+}
+JSON
+    return
+  fi
+
+  # File exists — check if memory-keeper already configured
+  if jq -e '.mcpServers."memory-keeper"' "$cfg" >/dev/null 2>&1; then
+    skip "memory-keeper MCP already configured in ~/.claude.json"
+    return
+  fi
+
+  info "Adding memory-keeper to existing ~/.claude.json..."
+  local tmp=$(mktemp)
+  jq '.mcpServers = (.mcpServers // {}) + {"memory-keeper": {"command": "npx", "args": ["-y", "memory-keeper"]}}'      "$cfg" > "$tmp" && mv "$tmp" "$cfg"
+  info "memory-keeper MCP added (will be lazy-installed by Claude Code via npx on first use)"
+}
+
 # ---- platform pipelines ------------------------------------------------------
 
 bootstrap_wsl_or_linux() {
@@ -452,6 +490,9 @@ bootstrap_wsl_or_linux() {
 
   section "Token-counter status script"
   write_tmux_claude_tokens_script
+
+  section "memory-keeper MCP server (user-level)"
+  setup_memory_keeper_mcp
 }
 
 bootstrap_macos() {
@@ -477,6 +518,9 @@ bootstrap_macos() {
 
   section "Token-counter status script"
   write_tmux_claude_tokens_script
+
+  section "memory-keeper MCP server (user-level)"
+  setup_memory_keeper_mcp
 }
 
 # ---- run ---------------------------------------------------------------------
