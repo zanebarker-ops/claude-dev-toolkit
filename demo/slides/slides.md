@@ -835,11 +835,6 @@ Before any code is written, the orchestrator must reach <span class="cyan">8 of 
 <span class="text-base muted">— measured: throwaway implementations dropped 60%</span>
 </p>
 
-<div class="status-bar">
-  <span class="left">QUALITY · GATE</span>
-  <span class="right">20 / 42</span>
-</div>
-
 ---
 
 <div class="eyebrow mb-4"><carbon:play-filled-alt /> live demo · 03</div>
@@ -1208,11 +1203,6 @@ class: 'text-center'
 Total wall-clock: <span class="cyan text-xl">~90s</span>
 </p>
 
-<div class="status-bar">
-  <span class="left">DEMO · /start-task</span>
-  <span class="right">29 / 42</span>
-</div>
-
 ---
 
 <div class="eyebrow mb-4"><carbon:thumbs-up /> vote-for-pr</div>
@@ -1290,11 +1280,6 @@ A Claude agent that runs<br/>
 It watches production. It verifies deploys.<br/>
 It catches silent failures. It files GitHub issues automatically.
 </p>
-
-<div class="status-bar">
-  <span class="left">DEFINITION · ROUTINE</span>
-  <span class="right">32 / 42</span>
-</div>
 
 ---
 
@@ -1465,11 +1450,6 @@ that the <span class="cyan">registry of routines</span> is correct.
 <p class="text-xs">Files an issue when they drift</p>
 </div>
 
-</div>
-
-<div class="status-bar">
-  <span class="left">META · SELF-AUDITING</span>
-  <span class="right">37 / 42</span>
 </div>
 
 ---
