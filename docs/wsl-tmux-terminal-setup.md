@@ -43,7 +43,7 @@ wsl -l -v
 
 Expected output shows `Ubuntu` as the distro at `VERSION  2`. If the version shows `1`, run `wsl --set-version Ubuntu 2`.
 
-If `Ubuntu` is not the distro name on your machine (for example `Ubuntu-24.04`), note the exact name — you will substitute it in Step 6.
+If `Ubuntu` is not the distro name on your machine (for example `Ubuntu-24.04`), note the exact name — you will substitute it in Step 7.
 
 ---
 
@@ -92,7 +92,39 @@ Reload with `tmux source-file ~/.tmux.conf` if a session is already running.
 
 ---
 
-## Step 4 — Create the session launcher script
+## Step 4 — Install Claude Code
+
+The whole point of this setup is to run Claude Code inside each tmux-backed session, so install the CLI now.
+
+```bash
+# Node.js (via nvm — recommended)
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+source ~/.bashrc
+nvm install --lts
+nvm use --lts
+
+# Claude Code CLI
+npm install -g @anthropic-ai/claude-code
+
+# Authenticate
+claude auth login
+# Follow the prompts to log in with your Anthropic account
+```
+
+Verify:
+
+```bash
+claude --version    # should print 2.x.x
+node --version      # should print v20+ or v22+
+```
+
+For the rest of the toolchain (oxlint, gh CLI, gitleaks, jq, beads), see [Required Tools (Linux / WSL)](../README.md#required-tools-linux--wsl) in the main README.
+
+> **Why install Claude before the launcher?** Each tmux session in the next steps will typically run a Claude session. Installing the CLI first means you can drop directly into Claude inside any session without leaving to install it later.
+
+---
+
+## Step 5 — Create the session launcher script
 
 Inside the Ubuntu shell:
 
@@ -156,7 +188,7 @@ The current client should switch to a session named `othersession`. `tmux ls` fr
 
 ---
 
-## Step 5 — Locate the Windows Terminal settings file
+## Step 6 — Locate the Windows Terminal settings file
 
 Windows Terminal stores `settings.json` at:
 
@@ -179,7 +211,7 @@ Copy-Item $wt "$wt.bak"
 
 ---
 
-## Step 6 — Write the new settings.json
+## Step 7 — Write the new settings.json
 
 Replace the contents of `settings.json` with the block below. If your WSL distro name is **not** `Ubuntu`, do a find-and-replace on `-d Ubuntu` to match what `wsl -l -v` shows. If you want to use the default distro instead, change `wsl.exe -d Ubuntu --` to `wsl.exe --`.
 
@@ -263,7 +295,7 @@ Replace each session profile's `guid` value with one of the outputs. The four bu
 
 ---
 
-## Step 7 — Verify
+## Step 8 — Verify
 
 Open Windows Terminal, click the dropdown arrow next to the new tab button, and confirm the 15 session profiles are listed. Open `Session - Main`. You should drop into a tmux session named `main`.
 
@@ -310,7 +342,7 @@ Note: this only affects the working directory of the *first* shell in a newly cr
 
 | Symptom | Likely cause / fix |
 |---|---|
-| `sessions should be nested with care, unset $TMUX to force` | You ran the script from inside an existing tmux session. The updated launcher in Step 4 handles this with `switch-client`. If you see this message, your script is the older version — re-run the Step 4 install block. |
+| `sessions should be nested with care, unset $TMUX to force` | You ran the script from inside an existing tmux session. The updated launcher in Step 5 handles this with `switch-client`. If you see this message, your script is the older version — re-run the Step 5 install block. |
 | Profile opens then closes immediately | Script not executable. Run `chmod +x ~/scripts/wsl-session.sh` inside WSL. |
 | `wsl-session.sh: command not found` | Path wrong, or the variable did not expand. Confirm the JSON uses `bash -lc \"$HOME/...\"` with escaped double quotes, not single quotes. |
 | `There is no distribution with the supplied name` | Distro name mismatch. Run `wsl -l -v`, then update `-d Ubuntu` to match exactly, or remove `-d Ubuntu` to use the default. |
