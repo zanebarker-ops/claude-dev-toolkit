@@ -2,8 +2,6 @@
 
 A portable runbook for setting up a Windows machine with WSL (Ubuntu), tmux, and a Windows Terminal config that exposes 15 named, tmux-backed sessions as separate terminal profiles. All paths are user-agnostic so the same config works on any machine.
 
-> **How this fits with the toolkit.** This runbook is the *base layer* — the OS, the shell multiplexer, and the terminal profiles. It is project-agnostic and only depends on `~/scripts/wsl-session.sh`. The toolkit's [`scripts/claude-session.sh`](../scripts/claude-session.sh) sits *on top* of this layer: it is project-aware and launches Claude Code inside a tmux session for a specific repo/worktree. Use this runbook once per machine to get the 15 sticky terminal tabs; use `claude-session.sh` per-project from inside any of those tabs to start a crash-proof Claude session. See [Crash-Proof Sessions (tmux)](../README.md#crash-proof-sessions-tmux) in the main README for the per-project layer.
-
 ---
 
 ## Goal
@@ -12,7 +10,7 @@ By the end of this runbook the machine will have:
 
 - WSL 2 with Ubuntu installed
 - tmux installed inside Ubuntu
-- A reusable launcher script at `~/scripts/wsl-session.sh` that creates or attaches to a named tmux session
+- A reusable launcher script at `~/scripts/wsl-session.sh` that creates, attaches to, or switches to a named tmux session — even when invoked from inside an existing tmux session
 - A Windows Terminal `settings.json` with 15 profiles (`Session - Main` plus `Session 2` through `Session 15`), each launching its own tmux session via the launcher script
 - No hardcoded usernames, repo paths, or machine-specific references
 
@@ -103,25 +101,36 @@ mkdir -p "$HOME/scripts"
 cat > "$HOME/scripts/wsl-session.sh" <<'EOF'
 #!/usr/bin/env bash
 # wsl-session.sh
-# Launch or attach to a named tmux session.
+# Launch, attach, or switch to a named tmux session.
 # Usage: wsl-session.sh <session-name>
 # Example: wsl-session.sh main
 
 set -euo pipefail
 
 SESSION_NAME="${1:-main}"
-
-# Move to home unless the caller already cd'd somewhere
 cd "$HOME"
 
-# new-session -A: attach if a session with this name exists, otherwise create it
-exec tmux new-session -A -s "$SESSION_NAME"
+if [ -n "${TMUX:-}" ]; then
+    # Already inside tmux - create the session if missing, then switch to it.
+    # This avoids the "sessions should be nested with care" error that
+    # tmux raises when you try to start a new session from inside one.
+    if ! tmux has-session -t "$SESSION_NAME" 2>/dev/null; then
+        tmux new-session -d -s "$SESSION_NAME"
+    fi
+    exec tmux switch-client -t "$SESSION_NAME"
+else
+    # Not inside tmux - attach if a session with this name exists,
+    # otherwise create it. -A is the "attach or create" flag.
+    exec tmux new-session -A -s "$SESSION_NAME"
+fi
 EOF
 
 chmod +x "$HOME/scripts/wsl-session.sh"
 ```
 
-Quick smoke test from Ubuntu:
+### Smoke test (from outside tmux)
+
+If you are currently attached to a tmux session, detach first with `Ctrl-b d`. Then:
 
 ```bash
 "$HOME/scripts/wsl-session.sh" smoketest
@@ -134,6 +143,16 @@ tmux ls
 ```
 
 `smoketest` should be listed. Kill it with `tmux kill-session -t smoketest`.
+
+### Smoke test (from inside tmux)
+
+While attached to any tmux session, run:
+
+```bash
+"$HOME/scripts/wsl-session.sh" othersession
+```
+
+The current client should switch to a session named `othersession`. `tmux ls` from inside it should show both your original session and `othersession`. Switch back with `Ctrl-b s` (interactive session picker) or by re-running the script with the original name.
 
 ---
 
@@ -262,14 +281,14 @@ Should list `main`. Open a new `Session - Main` tab — it attaches to the same 
 
 - `bash -lc "$HOME/..."` rather than a hardcoded `/home/<user>/...` path means no per-machine edits. The `-l` flag runs a login shell so `~/.profile` and `~/.bashrc` execute, picking up `PATH` additions, nvm, pyenv, etc.
 - Single quotes around the commandline string would prevent variable expansion. Using `\"` to embed double quotes inside the JSON string is what makes `$HOME` actually expand inside the WSL bash invocation.
-- `tmux new-session -A -s "$NAME"` is the idempotent "attach or create" pattern. No `if tmux has-session` guard needed.
+- The launcher's `$TMUX` check makes it safe to invoke from inside or outside tmux. Outside tmux, `tmux new-session -A -s "$NAME"` is the idempotent "attach or create" pattern. Inside tmux, `switch-client -t "$NAME"` jumps the current client to the target session, creating it detached first if it doesn't exist — this avoids the "sessions should be nested with care" error.
 - Profile names are intentionally generic so the file is sharable across machines and contexts without revealing project or workload context.
 
 ---
 
 ## Optional extras
 
-**Per-profile starting directories.** If you want a session to always open in a specific path, modify the launcher to switch on the session name, or add per-session scripts. Example tweak inside `wsl-session.sh`:
+**Per-profile starting directories.** If you want a session to always open in a specific path, modify the launcher to switch on the session name. Insert this just after the `cd "$HOME"` line in `wsl-session.sh`:
 
 ```bash
 case "$SESSION_NAME" in
@@ -278,6 +297,8 @@ case "$SESSION_NAME" in
   *)       cd "$HOME" ;;
 esac
 ```
+
+Note: this only affects the working directory of the *first* shell in a newly created session. Once the session exists, the `cd` is skipped on subsequent attaches.
 
 **Custom icons.** Add `"icon": "<path>"` to any profile. For portability, put icon files at a stable Windows path like `%USERPROFILE%\.config\terminal-icons\session.ico` rather than inside a project repo, so the same `settings.json` works without edits across machines.
 
@@ -289,25 +310,10 @@ esac
 
 | Symptom | Likely cause / fix |
 |---|---|
+| `sessions should be nested with care, unset $TMUX to force` | You ran the script from inside an existing tmux session. The updated launcher in Step 4 handles this with `switch-client`. If you see this message, your script is the older version — re-run the Step 4 install block. |
 | Profile opens then closes immediately | Script not executable. Run `chmod +x ~/scripts/wsl-session.sh` inside WSL. |
 | `wsl-session.sh: command not found` | Path wrong, or the variable did not expand. Confirm the JSON uses `bash -lc \"$HOME/...\"` with escaped double quotes, not single quotes. |
 | `There is no distribution with the supplied name` | Distro name mismatch. Run `wsl -l -v`, then update `-d Ubuntu` to match exactly, or remove `-d Ubuntu` to use the default. |
 | `tmux: command not found` | tmux not installed. `sudo apt install -y tmux`. |
 | Sessions do not persist between tab closes | Profile is not going through the launcher. Reopen the profile and run `tmux ls` after detaching to confirm the named session exists. |
 | Windows Terminal fails to load `settings.json` | JSON syntax error. Open `settings.json` and look for the parse error notification at the top of Windows Terminal, or validate with `Get-Content settings.json | ConvertFrom-Json`. |
-
----
-
-## Next: launch Claude Code inside one of these sessions
-
-Once the 15 profiles exist, the toolkit's per-project launcher takes over. Open `Session - Main` (or any numbered tab), `cd` into a repo or worktree, and run:
-
-```bash
-./scripts/claude-session.sh                     # default session for this project
-./scripts/claude-session.sh GH-123-feature      # named session for a worktree
-./scripts/claude-session.sh --list              # list active sessions
-```
-
-That script (in `scripts/claude-session.sh`) auto-detects the project name and worktree, checks prerequisites, and launches Claude Code inside its own tmux session. Two layers of tmux are intentional: the outer layer (this runbook's `wsl-session.sh`) keeps the *terminal tab* sticky; the inner layer (`claude-session.sh`) keeps the *Claude session* alive across IDE crashes. See [Crash-Proof Sessions (tmux)](../README.md#crash-proof-sessions-tmux) for the full pattern.
-
-> **Pro tip.** Map `Session - Main` to your default branch work, `Session 2`–`Session 5` to your active worktrees, `Session 6`–`Session 10` to long-running processes (logs, dev servers, MCP servers, oncall dashboards), and reserve `Session 11`–`Session 15` for ad-hoc throwaway work. Because each tab is a named tmux session, tabs are interchangeable — closing the tab does not kill the work.
