@@ -31,7 +31,7 @@ The arc:
   - [WSL + tmux + Windows Terminal Multi-Session Runbook](#wsl--tmux--windows-terminal-multi-session-runbook)
   - [VS Code + GitHub Setup](#vs-code--github-setup)
   - [Required Tools (Linux / WSL)](#required-tools-linux--wsl)
-  - [Required Tools (macOS)](#required-tools-macos)
+  - [Required Tools (macOS)](#required-tools-macos) — see also [macOS + tmux + iTerm2 runbook](docs/macos-tmux-terminal-setup.md)
   - [Optional Tools](#optional-tools)
 - [Installation](#installation)
 - [Hooks Reference](#hooks-reference)
@@ -341,7 +341,7 @@ brew install jq
 - **Filesystem performance**: macOS native filesystem (APFS) is fast. There's no equivalent of the WSL `ext4` vs `/mnt/c/` issue. Clone repos wherever you like.
 - **Worktrees**: work identically. Convention is still `<project>-worktrees/` as a sibling to your main repo. The toolkit's `enforce-worktree-path.sh` hook honors this.
 - **MCP servers**: install via `npm`/`npx` like on Linux. No platform-specific gotchas.
-- **15-session tmux setup**: same `wsl-claude-session.sh` pattern works — rename to `claude-session.sh` if you prefer (it's just a tmux launcher).
+- **15-session tmux setup**: end-to-end macOS runbook at [`docs/macos-tmux-terminal-setup.md`](docs/macos-tmux-terminal-setup.md) — covers tmux, iTerm2 Dynamic Profiles, and the 15-named-session pattern using the toolkit's `scripts/claude-session.sh`.
 - **Beads (`bd`)**: install per the project's instructions (typically `cargo install` or a release binary). No platform-specific build issues.
 - **Apple Silicon (M-series)**: all tools above run native ARM. No Rosetta needed.
 
