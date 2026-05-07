@@ -8,16 +8,7 @@ Born from 3000+ hours of real-world development on a production SaaS platform â€
 
 ## Demo
 
-A complete **60-minute presentation** for showing this toolkit to a technical audience lives in [`demo/`](demo/).
-
-| Asset | Path |
-|---|---|
-| Slidev presentation (~30 slides, 5 acts) | [`demo/slides/`](demo/slides/) |
-| Live demo runbook (commands + fallbacks) | [`demo/runbook.md`](demo/runbook.md) |
-| Full narrator script + Q&A | [`demo/talking-points.md`](demo/talking-points.md) |
-| 5 Mermaid system diagrams | [`demo/diagrams/`](demo/diagrams/) |
-| 3 sanitized RCA case studies | [`demo/case-studies/`](demo/case-studies/) |
-| **5 Claude Routine prompt templates** | [`demo/routines/`](demo/routines/) |
+A 60-minute Slidev presentation showcasing the toolkit lives in [`demo/slides/`](demo/slides/) (~43 slides, 5 acts).
 
 The deck is auto-deployed to GitHub Pages on every push to `master`:
 
@@ -38,6 +29,8 @@ cd demo/slides
 npm install
 npm run dev
 ```
+
+> Narrator script, runbook, case studies, diagrams, and routine templates live in a private companion repo and are not published here.
 
 ## Table of Contents
 
