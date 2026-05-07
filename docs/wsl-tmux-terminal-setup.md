@@ -124,7 +124,7 @@ set -g status-left "#[fg=#22d3ee,bold] #S #[fg=#7d8590]│ "
 set -g status-right-length 100
 # status-right shows: <claude tokens> | <window count> | <hostname> | <time>
 # The tokens script is wired up in Step 9 (Tmux accessories).
-set -g status-right "#[fg=#a3e635]#(~/scripts/tmux-claude-tokens.sh 2>/dev/null) #[fg=#7d8590]│ #[fg=#67e8f9]#{session_windows}w #[fg=#7d8590]│ #[fg=#ec4899]#H #[fg=#7d8590]│ #[fg=#e6edf3]%H:%M "
+set -g status-right "#[fg=#a3e635]#(~/scripts/tmux-claude-tokens.sh 2>/dev/null) #[fg=#7d8590]│ #[fg=#67e8f9]#{session_windows}w #[fg=#7d8590]│ #[fg=#f59e0b]#{cpu_percentage} #[fg=#7d8590]│ #[fg=#a3e635]#{online_status} #[fg=#7d8590]│ #[fg=#e6edf3]%H:%M "
 set -g window-status-current-style "bg=#22d3ee,fg=#06070d,bold"
 set -g window-status-style "bg=default,fg=#7d8590"
 set -g window-status-format " #I:#W "
@@ -141,6 +141,16 @@ set -g @plugin 'tmux-plugins/tmux-resurrect'
 set -g @plugin 'tmux-plugins/tmux-continuum'
 set -g @plugin 'tmux-plugins/tmux-yank'
 set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+set -g @plugin 'tmux-plugins/tmux-pain-control'
+set -g @plugin 'tmux-plugins/tmux-cpu'
+set -g @plugin 'tmux-plugins/tmux-online-status'
+set -g @plugin 'tmux-plugins/tmux-logging'
+set -g @plugin 'omerxx/tmux-sessionx'
+set -g @plugin 'rickstaa/tmux-notify'
+set -g @plugin 'laktak/extrakto'
+set -g @plugin 'roosta/tmux-fuzzback'
+set -g @plugin 'b0o/tmux-autoreload'
+set -g @plugin 'accessd/tmux-agent-indicator'
 
 # Resurrect: persist sessions across reboots
 set -g @resurrect-capture-pane-contents 'on'
@@ -153,6 +163,21 @@ set -g @continuum-save-interval '15'
 # Prefix highlight (visible cue when prefix is active)
 set -g @prefix_highlight_show_copy_mode 'on'
 set -g @prefix_highlight_show_sync_mode 'on'
+
+# Sessionx: fzf-powered session picker with live previews (prefix+o)
+set -g @sessionx-bind 'o'
+set -g @sessionx-window-mode 'on'
+set -g @sessionx-preview-enabled 'true'
+set -g @sessionx-preview-location 'right'
+set -g @sessionx-preview-ratio '60%'
+
+# Notify: toast when a flagged command finishes (prefix+m to flag)
+set -g @tnotify-verbose 'on'
+set -g @tnotify-sleep-duration '0'
+
+# Extrakto: fzf-pick paths/URLs/SHAs from pane buffer (prefix+tab)
+set -g @extrakto_split_direction 'p'
+set -g @extrakto_grab_area 'window full'
 
 # Initialize TPM (must be the LAST line)
 run '~/.tmux/plugins/tpm/tpm'
@@ -403,13 +428,40 @@ Then inside any tmux session, press `prefix + I` (capital i — that's `Ctrl-b I
 
 The plugins enabled by the baseline config:
 
-| Plugin | What you get |
-|---|---|
-| **tmux-sensible** | A small set of universally-agreed sane defaults (escape-time, history-limit, etc.). Safe baseline. |
-| **tmux-resurrect** | `prefix + Ctrl-s` saves sessions/windows/panes/CWDs/running commands to disk. `prefix + Ctrl-r` restores after a reboot. Survives WSL restarts. |
-| **tmux-continuum** | Auto-save sessions every 15 min and auto-restore on tmux start. Pairs with resurrect. |
-| **tmux-yank** | Better copy-mode. Selecting text in copy mode pipes to `clip.exe` so it lands in the Windows clipboard. |
-| **tmux-prefix-highlight** | Status-bar indicator when prefix key has been pressed and tmux is waiting for a command. Helpful when you forget if you hit prefix. |
+| Plugin | What you get | Why it helps for 15 parallel Claude sessions |
+|---|---|---|
+| **tmux-sensible** | Universally-agreed sane defaults | Safe baseline |
+| **tmux-resurrect** | `prefix+Ctrl-s` save / `prefix+Ctrl-r` restore | Survives WSL restarts — get all 15 sessions back |
+| **tmux-continuum** | Auto-save every 15 min, auto-restore on start | Hands-free session persistence |
+| **tmux-yank** | Selection in copy mode → `clip.exe` (Windows clipboard) | Yank Claude output straight to Windows |
+| **tmux-prefix-highlight** | Status-bar indicator when prefix is active | Visible cue when you forget if you pressed prefix |
+| **tmux-pain-control** | Sane pane navigation/split keybinds (cwd-preserving) | New Claude pane in the same worktree, not `$HOME` |
+| **tmux-cpu** | CPU/memory in status bar | 15 Claude sessions can pin a VM — see it before it crashes |
+| **tmux-online-status** | Network-up indicator | Catch WSL DNS blips before blaming Claude API |
+| **tmux-logging** | `prefix+alt+p` toggles per-pane logging to `~/tmux-logs/` | Capture Claude transcripts you'll want later |
+| **tmux-sessionx** ⭐ | `prefix+o` opens fzf with live previews of every session | The killer feature for "which of my 15 sessions is running X?" |
+| **tmux-notify** ⭐ | Mark pane → toast notification when its command exits | Stop polling 15 panes; get pinged when Claude finishes |
+| **tmux-agent-indicator** ⭐ | Pane border + status-bar icon reflect AI agent state (idle / thinking / awaiting permission) | Purpose-built for Claude/Codex panes — instantly see which are blocked |
+| **extrakto** | `prefix+tab` fzf-pick paths/URLs/SHAs/quotes from buffer | Pull file paths and error messages from Claude output without mouse |
+| **tmux-fuzzback** | `prefix+?` fzf search across scrollback | Find "where did Claude print that migration filename 800 lines ago" |
+| **tmux-autoreload** | Watch `~/.tmux.conf` and reload on save | Saves the `prefix+r` dance while tuning the config |
+
+The ⭐ plugins are the ones you'd miss most after a week. Install all of them.
+
+Most plugins have prerequisites:
+
+```bash
+sudo apt install -y fzf entr bc
+# fzf:  required by tmux-sessionx, extrakto, fuzzback
+# entr: required by tmux-autoreload (file-watcher)
+# bc:   used by the token-counter script for floating-point math
+
+# Optional: native Windows toasts for tmux-notify
+# (without this, notifications fall back to terminal bell + status flash)
+# Download wsl-notify-send.exe from
+#   https://github.com/stuartleeks/wsl-notify-send/releases
+# and put it on your Windows %PATH% (e.g. C:\Users\<you>\bin\)
+```
 
 ### 9b — Token usage per session (the killer feature)
 
