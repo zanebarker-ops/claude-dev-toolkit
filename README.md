@@ -45,6 +45,7 @@ npm run dev
 - [What's Included](#whats-included)
 - [Prerequisites](#prerequisites)
   - [WSL2 Setup (Windows)](#wsl2-setup-windows)
+  - [WSL + tmux + Windows Terminal Multi-Session Runbook](#wsl--tmux--windows-terminal-multi-session-runbook)
   - [VS Code + GitHub Setup](#vs-code--github-setup)
   - [Required Tools (Linux / WSL)](#required-tools-linux--wsl)
   - [Required Tools (macOS)](#required-tools-macos)
@@ -114,6 +115,43 @@ sudo apt update && sudo apt upgrade -y
 wsl --list --verbose
 # Should show your distro with VERSION 2
 ```
+
+### WSL + tmux + Windows Terminal Multi-Session Runbook
+
+Once WSL is up, follow the **end-to-end runbook** in [`docs/wsl-tmux-terminal-setup.md`](docs/wsl-tmux-terminal-setup.md) to finish the workstation setup:
+
+1. Install tmux inside Ubuntu with sane defaults (50k scrollback, mouse on, base-index 1).
+2. Drop a portable launcher at `~/scripts/wsl-session.sh` — a generic `tmux new-session -A -s "$NAME"` wrapper that attaches to a named session if it exists, otherwise creates it.
+3. Replace Windows Terminal's `settings.json` with a config that exposes **15 named profiles** (`Session - Main`, `Session 2` … `Session 15`), each invoking the launcher with its own session name via `wsl.exe -d Ubuntu -- bash -lc "$HOME/scripts/wsl-session.sh <name>"`.
+
+#### Why this is its own runbook
+
+The runbook is **portable across machines** — no hardcoded usernames, repo paths, or per-machine GUIDs that need editing. The pre-generated GUIDs in the doc are unique within a single `settings.json` (which is all Windows Terminal requires); you can paste the file onto any Windows box and it works.
+
+#### How the two layers work together
+
+This toolkit gives you **two complementary tmux layers**:
+
+| Layer | Script | Scope | Purpose |
+|---|---|---|---|
+| **Outer** (terminal-tab layer) | `~/scripts/wsl-session.sh` (from runbook) | Per-machine, project-agnostic | Each Windows Terminal tab opens a *named, sticky* tmux session. Closing the tab does not kill the work. |
+| **Inner** (Claude-session layer) | [`scripts/claude-session.sh`](scripts/claude-session.sh) (in this repo) | Per-project / per-worktree | Inside any tab, launch a tmux session that runs Claude Code for a specific repo/worktree. Survives VS Code crashes. |
+
+A typical workstation layout:
+
+```
+Windows Terminal (15 tabs, each backed by tmux via wsl-session.sh)
+├─ Session - Main      → cd ~/repos/your-app          → ./scripts/claude-session.sh
+├─ Session 2           → cd ~/repos/your-app-worktrees/GH-123-feature → ./scripts/claude-session.sh GH-123-feature
+├─ Session 3           → cd ~/repos/your-app-worktrees/GH-456-bugfix  → ./scripts/claude-session.sh GH-456-bugfix
+├─ Session 4           → tail -f /var/log/dev-server.log  (long-running process)
+├─ Session 5–10        → other worktrees, MCP servers, dashboards
+└─ Session 11–15       → ad-hoc throwaway work
+```
+
+Both layers detach with `Ctrl-b d`. Both attach with `tmux attach -t <name>`. Re-opening a closed tab simply re-attaches to the existing tmux session — your scrollback, processes, and Claude session are all intact.
+
+> **Skip if on macOS / native Linux.** The runbook is Windows-specific. On macOS, just use `scripts/claude-session.sh` directly inside iTerm2 / Terminal — no outer layer needed because closing a tab there does not pose the same fragility.
 
 ### Why WSL ext4? (Clone Into `~/repos/`, Not `/mnt/c/`)
 
@@ -716,7 +754,9 @@ Each session is fully isolated and survives independently.
 
 ### Windows Terminal Profile
 
-Add a one-click launch profile to Windows Terminal:
+You have two options here, depending on how many sessions you want sticky in the terminal dropdown:
+
+**Option A — Single one-click profile** (simplest, good for one project):
 
 1. Open Windows Terminal Settings (`Ctrl+,`)
 2. Click "Add a new profile" -> "New empty profile"
@@ -730,6 +770,10 @@ Add a one-click launch profile to Windows Terminal:
 | Icon | Any icon you like |
 
 4. Save. Now launch Claude sessions from the Windows Terminal dropdown.
+
+**Option B — 15-profile multi-session layout** (recommended if you run multiple worktrees in parallel):
+
+Follow the full runbook at [`docs/wsl-tmux-terminal-setup.md`](docs/wsl-tmux-terminal-setup.md). It replaces `settings.json` with a config that exposes 15 named, tmux-backed tabs (`Session - Main`, `Session 2` … `Session 15`) via a single `~/scripts/wsl-session.sh` launcher. Each tab is an independent tmux session that survives tab-close — perfect for parking a worktree, dev server, or MCP process per tab. See [WSL + tmux + Windows Terminal Multi-Session Runbook](#wsl--tmux--windows-terminal-multi-session-runbook) above for how this layer interacts with `claude-session.sh`.
 
 ### Crash Recovery
 
