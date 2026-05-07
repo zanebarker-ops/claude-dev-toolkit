@@ -30,7 +30,7 @@ Systematically locate:
 - All fallback logic and default values used on failure
 - All places where errors are logged but execution continues
 - All optional chaining or null coalescing that might hide errors
-- **SafeGamer specific**: Supabase error handling (`{ data, error }` patterns)
+- **<your-project> specific**: Supabase error handling (`{ data, error }` patterns)
 
 ### 2. Scrutinize Each Error Handler
 
@@ -60,7 +60,7 @@ For every error handling location, ask:
 - Should this error be propagated to a higher-level handler instead of being caught here?
 - Is the error being swallowed when it should bubble up?
 
-### 3. SafeGamer-Specific Error Handling Patterns
+### 3. Project-Specific Error Handling Patterns
 
 Check for proper handling of:
 
@@ -97,7 +97,7 @@ Look for patterns that hide errors:
 - Fallback chains that try multiple approaches without explaining why
 - Retry logic that exhausts attempts without informing the user
 
-### 5. Validate Against SafeGamer Standards
+### 5. Validate Against Project Standards
 
 Ensure compliance with the project's error handling requirements:
 - Never silently fail in production code

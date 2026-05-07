@@ -12,7 +12,7 @@ conditions:
     pattern: CREATE\s+TABLE|ALTER\s+TABLE.*ADD|DROP\s+TABLE
   - field: new_text
     operator: not_contains
-    pattern: Copyright.*SafeGamer
+    pattern: Copyright.*<your-project>
 ---
 
 ⚠️ **Migration missing documentation header!**
@@ -26,7 +26,7 @@ conditions:
 
 **Template:**
 ```sql
--- Copyright (c) 2026 SafeGamer.ai. All rights reserved.
+-- Copyright (c) 2026 <your-project>.ai. All rights reserved.
 -- [Brief description of what changed] (GH-###)
 --
 -- CONTEXT:

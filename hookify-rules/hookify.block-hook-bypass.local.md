@@ -42,7 +42,7 @@ You should ONLY bypass hooks in these specific scenarios:
 ### If lint/typecheck is failing:
 ```bash
 # FIX the errors, don't bypass them
-cd jetship-saas-boilerplate/apps/web
+cd <your-app>/apps/web
 npx pnpm run lint
 npx pnpm run type-check
 ```

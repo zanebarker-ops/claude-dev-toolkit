@@ -13,7 +13,7 @@ Per CLAUDE.md branch protection rules:
 - **NEVER checkout `main`** - the main repo should always be on `dev`
 
 **Required workflow:**
-1. Create a feature branch: `git worktree add ../safegamer-ai-worktrees/GH-###-description -b feature/GH-###-description dev`
+1. Create a feature branch: `git worktree add ../<repo>-worktrees/GH-###-description -b feature/GH-###-description dev`
 2. Work in the worktree
 3. Create a PR to merge into `dev`
 

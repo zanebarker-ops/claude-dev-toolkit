@@ -6,12 +6,12 @@
 
 | Profile | Model | Weekly Limit | Use For |
 |---------|-------|--------------|---------|
-| **SafeGamer-Sonnet** | Claude Sonnet | Max 100 | Task creation, PRPs, routine work |
-| **SafeGamer-Opus** | Claude Opus | Max 200 | Complex implementations, debugging |
+| **Sonnet-Profile** | Claude Sonnet | Max 100 | Task creation, PRPs, routine work |
+| **Opus-Profile** | Claude Opus | Max 200 | Complex implementations, debugging |
 
 ## Opus 4.6 as Orchestrator
 
-Opus 4.6 is the **primary orchestrator** for all SafeGamer development. It:
+Opus 4.6 is the **primary orchestrator** for all project development. It:
 - Receives the task via `/start-task`
 - Handles infrastructure setup (GH issue, bead, worktree)
 - Runs the Confidence Gate
@@ -61,11 +61,11 @@ Specialist agents (software-architect, backend-developer, etc.) provide domain k
 
 ```bash
 # Good - Uses Sonnet profile
-# [In SafeGamer-Sonnet VS Code profile]
+# [In Sonnet-Profile VS Code profile]
 gh issue create --title "Add logout button" --body "..."
 
 # Bad - Wastes Opus quota on task creation
-# [In SafeGamer-Opus VS Code profile]
+# [In Opus-Profile VS Code profile]
 gh issue create --title "Add logout button" --body "..."
 ```
 

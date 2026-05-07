@@ -1,17 +1,17 @@
-# PR Review Toolkit for SafeGamer
+# PR Review Toolkit for <your-project>
 
-A comprehensive collection of specialized agents for thorough pull request review, customized for SafeGamer's security requirements and development practices.
+A comprehensive collection of specialized agents for thorough pull request review, customized for the project's security requirements and development practices.
 
 ## Overview
 
 This plugin bundles 6 expert review agents that each focus on a specific aspect of code quality. Use them individually for targeted reviews or together for comprehensive PR analysis.
 
-Based on [Anthropic's PR Review Toolkit](https://github.com/anthropics/claude-code/tree/main/plugins/pr-review-toolkit) by Daisy, customized for SafeGamer.
+Based on [Anthropic's PR Review Toolkit](https://github.com/anthropics/claude-code/tree/main/plugins/pr-review-toolkit) by Daisy, customized for <your-project>.
 
 ## Agents
 
 ### 1. code-reviewer
-**Focus**: General code review + SafeGamer security compliance
+**Focus**: General code review + project security compliance
 
 **Analyzes:**
 - CLAUDE.md compliance
@@ -118,7 +118,7 @@ Based on [Anthropic's PR Review Toolkit](https://github.com/anthropics/claude-co
 **Analyzes:**
 - Code clarity and readability
 - Unnecessary complexity
-- JetShip/SafeGamer pattern compliance
+- <your-project> pattern compliance
 
 **When to use:**
 - After passing code review
@@ -157,9 +157,9 @@ Based on [Anthropic's PR Review Toolkit](https://github.com/anthropics/claude-co
 → Triggers silent-failure-hunter
 ```
 
-## SafeGamer Security Checks
+## Project Security Checks
 
-The code-reviewer agent includes SafeGamer-specific security checks:
+The code-reviewer agent includes project-specific security checks:
 
 1. **RLS Policies**: ALL new tables must have Row Level Security enabled
 2. **Auth Middleware**: All API routes must verify authentication
@@ -178,7 +178,7 @@ The code-reviewer agent includes SafeGamer-specific security checks:
 
 ## Installation
 
-This plugin is located at `.claude/plugins/pr-review-toolkit/` in the SafeGamer repository.
+This plugin is located at `.claude/plugins/pr-review-toolkit/` in the project repository.
 
 ## Hooks (Optional)
 
@@ -215,4 +215,4 @@ MIT (based on Anthropic plugin)
 ## Credits
 
 - Original plugin: Daisy (daisy@anthropic.com)
-- SafeGamer customization: SafeGamer Team
+- <your-project> customization: Project Team

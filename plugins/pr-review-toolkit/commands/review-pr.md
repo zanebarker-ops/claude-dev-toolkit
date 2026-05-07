@@ -1,12 +1,12 @@
 ---
-description: "Comprehensive PR review using specialized SafeGamer agents"
+description: "Comprehensive PR review using specialized <your-project> agents"
 argument-hint: "[review-aspects]"
 allowed-tools: ["Bash", "Glob", "Grep", "Read", "Task"]
 ---
 
 # Comprehensive PR Review
 
-Run a comprehensive pull request review using multiple specialized agents, each focusing on a different aspect of code quality and SafeGamer security requirements.
+Run a comprehensive pull request review using multiple specialized agents, each focusing on a different aspect of code quality and project security requirements.
 
 **Review Aspects (optional):** "$ARGUMENTS"
 
@@ -25,7 +25,7 @@ Run a comprehensive pull request review using multiple specialized agents, each 
    - **types** - Analyze type design and invariants (if new types added)
    - **code** - General code review for project guidelines and security
    - **simplify** - Simplify code for clarity and maintainability
-   - **security** - SafeGamer security check (RLS, auth, data exposure)
+   - **security** - project security check (RLS, auth, data exposure)
    - **all** - Run all applicable reviews (default)
 
 3. **Identify Changed Files**
@@ -43,7 +43,7 @@ Run a comprehensive pull request review using multiple specialized agents, each 
    - **If types added/modified**: type-design-analyzer
    - **After passing review**: code-simplifier (polish and refine)
 
-5. **SafeGamer Security Checklist**
+5. **Project Security Checklist**
 
    For any database/API changes, verify:
    - [ ] RLS enabled on new tables
@@ -116,7 +116,7 @@ Run a comprehensive pull request review using multiple specialized agents, each 
 # Simplifies code after passing review
 
 /pr-review-toolkit:review-pr security
-# Focus on SafeGamer security requirements
+# Focus on project security requirements
 ```
 
 **Parallel review:**
@@ -155,7 +155,7 @@ Run a comprehensive pull request review using multiple specialized agents, each 
 **code-simplifier**:
 - Simplifies complex code
 - Improves clarity and readability
-- Applies SafeGamer/JetShip standards
+- Applies <your-project> standards
 - Preserves functionality
 
 ## Tips:

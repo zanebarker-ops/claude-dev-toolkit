@@ -1,6 +1,6 @@
-# Feature PRP Template - SafeGamer.ai
+# Feature PRP Template - <your-project>.ai
 
-Use this template to create a comprehensive Product Requirements Plan for new SafeGamer features.
+Use this template to create a comprehensive Product Requirements Plan for new <your-project> features.
 
 ---
 
@@ -35,10 +35,10 @@ Use this template to create a comprehensive Product Requirements Plan for new Sa
 
 ```bash
 # Create feature branch and worktree
-git worktree add ../safegamer-ai-worktrees/GH-###-feature-name -b feature/GH-###-feature-name dev
+git worktree add ../<repo>-worktrees/GH-###-feature-name -b feature/GH-###-feature-name dev
 
 # Navigate to worktree
-cd ../safegamer-ai-worktrees/GH-###-feature-name
+cd ../<repo>-worktrees/GH-###-feature-name
 ```
 
 ---
@@ -46,7 +46,7 @@ cd ../safegamer-ai-worktrees/GH-###-feature-name
 
 This PRP is executed by Opus 4.6 via `/start-task`. The orchestrator reads this document,
 decides which sections to implement based on task complexity, and invokes specialist agents
-as needed. Phases below are **planning content** � Opus 4.6 may skip, reorder, or parallelize
+as needed. Phases below are **planning content** — Opus 4.6 may skip, reorder, or parallelize
 them based on what the task actually requires.
 
 | Task Size | Which phases Opus 4.6 will use |
@@ -206,10 +206,10 @@ export async function createFeature(formData: FormData) {
 
 ```
 app/(back)/feature/
-├── page.tsx              # Main page (server component)
-├── feature-list.tsx      # List component (client)
-├── feature-form.tsx      # Create/edit form (client)
-└── feature-card.tsx      # Item display (server)
+â”œâ”€â”€ page.tsx              # Main page (server component)
+â”œâ”€â”€ feature-list.tsx      # List component (client)
+â”œâ”€â”€ feature-form.tsx      # Create/edit form (client)
+â””â”€â”€ feature-card.tsx      # Item display (server)
 ```
 
 ### Main Page
@@ -349,7 +349,7 @@ test.describe('Feature', () => {
 
 ### Review Checklist
 
-- [ ] Code follows SafeGamer conventions
+- [ ] Code follows <your-project> conventions
 - [ ] No hardcoded family IDs
 - [ ] TypeScript types properly defined
 - [ ] No console.log in production code
@@ -462,5 +462,5 @@ If issues arise in production:
 
 ---
 
-**Template Version:** 1.1 � Updated for Opus 4.6 intelligent orchestration
+**Template Version:** 1.1 — Updated for Opus 4.6 intelligent orchestration
 **Last Updated:** 2025-12-28
