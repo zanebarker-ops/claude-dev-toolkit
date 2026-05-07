@@ -1,6 +1,6 @@
 # Claude Dev Toolkit
 
-A comprehensive development toolkit for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that enforces quality, security, and workflow discipline across any project. Includes hooks, linting, 23 AI agent prompts, crash-proof sessions, and CI gates.
+A comprehensive development toolkit for [Claude Code](https://docs.anthropic.com/en/docs/claude-code) that enforces quality, security, and workflow discipline across any project. Includes hooks, linting, 26 AI agent prompts, crash-proof sessions, and CI gates.
 
 Born from 3000+ hours of real-world development on a production SaaS platform — every hook and rule exists because something went wrong without it.
 
@@ -46,7 +46,8 @@ npm run dev
 - [Prerequisites](#prerequisites)
   - [WSL2 Setup (Windows)](#wsl2-setup-windows)
   - [VS Code + GitHub Setup](#vs-code--github-setup)
-  - [Required Tools](#required-tools)
+  - [Required Tools (Linux / WSL)](#required-tools-linux--wsl)
+  - [Required Tools (macOS)](#required-tools-macos)
   - [Optional Tools](#optional-tools)
 - [Installation](#installation)
 - [Hooks Reference](#hooks-reference)
@@ -241,9 +242,9 @@ Keep only essentials for stability:
 
 **Avoid** heavy extensions that cause instability (aggressive file watchers, memory-heavy language servers).
 
-### Required Tools
+### Required Tools (Linux / WSL)
 
-Install these in WSL:
+Install these in WSL or any Debian/Ubuntu Linux:
 
 ```bash
 # Node.js (via nvm — recommended)
@@ -272,6 +273,68 @@ sudo apt install tmux
 
 # Git (usually pre-installed)
 sudo apt install git
+```
+
+### Required Tools (macOS)
+
+Same toolchain as Linux/WSL — uses [Homebrew](https://brew.sh) for installs. The full workflow (worktrees, beads, MCP, parallel tmux sessions) works identically on macOS.
+
+```bash
+# Homebrew (skip if already installed)
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Node.js (via nvm — recommended for managing multiple versions)
+brew install nvm
+mkdir -p ~/.nvm
+echo 'export NVM_DIR="$HOME/.nvm"' >> ~/.zshrc
+echo '[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"' >> ~/.zshrc
+source ~/.zshrc
+nvm install --lts
+nvm use --lts
+
+# Claude Code CLI
+npm install -g @anthropic-ai/claude-code
+claude auth login   # follow prompts to authenticate
+
+# oxlint (fast linter)
+npm install -g oxlint
+
+# GitHub CLI
+brew install gh
+gh auth login
+
+# tmux (crash-proof sessions — keeps your Claude sessions alive across IDE/terminal crashes)
+brew install tmux
+
+# Git (usually pre-installed; install latest via brew if needed)
+brew install git
+
+# gitleaks (secret scanning, used by hooks/gitleaks-scan.sh)
+brew install gitleaks
+
+# jq (used by some hooks for JSON parsing)
+brew install jq
+```
+
+#### macOS-specific notes
+
+- **Filesystem performance**: macOS native filesystem (APFS) is fast. There's no equivalent of the WSL `ext4` vs `/mnt/c/` issue. Clone repos wherever you like.
+- **Worktrees**: work identically. Convention is still `<project>-worktrees/` as a sibling to your main repo. The toolkit's `enforce-worktree-path.sh` hook honors this.
+- **MCP servers**: install via `npm`/`npx` like on Linux. No platform-specific gotchas.
+- **15-session tmux setup**: same `wsl-claude-session.sh` pattern works — rename to `claude-session.sh` if you prefer (it's just a tmux launcher).
+- **Beads (`bd`)**: install per the project's instructions (typically `cargo install` or a release binary). No platform-specific build issues.
+- **Apple Silicon (M-series)**: all tools above run native ARM. No Rosetta needed.
+
+```bash
+# Verify everything is wired
+node --version          # → v20+ or v22+
+claude --version        # → 2.x.x
+oxlint --version
+gh --version
+tmux -V
+git --version
+gitleaks version
+jq --version
 ```
 
 ### Optional Tools
@@ -322,6 +385,8 @@ The installer:
 
 Hooks are shell scripts that run automatically before/after Claude Code tool calls. They enforce workflow rules without you having to remember them.
 
+> **Full reference:** [`hooks/README.md`](hooks/README.md) — explains the 4 event types, the block-vs-inform model, per-hook details, customization, debugging.
+
 ### PreToolUse Hooks (run BEFORE a tool executes)
 
 | Hook | Trigger | What It Does |
@@ -368,6 +433,8 @@ Hooks are registered in `.claude/settings.json`. Each hook:
 ## Hookify Rules Reference
 
 Hookify rules are lightweight markdown files that define pattern-matching rules. They complement hooks with simpler, declarative checks.
+
+> **Full reference:** [`hookify-rules/README.md`](hookify-rules/README.md) — full YAML schema, per-rule details, loader wiring, customization.
 
 ### Block Rules (P0 — Critical)
 
