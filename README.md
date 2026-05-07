@@ -374,6 +374,40 @@ npm install -g @covibes/zeroshot
 
 ## Installation
 
+There are two scripts:
+
+| Script | What it does | When to use |
+|---|---|---|
+| **`bootstrap.sh`** | Full host setup: tmux, Node, Claude Code CLI, gh, oxlint, gitleaks, jq, fzf, TPM + 16 plugins, baseline `~/.tmux.conf`, the WSL session launcher, the token-counter status script. Idempotent. | First time on a new machine (WSL / Linux / macOS) |
+| **`install.sh`** | Project-level file drop: hooks, commands, settings template, hookify rules, scripts, templates, plugins. | Every time you want the toolkit added to a specific project |
+
+### Quick paths
+
+```bash
+# Clone the toolkit
+git clone https://github.com/zanebarker-ops/claude-dev-toolkit.git
+cd claude-dev-toolkit
+
+# (1) Brand-new machine — install everything + drop into a project in one go
+./bootstrap.sh /path/to/your-project
+
+# (2) Brand-new machine — just set up the host (run claude auth login after)
+./bootstrap.sh
+
+# (3) Already have tmux/Node/Claude installed — just install the toolkit into a project
+./install.sh /path/to/your-project
+
+# (4) Verify what's already on the box (no install)
+./bootstrap.sh --check
+```
+
+After `bootstrap.sh` finishes:
+1. Run `claude auth login` to authenticate the Claude Code CLI.
+2. (WSL only) Copy the Windows Terminal `settings.json` from [`docs/wsl-tmux-terminal-setup.md`](docs/wsl-tmux-terminal-setup.md) Step 7 into `%LOCALAPPDATA%\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json` to expose the 15 named session profiles.
+3. Inside any tmux session, press `prefix + I` (default: `Ctrl-b I`) to fetch all the plugins (`bootstrap.sh` tries to do this automatically, but if it didn't work this is the manual fallback).
+
+### Manual install path
+
 ```bash
 # Clone the toolkit
 git clone git@github.com:zanebarker-ops/claude-dev-toolkit.git ~/claude-dev-toolkit
