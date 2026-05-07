@@ -1441,28 +1441,28 @@ layout: center
 class: 'text-center'
 ---
 
-<div class="eyebrow mb-8"><carbon:rotate-clockwise-alt /> the meta-routine</div>
+<div class="eyebrow mb-4"><carbon:rotate-clockwise-alt /> the meta-routine</div>
 
-<blockquote class="text-3xl leading-tight max-w-4xl mx-auto">
+<blockquote class="text-2xl leading-tight max-w-4xl mx-auto">
 A routine whose only job is to verify<br/>
 that the <span class="cyan">registry of routines</span> is correct.
 </blockquote>
 
-<div class="grid grid-cols-3 gap-4 mt-8 max-w-3xl mx-auto">
+<div class="grid grid-cols-3 gap-3 mt-4 max-w-3xl mx-auto">
 
-<div class="hud" style="padding:1rem;">
-<carbon:document class="cyan text-2xl mb-2" />
-<p class="text-sm">Reads the registry doc</p>
+<div class="hud" style="padding:0.6rem 0.8rem;">
+<carbon:document class="cyan text-xl mb-1" />
+<p class="text-xs">Reads the registry doc</p>
 </div>
 
-<div class="hud" style="padding:1rem;">
-<carbon:api class="cyan text-2xl mb-2" />
-<p class="text-sm">Queries the live scheduler</p>
+<div class="hud" style="padding:0.6rem 0.8rem;">
+<carbon:api class="cyan text-xl mb-1" />
+<p class="text-xs">Queries the live scheduler</p>
 </div>
 
-<div class="hud" style="padding:1rem;">
-<carbon:warning-alt class="cyan text-2xl mb-2" />
-<p class="text-sm">Files an issue when they drift</p>
+<div class="hud" style="padding:0.6rem 0.8rem;">
+<carbon:warning-alt class="cyan text-xl mb-1" />
+<p class="text-xs">Files an issue when they drift</p>
 </div>
 
 </div>
