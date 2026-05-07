@@ -66,29 +66,100 @@ tmux -V
 
 Confirm a version line prints (e.g. `tmux 3.4`). The `tmux ls` "no such file or directory" message is normal when no sessions are running.
 
-Optional — minimal sane tmux defaults. Create `~/.tmux.conf`:
+Drop in a sensible baseline `~/.tmux.conf`. This covers mouse scroll, sane numbering, vim-style pane navigation, a status bar with session info + clock, and a hook for the optional token-usage indicator (described below).
 
 ```bash
 cat > ~/.tmux.conf <<'EOF'
-# Larger scrollback
-set -g history-limit 50000
-
-# Mouse support
-set -g mouse on
-
-# Start window/pane numbering at 1
-set -g base-index 1
-setw -g pane-base-index 1
-
-# Reload config with prefix + r
-bind r source-file ~/.tmux.conf \; display "Config reloaded"
-
-# Use 256 colors
+# ---- General -----------------------------------------------------------------
+set -g history-limit 50000              # 50k lines of scrollback per pane
+set -g mouse on                         # mouse scroll, click panes/windows, resize
+set -g base-index 1                     # windows start at 1, not 0
+setw -g pane-base-index 1               # panes too
+set -g renumber-windows on              # close window 2, window 3 becomes 2
 set -g default-terminal "screen-256color"
+set -ga terminal-overrides ",xterm-256color:Tc"   # truecolor in modern terminals
+set -sg escape-time 10                  # makes vim feel responsive in tmux
+set -g focus-events on                  # vim auto-reload, etc.
+
+# ---- Reload config quickly ---------------------------------------------------
+bind r source-file ~/.tmux.conf \; display "tmux.conf reloaded"
+
+# ---- Pane navigation (vim-style hjkl) ----------------------------------------
+bind h select-pane -L
+bind j select-pane -D
+bind k select-pane -U
+bind l select-pane -R
+
+# ---- Pane resizing (repeatable) ----------------------------------------------
+bind -r H resize-pane -L 5
+bind -r J resize-pane -D 5
+bind -r K resize-pane -U 5
+bind -r L resize-pane -R 5
+
+# ---- Splits keep CWD ---------------------------------------------------------
+bind '"' split-window -v -c "#{pane_current_path}"
+bind %   split-window -h -c "#{pane_current_path}"
+bind c   new-window      -c "#{pane_current_path}"
+
+# ---- Quick session switcher (prefix + s gives a list) ------------------------
+# Built in: prefix + s
+# Add: prefix + S to detach all OTHER clients on this session (kicks idle tabs)
+bind S detach-client -a
+
+# ---- Sync panes (run same command in every pane of current window) -----------
+bind y setw synchronize-panes \; display "sync: #{?pane_synchronized,ON,OFF}"
+
+# ---- Copy mode: Vim-like, copy to system clipboard via win32yank/clip.exe ----
+setw -g mode-keys vi
+bind -T copy-mode-vi v send-keys -X begin-selection
+bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "clip.exe"
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "clip.exe"
+
+# ---- Status bar --------------------------------------------------------------
+set -g status-interval 5
+set -g status-position bottom
+set -g status-style "bg=#0f1626,fg=#e6edf3"
+set -g status-left-length 40
+set -g status-left "#[fg=#22d3ee,bold] #S #[fg=#7d8590]│ "
+set -g status-right-length 100
+# status-right shows: <claude tokens> | <window count> | <hostname> | <time>
+# The tokens script is wired up in Step 9 (Tmux accessories).
+set -g status-right "#[fg=#a3e635]#(~/scripts/tmux-claude-tokens.sh 2>/dev/null) #[fg=#7d8590]│ #[fg=#67e8f9]#{session_windows}w #[fg=#7d8590]│ #[fg=#ec4899]#H #[fg=#7d8590]│ #[fg=#e6edf3]%H:%M "
+set -g window-status-current-style "bg=#22d3ee,fg=#06070d,bold"
+set -g window-status-style "bg=default,fg=#7d8590"
+set -g window-status-format " #I:#W "
+set -g window-status-current-format " #I:#W "
+
+# ---- Pane borders ------------------------------------------------------------
+set -g pane-border-style "fg=#1a2236"
+set -g pane-active-border-style "fg=#22d3ee"
+
+# ---- Plugins (managed by TPM — see Step 9) -----------------------------------
+set -g @plugin 'tmux-plugins/tpm'
+set -g @plugin 'tmux-plugins/tmux-sensible'
+set -g @plugin 'tmux-plugins/tmux-resurrect'
+set -g @plugin 'tmux-plugins/tmux-continuum'
+set -g @plugin 'tmux-plugins/tmux-yank'
+set -g @plugin 'tmux-plugins/tmux-prefix-highlight'
+
+# Resurrect: persist sessions across reboots
+set -g @resurrect-capture-pane-contents 'on'
+set -g @resurrect-strategy-vim 'session'
+
+# Continuum: auto-save every 15 min, auto-restore on tmux start
+set -g @continuum-restore 'on'
+set -g @continuum-save-interval '15'
+
+# Prefix highlight (visible cue when prefix is active)
+set -g @prefix_highlight_show_copy_mode 'on'
+set -g @prefix_highlight_show_sync_mode 'on'
+
+# Initialize TPM (must be the LAST line)
+run '~/.tmux/plugins/tpm/tpm'
 EOF
 ```
 
-Reload with `tmux source-file ~/.tmux.conf` if a session is already running.
+Reload with `tmux source-file ~/.tmux.conf` if a session is already running. The plugin lines do nothing yet — Step 9 installs TPM and runs them.
 
 ---
 
@@ -318,23 +389,147 @@ Should list `main`. Open a new `Session - Main` tab — it attaches to the same 
 
 ---
 
-## Optional extras
+## Step 9 — Tmux accessories
 
-**Per-profile starting directories.** If you want a session to always open in a specific path, modify the launcher to switch on the session name. Insert this just after the `cd "$HOME"` line in `wsl-session.sh`:
+Quality-of-life additions on top of the baseline `.tmux.conf` from Step 3. All optional but worth it if you're going to live in tmux daily.
+
+### 9a — Install Tmux Plugin Manager (TPM)
+
+```bash
+git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+```
+
+Then inside any tmux session, press `prefix + I` (capital i — that's `Ctrl-b I` by default) to fetch and install the plugins listed in your `.tmux.conf`. They install into `~/.tmux/plugins/`.
+
+The plugins enabled by the baseline config:
+
+| Plugin | What you get |
+|---|---|
+| **tmux-sensible** | A small set of universally-agreed sane defaults (escape-time, history-limit, etc.). Safe baseline. |
+| **tmux-resurrect** | `prefix + Ctrl-s` saves sessions/windows/panes/CWDs/running commands to disk. `prefix + Ctrl-r` restores after a reboot. Survives WSL restarts. |
+| **tmux-continuum** | Auto-save sessions every 15 min and auto-restore on tmux start. Pairs with resurrect. |
+| **tmux-yank** | Better copy-mode. Selecting text in copy mode pipes to `clip.exe` so it lands in the Windows clipboard. |
+| **tmux-prefix-highlight** | Status-bar indicator when prefix key has been pressed and tmux is waiting for a command. Helpful when you forget if you hit prefix. |
+
+### 9b — Token usage per session (the killer feature)
+
+The status-right segment in the baseline config calls `~/scripts/tmux-claude-tokens.sh`. The script reads Claude Code's per-session JSONL transcripts under `~/.claude/projects/` and shows token totals for the most-recently-active session.
+
+Install the script:
+
+```bash
+mkdir -p "$HOME/scripts"
+cat > "$HOME/scripts/tmux-claude-tokens.sh" <<'EOF'
+#!/usr/bin/env bash
+# Sum tokens (input + output + cache create + cache read) from the most
+# recently-modified Claude Code JSONL transcript on this machine.
+# Output format suitable for tmux status-right: "🤖 12.3k"
+set -euo pipefail
+
+# Find the newest .jsonl across all Claude Code projects
+LATEST=$(find "$HOME/.claude/projects" -name '*.jsonl' -type f -printf '%T@ %p
+' 2>/dev/null          | sort -nr | head -1 | awk '{$1=""; print substr($0,2)}')
+
+if [ -z "$LATEST" ] || [ ! -f "$LATEST" ]; then
+  echo "🤖 ─"
+  exit 0
+fi
+
+# jq present? If not, fall back to a coarse line count
+if command -v jq >/dev/null 2>&1; then
+  TOTAL=$(jq -r '
+    [ .message.usage.input_tokens // 0,
+      .message.usage.output_tokens // 0,
+      .message.usage.cache_creation_input_tokens // 0,
+      .message.usage.cache_read_input_tokens // 0 ]
+    | add' "$LATEST" 2>/dev/null     | awk '{sum+=$1} END {printf "%.0f
+", sum+0}')
+else
+  TOTAL=$(wc -l < "$LATEST")  # rough proxy: messages, not tokens
+fi
+
+# Humanize: 12345 -> "12.3k", 1234567 -> "1.2M"
+if [ "${TOTAL:-0}" -ge 1000000 ]; then
+  printf "🤖 %.1fM" "$(echo "$TOTAL / 1000000" | bc -l)"
+elif [ "${TOTAL:-0}" -ge 1000 ]; then
+  printf "🤖 %.1fk" "$(echo "$TOTAL / 1000" | bc -l)"
+else
+  printf "🤖 %s" "$TOTAL"
+fi
+EOF
+chmod +x "$HOME/scripts/tmux-claude-tokens.sh"
+
+# Verify
+"$HOME/scripts/tmux-claude-tokens.sh"
+```
+
+The status bar refreshes every 5 seconds (`status-interval` in the baseline config). Reload tmux with `prefix + r` to pick up the new value.
+
+> **Caveat:** the script reads the *most recently modified* transcript across ALL Claude projects on the box, not the one running inside the specific tmux session you're looking at. If you run multiple Claude sessions in parallel (which is the whole point of this setup), the displayed total is "the most recently active session." For per-session attribution, you'd need to wire each tmux session to a specific project path — see "Per-session token attribution" below.
+
+### 9c — Per-session starting directory
+
+If you want each session to open in a specific path, modify the launcher to switch on the session name. Insert this just after the `cd "$HOME"` line in `~/scripts/wsl-session.sh`:
 
 ```bash
 case "$SESSION_NAME" in
-  infra)   cd "$HOME/repos/infra" ;;
-  notes)   cd "$HOME/notes" ;;
-  *)       cd "$HOME" ;;
+  main)        cd "$HOME/repos/main-project" ;;
+  infra)       cd "$HOME/repos/infra" ;;
+  notes)       cd "$HOME/notes" ;;
+  *)           cd "$HOME" ;;
 esac
 ```
 
 Note: this only affects the working directory of the *first* shell in a newly created session. Once the session exists, the `cd` is skipped on subsequent attaches.
 
-**Custom icons.** Add `"icon": "<path>"` to any profile. For portability, put icon files at a stable Windows path like `%USERPROFILE%\.config\terminal-icons\session.ico` rather than inside a project repo, so the same `settings.json` works without edits across machines.
+### 9d — Per-pane logging (everything you typed, saved to disk)
 
-**Color schemes.** Define entries in the top-level `"schemes"` array, then reference one with `"colorScheme": "<scheme-name>"` inside any profile.
+Useful when something works and you want to copy-paste the exact commands later, or when something failed and you want a trace. `tmux-logging` is a popular plugin for this — add it to the plugin list:
+
+```
+set -g @plugin 'tmux-plugins/tmux-logging'
+```
+
+Then `prefix + alt+p` toggles per-pane logging to `~/tmux-logs/<session>-<window>-<pane>-<timestamp>.log`. `prefix + alt+P` saves the visible scrollback. `prefix + alt+shift+p` clears the pane history.
+
+### 9e — Per-session token attribution (advanced)
+
+If you want each tmux session to show ONLY its own session's token count (not the global most-recent), wire the Claude session ID to the tmux session at launch:
+
+1. Modify `wsl-session.sh` to set `CLAUDE_SESSION_ID` for new tmux sessions when launching Claude
+2. Update `tmux-claude-tokens.sh` to read `tmux show-environment CLAUDE_SESSION_ID` first, fall back to most-recent if unset
+
+This is left as an exercise — Claude Code's per-session metadata format is still evolving and will need adjustment as the CLI changes.
+
+### 9f — Quick keybinding reference
+
+After applying the baseline config + plugins:
+
+| Combo | Effect |
+|---|---|
+| `Ctrl-b` | tmux prefix (default) |
+| `prefix + r` | reload `.tmux.conf` |
+| `prefix + h/j/k/l` | jump pane left/down/up/right |
+| `prefix + H/J/K/L` (repeat) | resize current pane in that direction |
+| `prefix + "` / `prefix + %` | split horizontally / vertically |
+| `prefix + c` | new window (in current path) |
+| `prefix + s` | interactive session picker |
+| `prefix + S` | detach OTHER clients (clean idle attach) |
+| `prefix + y` | toggle synchronize-panes (run-everywhere) |
+| `prefix + d` | detach current client |
+| `prefix + [` | enter copy mode; `v` start, `y` yank to clipboard, `q` quit |
+| `prefix + Ctrl-s` | resurrect: save sessions to disk |
+| `prefix + Ctrl-r` | resurrect: restore from disk |
+| `prefix + I` | TPM: install/update plugins |
+| `prefix + alt-u` | TPM: uninstall removed plugins |
+
+### 9g — Custom Windows Terminal icons
+
+Add `"icon": "<path>"` to any profile in `settings.json`. For portability, put icon files at a stable Windows path like `%USERPROFILE%\.config\terminal-icons\session.ico` rather than inside a project repo.
+
+### 9h — Custom color schemes
+
+Define entries in the top-level `"schemes"` array of `settings.json`, then reference one with `"colorScheme": "<scheme-name>"` inside any profile.
 
 ---
 
