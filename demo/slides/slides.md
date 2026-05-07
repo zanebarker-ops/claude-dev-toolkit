@@ -1467,10 +1467,6 @@ that the <span class="cyan">registry of routines</span> is correct.
 
 </div>
 
-<p class="text-xl mt-6 magenta glow-magenta">
-The system patrols itself.
-</p>
-
 <div class="status-bar">
   <span class="left">META · SELF-AUDITING</span>
   <span class="right">37 / 42</span>
