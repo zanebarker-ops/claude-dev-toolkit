@@ -26,7 +26,7 @@ Payments: Stripe (if applicable)
 Email: [Email provider]
 Automation: n8n on Railway (if applicable)
 AI: OpenAI / Anthropic (if applicable)
-Hosting: Vercel (app), Cloudflare Pages (landing)
+Hosting: [Hosting platform] (app), Cloudflare Pages (landing)
 ```
 
 ## Database Design Patterns

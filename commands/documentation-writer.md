@@ -215,7 +215,7 @@ graph TB
     end
 
     subgraph "Frontend"
-        D[Next.js Dashboard<br/>Vercel]
+        D[Next.js Dashboard<br/>Hosting Platform]
     end
 
     subgraph "Backend"

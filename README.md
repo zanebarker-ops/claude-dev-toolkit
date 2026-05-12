@@ -721,11 +721,10 @@ gh pr create --base dev
 
 ### Compatibility
 
-Works with any CI/CD that reports via GitHub Deployments API:
-- **Vercel** (automatic)
-- **Netlify** (automatic)
+Works with any CI/CD platform that reports via the GitHub Deployments API:
 - **GitHub Actions** (with `actions/deploy-pages` or custom deployment steps)
-- **Railway**, **Render**, etc. (if configured to report deployments)
+- **PaaS providers** with native GitHub integration (automatic)
+- **Container/serverless platforms** that publish deployment statuses (if configured to report deployments)
 
 ---
 
