@@ -18,7 +18,7 @@ conditions:
 
 **Why this is blocked:**
 - Disabling lint rules hides real problems instead of fixing them
-- This caused broken Vercel deployments (GH-644)
+- This caused broken deployments (GH-644)
 - Future developers won't know why rules were disabled
 
 **How to fix properly:**

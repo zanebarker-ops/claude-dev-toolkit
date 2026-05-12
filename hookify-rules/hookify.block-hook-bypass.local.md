@@ -68,7 +68,7 @@ Will fix hook in separate PR."
 ## Previous Incidents
 
 - GH-1094: Used `git -c core.hooksPath=/dev/null` to bypass lint errors instead of fixing them
-- This led to pushing code with unused variables that Vercel CI caught
+- This led to pushing code with unused variables that deployment CI caught
 
 ## Override (Emergency Only)
 

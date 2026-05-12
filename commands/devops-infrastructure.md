@@ -20,7 +20,7 @@ Ensure reliable, secure deployments and infrastructure across hosting providers,
 ```yaml
 # Customize this for your stack
 Dashboard:
-  host: Vercel
+  host: [Hosting platform - e.g., Netlify, Cloudflare Pages, AWS Amplify, etc.]
   production: https://app.[your-domain].com (main branch)
   staging: https://dev.[your-domain].com (dev branch)
   preview: Auto-generated per feature branch
@@ -42,7 +42,7 @@ Email:
 ### Feature Branch Deployment (CI/CD)
 
 ```bash
-# Feature branch deployment (automatic via Vercel/Netlify)
+# Feature branch deployment (automatic via your hosting platform's GitHub integration)
 git push origin feature/GH-###-description
 # → CI/CD creates preview URL automatically
 
@@ -165,7 +165,9 @@ curl -X POST 'https://[your-n8n-host]/api/v1/workflows' \
 
 ```typescript
 // app/layout.tsx
-import { Analytics } from '@vercel/analytics/react'
+// Replace with your analytics provider's React component
+// (e.g., PostHog, Plausible, GA4, your hosting platform's analytics)
+import { Analytics } from '<your-analytics-package>'
 
 export default function RootLayout({ children }) {
   return (

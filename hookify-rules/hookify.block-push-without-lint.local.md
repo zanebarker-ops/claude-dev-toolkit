@@ -30,7 +30,7 @@ scripts/lint-worktree.sh typecheck
 
 ## Why This Rule Exists
 
-- **Vercel CI is expensive** - Don't waste CI cycles catching errors that should be caught locally
+- **Deployment CI is expensive** - Don't waste CI cycles catching errors that should be caught locally
 - **Faster feedback** - Catch errors in seconds locally vs minutes on CI
 - **Rule #2 violation** - This is a mandatory workflow rule (see @docs/reference/standards/workflows.md:13-16)
 
@@ -54,7 +54,7 @@ The git pre-push hook will still validate lint on the actual push.
 
 ## Previous Incidents
 
-- GH-1094: Pushed code with unused variable lint errors, caught by Vercel CI
-- GH-588, GH-589: PRs merged without lint checks caused broken Vercel deployments
+- GH-1094: Pushed code with unused variable lint errors, caught by deployment CI
+- GH-588, GH-589: PRs merged without lint checks caused broken deployments
 
 **Reference:** @docs/reference/standards/workflows.md Section 5b (Pre-PR Checks)

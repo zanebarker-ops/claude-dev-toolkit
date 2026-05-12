@@ -118,12 +118,12 @@ tech_stack:
     provider: "[Resend, SendGrid, Postmark, SES, etc.]"
 
   hosting:
-    app: "[Vercel, Netlify, Railway, Fly.io, AWS, etc.]"
-    automation: "[Railway, Fly.io, etc. - for background workers/n8n]"
+    app: "[PaaS / hosting provider — e.g., Netlify, Railway, Fly.io, AWS, etc.]"
+    automation: "[Background-worker host — e.g., Railway, Fly.io, etc.]"
 
   monitoring:
     error_tracking: "[Sentry, Datadog, built-in, etc.]"
-    analytics: "[Vercel Analytics, PostHog, Mixpanel, etc.]"
+    analytics: "[Web analytics provider — e.g., PostHog, Mixpanel, Plausible, etc.]"
 
   automation:
     workflow_engine: "[n8n, Trigger.dev, custom workers, etc.]"
@@ -236,7 +236,7 @@ Create these 9 development agents as `.claude/commands/[agent-name].md`:
 
 #### 9. DevOps/Infrastructure (`devops-infrastructure.md`)
 **Purpose**: Manages deployments, migrations, and monitoring
-**Must include**: Vercel deployment commands, migration procedure, migration template (with RLS), backup strategy, CI/CD pipeline
+**Must include**: Hosting-platform deployment commands, migration procedure, migration template (with RLS), backup strategy, CI/CD pipeline
 **Customize**: Hosting URLs, database connection details, automation platform config
 
 ---

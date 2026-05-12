@@ -35,7 +35,7 @@ You are an expert test coverage analyst specializing in pull request review for 
 - **E2E Tests**: Located in `<your-app-path>/e2e/`
 - **Test Account**: Uses `admin@example.com` for E2E testing
 - **Playwright**: E2E tests use Playwright framework
-- **Vercel Preview**: Tests run against Vercel preview deployments, not localhost
+- **Preview Deployments**: Tests run against the hosting platform's preview deployments, not localhost
 - **RLS Testing**: Test that RLS policies work (can't access other families' data)
 - **Auth Flow Testing**: Onboarding, login, session handling
 

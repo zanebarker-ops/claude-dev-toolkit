@@ -2,7 +2,8 @@
 # check-deploy.sh - Check CI/CD preview deployment status via GitHub Deployments API
 #
 # Polls the GitHub Deployments API until the deployment succeeds or times out.
-# Works with Vercel, Netlify, or any CI/CD that reports via GitHub Deployments.
+# Works with any hosting platform / CI/CD that reports via GitHub Deployments
+# (e.g., GitHub Actions, Netlify, Cloudflare Pages, PaaS providers with GitHub integration).
 #
 # Usage:
 #   scripts/check-deploy.sh [SHA]

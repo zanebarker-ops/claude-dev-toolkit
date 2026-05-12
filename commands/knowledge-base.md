@@ -88,7 +88,7 @@ Backend:
   Payments: Stripe
 
 Hosting:
-  Dashboard: Vercel
+  Dashboard: [Hosting platform - e.g., Netlify, Cloudflare Pages, AWS Amplify, etc.]
   Database: Supabase Cloud
   Automation: Railway / Fly.io (if applicable)
 
