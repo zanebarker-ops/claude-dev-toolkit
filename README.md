@@ -4,6 +4,8 @@ A comprehensive development toolkit for [Claude Code](https://docs.anthropic.com
 
 Born from 3000+ hours of real-world development on a production SaaS platform — every hook and rule exists because something went wrong without it.
 
+> **Heads up — this toolkit is heavy.** It is tuned for a multi-year, multi-developer SaaS codebase with RLS, migrations, deploy gates, and many parallel worktrees. If your project is smaller — a side project, an internal tool, a non-SaaS app, or anything that doesn't need 26 specialized agents — the full toolkit is overkill. Skip to [Lighter setups for non-SaaS projects](#lighter-setups-for-non-saas-projects) for alternatives (Claude Desktop, the Claude Code VS Code extension, and Claude Cowork) that cover almost every other use case at a fraction of the token cost.
+
 ---
 
 ## Demo
@@ -25,6 +27,7 @@ The arc:
 ## Table of Contents
 
 - [Demo](#demo)
+- [Lighter setups for non-SaaS projects](#lighter-setups-for-non-saas-projects)
 - [What's Included](#whats-included)
 - [Prerequisites](#prerequisites)
   - [WSL2 Setup (Windows)](#wsl2-setup-windows)
@@ -56,6 +59,57 @@ The arc:
 - [Customization Guide](#customization-guide)
 - [Troubleshooting](#troubleshooting)
 - [Uninstall](#uninstall)
+
+---
+
+## Lighter setups for non-SaaS projects
+
+The toolkit in this repo exists because production SaaS at scale needs the full Confidence Gate, multi-agent review, and CI-enforced workflow discipline. **Most projects do not.** If you are not running RLS migrations against prod or coordinating 15 parallel features, one of the following lighter Claude configurations will get you 80%+ of the value with a small fraction of the setup time and token spend.
+
+| Setup | Best for | Install | What you get |
+|---|---|---|---|
+| **Claude Desktop** | Casual coding, scripts, notebooks, anything you'd prompt-and-paste today | [claude.ai/download](https://claude.ai/download) (macOS / Windows) | Native chat app with project memory, file uploads, and MCP server support. No CLI to install. |
+| **Claude Code — VS Code extension** | Side projects, internal tools, single-developer repos | Install **Claude Code** from the [VS Code marketplace](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code) and sign in with your Anthropic account | Inline edits, diff review, and slash commands directly in the editor. No tmux, no hooks, no worktrees required. |
+| **Claude Cowork** | Multi-step *knowledge work* — research, docs, spreadsheets — not just code | Open Claude Desktop on macOS / Windows → click the **Cowork** tab (requires a paid plan: Pro, Max, Team, or Enterprise — see the [setup guide](https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork)) | Agentic, multi-step task execution inside the desktop app — file organization, spreadsheets with formulas, multi-source research synthesis. |
+
+### Pick one in 30 seconds
+
+- **"I just want Claude to help me code in a small repo."** → Install the **Claude Code VS Code extension**.
+- **"I want to chat with Claude about files and have it edit them, no terminal."** → **Claude Desktop**.
+- **"I need Claude to do non-code work — research, documents, spreadsheets — on its own."** → **Claude Cowork** (inside Claude Desktop).
+- **"I'm running a production SaaS with parallel features, migrations, and a deploy gate."** → You are in the right place. Keep reading.
+
+### Recommended extensions and MCP servers (for the lighter setups)
+
+If you go with the **VS Code extension** or **Claude Desktop**, the following extras cover most of what the heavy toolkit gives you, without the operational overhead.
+
+**VS Code extensions worth installing alongside Claude Code:**
+
+- `GitLens` — inline blame and history; replaces several of the heavy toolkit's git workflow hooks.
+- `GitHub Pull Requests` — review and create PRs from the editor; covers what `gh pr` automation does in this toolkit.
+- `Error Lens` — surfaces compile/lint errors inline so Claude sees them in context.
+- `ESLint` / `Prettier` (or your stack's equivalent — `ruff` for Python, `rustfmt` for Rust, etc.) — the lint layer this toolkit's `oxlint` runner duplicates at CI time.
+- `Markdown All in One` — useful if you use `CLAUDE.md` (you should, see below).
+
+**MCP servers worth attaching to Claude Desktop or the VS Code extension:**
+
+- [`filesystem`](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem) — read/write files in a sandboxed directory.
+- [`git`](https://github.com/modelcontextprotocol/servers/tree/main/src/git) — diff, log, blame, and commit from inside Claude.
+- [`github`](https://github.com/modelcontextprotocol/servers/tree/main/src/github) — issues, PRs, and CI status without leaving the chat.
+- `memory-keeper` — persistent project memory across sessions. This repo's [`bootstrap.sh`](bootstrap.sh) installs it at the user level; you can install it standalone too if you only want the memory layer.
+
+**Always do this, even on small projects:** drop a short `CLAUDE.md` at the project root listing the stack, the test command, and one or two "do not do this" rules. Even without any hooks or agents, that one file resolves a surprising share of issues. See [`templates/`](templates/) for a starting point you can trim down.
+
+### When to graduate to the full toolkit
+
+Consider the full toolkit when you start hitting any of these:
+
+- More than ~3 features in flight at once and merges are starting to collide.
+- A production deploy you cannot easily roll back (migrations, RLS, paying users).
+- You're running Claude for hours per day and want hard rails against accidental destructive edits.
+- You need consistent multi-agent PR review on every change.
+
+Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at full burn) only pay off when the alternative is a production incident.
 
 ---
 
