@@ -30,6 +30,7 @@ The arc:
 - [Lighter setups for non-SaaS projects](#lighter-setups-for-non-saas-projects)
 - [What's Included](#whats-included)
 - [Prerequisites](#prerequisites)
+  - [GitHub Account Setup (start here if new to GitHub)](#github-account-setup-start-here-if-new-to-github)
   - [WSL2 Setup (Windows)](#wsl2-setup-windows)
   - [WSL + tmux + Windows Terminal Multi-Session Runbook](#wsl--tmux--windows-terminal-multi-session-runbook)
   - [VS Code + GitHub Setup](#vs-code--github-setup)
@@ -128,6 +129,128 @@ Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at
 ---
 
 ## Prerequisites
+
+### GitHub Account Setup (start here if new to GitHub)
+
+This toolkit's core workflow — `/start-task`, the worktree lifecycle, the CI deploy gate — is built on top of GitHub. Every task begins with `gh issue create`, every change goes through a pull request, and every hook assumes `git` and `gh` are wired up and working.
+
+**If you have only signed up at [github.com](https://github.com) and nothing else, do everything in this section before moving on.** The rest of the prerequisites assume the steps below are complete.
+
+#### What GitHub is, in 30 seconds
+
+- **Repository (repo)** — a folder of code that GitHub stores and version-controls. You will have one per project.
+- **Issue** — a numbered ticket on a repo (e.g. `GH-123`). The toolkit uses issues as the unit of work: one issue, one branch, one worktree, one pull request.
+- **Pull request (PR)** — a proposal to merge one branch into another. The toolkit's CI/deploy gate runs on every PR.
+- **`git`** — the command-line tool that tracks your local changes. **GitHub is not git** — GitHub is the remote service that hosts the repo `git` pushes to.
+- **`gh`** — the official GitHub command-line tool. Lets you create issues, open PRs, and view CI status without leaving the terminal. The toolkit calls `gh` constantly.
+
+#### Step 1 — Create or sign in to your GitHub account
+
+1. Go to [github.com](https://github.com) and sign in. If you don't have an account, click **Sign up** and follow the prompts (free tier is fine).
+2. Verify your email address (check your inbox). Several of the steps below silently fail if your email isn't verified.
+3. Pick a username you're willing to live with — it shows up in every URL and every commit. You can change it later but it breaks every existing link.
+
+#### Step 2 — Create your first repository (via the GitHub website)
+
+You can do this from the CLI later, but for your very first repo it's easier in the browser.
+
+1. Click the **+** icon in the top-right of github.com → **New repository**.
+2. **Repository name** — pick something short and lowercase, e.g. `my-first-project`.
+3. **Description** — optional, one line.
+4. **Public or Private** — Private is fine for learning. You can flip this later.
+5. **Initialize this repository with:** check **Add a README file**. Leave `.gitignore` and license blank for now.
+6. Click **Create repository**.
+
+You should now be looking at `https://github.com/<your-username>/my-first-project` with a single `README.md` file in it. **Bookmark this URL** — you'll need it in Step 5.
+
+#### Step 3 — Confirm Issues are enabled on the repo
+
+The toolkit's `/start-task` command will run `gh issue create` against this repo. If issues are disabled, the workflow fails at step one.
+
+1. On your repo page, click **Settings** (top-right tab).
+2. Scroll to the **Features** section.
+3. Make sure **Issues** is **checked**. (It is on by default for new repos — this is just a sanity check.)
+
+#### Step 4 — Install the GitHub CLI (`gh`)
+
+You need `gh` installed on the same machine where you'll run Claude Code. The full install commands for WSL/Linux and macOS are below in [Required Tools (Linux / WSL)](#required-tools-linux--wsl) and [Required Tools (macOS)](#required-tools-macos). Do that install now, then come back here.
+
+Quick check that it worked:
+
+```bash
+gh --version
+# Should print something like: gh version 2.x.x
+```
+
+#### Step 5 — Authenticate `gh` to your GitHub account
+
+```bash
+gh auth login
+```
+
+You'll be asked a series of questions. Here are the answers for the common case (working against github.com over HTTPS, using a browser to log in — easiest path for a beginner):
+
+| Prompt | Answer |
+|---|---|
+| What account do you want to log into? | **GitHub.com** |
+| What is your preferred protocol for Git operations? | **HTTPS** |
+| Authenticate Git with your GitHub credentials? | **Yes** |
+| How would you like to authenticate GitHub CLI? | **Login with a web browser** |
+
+It will print a one-time code (e.g. `ABCD-1234`) and open your browser. Paste the code, click **Authorize**, and return to the terminal. You should see `✓ Logged in as <your-username>`.
+
+> **Why HTTPS and not SSH?** SSH (set up later in [VS Code + GitHub Setup](#vs-code--github-setup)) is the long-term recommendation for pushing code, but `gh auth login` over HTTPS is the lowest-friction first step. Once SSH keys are in place, you can switch with `gh auth refresh -h github.com -s admin:public_key`.
+
+#### Step 6 — Configure your git identity
+
+Every commit is signed with a name and email. Set these once, globally:
+
+```bash
+git config --global user.name "Your Name"
+git config --global user.email "your@email.com"
+```
+
+Use the **same email address** you registered with GitHub — otherwise commits won't be associated with your GitHub profile (you'll see grey "unknown author" avatars on github.com).
+
+#### Step 7 — Verify the full chain works
+
+Run all four of these. If any fail, fix that step before continuing — every downstream toolkit feature assumes they pass.
+
+```bash
+# 1. gh is authenticated
+gh auth status
+# Expect: "Logged in to github.com as <your-username>"
+
+# 2. You can read your own repos
+gh repo list --limit 5
+# Expect: a list including my-first-project
+
+# 3. You can create an issue (test against the repo you just made)
+gh issue create \
+  --repo <your-username>/my-first-project \
+  --title "Test issue from gh CLI" \
+  --body "If you can read this, gh is wired up correctly."
+# Expect: a URL like https://github.com/<your-username>/my-first-project/issues/1
+
+# 4. You can clone over HTTPS
+cd ~ && mkdir -p repos && cd repos
+git clone https://github.com/<your-username>/my-first-project.git
+cd my-first-project && ls
+# Expect: README.md
+```
+
+Close the test issue afterwards (`gh issue close 1 --repo <your-username>/my-first-project`) — it has served its purpose.
+
+#### What you can skip for now
+
+- **SSH keys** — not strictly required to start. The toolkit works fine over HTTPS. Set these up later via [VS Code + GitHub Setup](#vs-code--github-setup) when you're comfortable.
+- **Organizations / teams** — only needed if you're collaborating with others under a shared GitHub org.
+- **GitHub Actions / CI config** — the toolkit ships its own CI templates; you don't need to author workflows by hand to get started.
+- **Branch protection rules** — recommended later for `main`/`dev`, but the toolkit's confidence gate already enforces most of what branch protection covers.
+
+You're done with the GitHub side. Continue with the platform-specific setup below.
+
+---
 
 ### WSL2 Setup (Windows)
 
