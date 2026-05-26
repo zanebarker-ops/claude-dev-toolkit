@@ -13,7 +13,7 @@ INPUT=$(cat)
 
 # Extract the command from JSON input (read tool_input.command — the
 # location Claude Code uses for PreToolUse:Bash; .command as fallback)
-COMMAND=$(echo "$INPUT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command') or d.get('command',''))" 2>/dev/null || echo "")
+COMMAND=$(echo "$INPUT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command') or d.get('input',{}).get('command') or d.get('command',''))" 2>/dev/null || echo "")
 
 # Check if this is a git commit command
 if echo "$COMMAND" | grep -q "git commit"; then

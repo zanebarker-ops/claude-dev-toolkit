@@ -65,7 +65,7 @@ cp "$TOOLKIT_DIR/commands/"*.md "$TARGET/.claude/commands/"
 for d in "$TOOLKIT_DIR/commands/"*/; do
   [ -d "$d" ] && cp -r "$d" "$TARGET/.claude/commands/"
 done
-cmd_count=$(find "$TARGET/.claude/commands/" -name "*.md" | wc -l)
+cmd_count=$(find "$TARGET/.claude/commands/" -maxdepth 1 -name "*.md" | wc -l)
 info "Commands installed to .claude/commands/ ($cmd_count files)"
 
 section "Installing hookify rules"
