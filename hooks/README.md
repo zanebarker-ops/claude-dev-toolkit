@@ -64,7 +64,8 @@ The model can never bypass a `block`. You don't have to remember the policy — 
 | `security-check.sh` | `PreToolUse:Bash` | Pre-commit checks: RLS on migrations, no service-role keys in client code |
 | `check-ci-before-pr.sh` | `PreToolUse:Bash` | Blocks `gh pr create` unless a CI/CD verification marker file exists |
 | `warn-pr-to-main.sh` | `PreToolUse:Bash` | When opening a PR to `main`/`master`, warns to consider staging branch first |
-| `pre-push-review-reminder` | `PreToolUse:Bash` | Before `git push`, reminds to run review agents |
+
+> **Note:** `pre-push-review-reminder` used to live here but was always a **git** hook (server-side, runs on `git push`), not a Claude Code hook. It now lives in [`git-hooks/`](../git-hooks/) and is installed separately via `bash install-git-hooks.sh /path/to/project`. See the toolkit root README for details.
 
 ### Read protection
 

@@ -560,12 +560,9 @@ npm install -g @covibes/zeroshot
 
 ## Installation
 
-There are two scripts:
-
-| Script | What it does | When to use |
-|---|---|---|
-| **`bootstrap.sh`** | Full host setup: tmux, Node, Claude Code CLI, gh, oxlint, gitleaks, jq, fzf, TPM + 16 plugins, baseline `~/.tmux.conf`, the WSL session launcher, the token-counter status script, **and the `memory-keeper` MCP server (user-level)**. Idempotent. | First time on a new machine (WSL / Linux / macOS) |
-| **`install.sh`** | Project-level file drop: hooks, commands, settings template, hookify rules, scripts, templates, plugins. | Every time you want the toolkit added to a specific project |
+> **Two installers, separate concerns:**
+> - `install.sh` → Claude Code hooks/commands/templates into `.claude/` (per project)
+> - `install-git-hooks.sh` → Optional git hooks (e.g. `pre-push-review-reminder`) into `.git/hooks/` (per clone). Run after `install.sh` if you want them.
 
 ### Quick paths
 
@@ -671,7 +668,7 @@ Hooks are shell scripts that run automatically before/after Claude Code tool cal
 | `gitleaks-scan.sh` | Bash (git commit) | Scans staged files for secrets/credentials via gitleaks |
 | `warn-pr-to-main.sh` | Bash (gh pr create) | Warns when creating a PR directly to main/master |
 | `block-env-read.sh` | Read | Blocks reading .env files to prevent credential exposure |
-| `security-check.sh` | Edit, Write | Flags dangerous patterns (secrets, SQL injection, etc.) |
+| `security-check.sh` | Bash (git commit) | Pre-commit checks: RLS on migrations, no secret keys in client code, auth on API routes |
 | `database-context-injector.sh` | Edit, Write | Adds database schema context when editing SQL files |
 
 ### PostToolUse Hooks (run AFTER a tool executes)
@@ -690,7 +687,7 @@ Hooks are shell scripts that run automatically before/after Claude Code tool cal
 | `remind-success-prompt.sh` | Always | Reminds about success criteria |
 | `qa-review-prompt.sh` | Always | Reminds about QA review before PR |
 | `agent-review-reminder.sh` | Always | Reminds to run review agents before PR |
-| `pre-push-review-reminder` | Bash (git push) | Reminds to run code review before pushing |
+| `pre-push-review-reminder` | **git hook** (not Claude Code) | Reminds to run review skills on `git push` — installed via `install-git-hooks.sh` (see Installation) |
 
 ### How Hooks Work
 

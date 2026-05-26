@@ -54,12 +54,7 @@ section "Installing hooks"
 # Copy only the hook files (skip README); set executable bit for direct
 # invocation by Claude Code (settings.json invokes them as .claude/hooks/foo.sh).
 cp "$TOOLKIT_DIR/hooks/"*.sh "$TARGET/.claude/hooks/"
-# Also pre-push-review-reminder (no .sh extension); explicitly copy + chmod.
-[ -f "$TOOLKIT_DIR/hooks/pre-push-review-reminder" ] && \
-  cp "$TOOLKIT_DIR/hooks/pre-push-review-reminder" "$TARGET/.claude/hooks/"
 chmod +x "$TARGET/.claude/hooks/"*.sh
-[ -f "$TARGET/.claude/hooks/pre-push-review-reminder" ] && \
-  chmod +x "$TARGET/.claude/hooks/pre-push-review-reminder"
 hook_count=$(find "$TARGET/.claude/hooks/" -maxdepth 1 -type f ! -name "README.md" | wc -l)
 info "Hooks installed to .claude/hooks/ ($hook_count files, all executable)"
 
