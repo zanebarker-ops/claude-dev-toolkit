@@ -6,7 +6,7 @@
 set -euo pipefail
 
 INPUT=$(cat)
-COMMAND=$(echo "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('command',''))" 2>/dev/null || echo "")
+COMMAND=$(echo "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command') or d.get('command',''))" 2>/dev/null || echo "")
 
 # Only trigger on gh pr create with --base main or --base master
 if echo "$COMMAND" | grep -qE 'gh pr create' && echo "$COMMAND" | grep -qE '\-\-base (main|master)|\-\-base=(main|master)'; then

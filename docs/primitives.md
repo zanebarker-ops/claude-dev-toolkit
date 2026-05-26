@@ -231,7 +231,7 @@ A real example (the `/start-task` workflow that ships in this toolkit):
 2. **Skills** invoked during the workflow: `/security-auditor`, `/code-reviewer`, `/bug-finder`, `/test-automation`
 3. **Agents** spawned: `Explore` (for deep code search), `Plan` (for architecture decisions)
 4. **MCPs** called: `mcp__memory-keeper__*` (cross-session context), maybe `mcp__github__*` for PR ops
-5. **Hooks** enforcing: `pre-commit-lint.sh` (no lint errors), `check-vercel-before-pr.sh` (no PR without Vercel green), `block-env-read.sh` (no reading `.env` files)
+5. **Hooks** enforcing: `pre-commit-lint.sh` (no lint errors), `check-ci-before-pr.sh` (no PR without Vercel green), `block-env-read.sh` (no reading `.env` files)
 
 The Workflow doesn't *contain* the others — it *coordinates* them.
 
@@ -247,7 +247,7 @@ This is the part most people miss when first wiring up Claude Code.
 - An MCP tool exists — the agent may pick it, may use Bash instead
 
 **Hard enforcement** = a hook physically prevents the wrong action. Examples:
-- `check-vercel-before-pr.sh` returns non-zero on `gh pr create` if Vercel preview hasn't passed
+- `check-ci-before-pr.sh` returns non-zero on `gh pr create` if Vercel preview hasn't passed
 - `check-cross-worktree.sh` blocks Edit/Write on files outside the current worktree
 - `block-env-read.sh` returns deny on `Read` of any `.env` file
 

@@ -119,13 +119,13 @@ Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at
 | Category | Count | Description |
 |----------|-------|-------------|
 | **Hooks** | 18 | Event-driven scripts that enforce workflow rules |
-| **Hookify Rules** | 13 | Markdown-based rules for blocking/warning on patterns |
+| **Hookify Rules** | 15 | Markdown-based rules for blocking/warning on patterns |
 | **Agent Commands** | 26 | Specialized AI agent prompts (`/start-task`, `/security-auditor`, etc.) |
 | **PR Review Toolkit** | 6 agents | Automated multi-agent code review before PRs |
-| **Scripts** | 4 | Lint runner, deploy checker, session manager, ext4 migration |
+| **Scripts** | 4 (installed) | Lint runner, deploy checker, session manager, ext4 migration |
 | **Templates** | 9 | CLAUDE.md, worktree workflow, model selection, agents, PRP, hookify docs, coordination system |
 | **Config** | 2 | `.oxlintrc.json`, `settings.json` template |
-| **Multi-Vendor Review** | 13 files | Codex-based binding review loop (hooks + scripts + lib + verify tests) |
+| **Multi-Vendor Review** | 18 files | Codex-based binding review loop (hooks + scripts + lib + verify tests) |
 
 ---
 
@@ -560,12 +560,9 @@ npm install -g @covibes/zeroshot
 
 ## Installation
 
-There are two scripts:
-
-| Script | What it does | When to use |
-|---|---|---|
-| **`bootstrap.sh`** | Full host setup: tmux, Node, Claude Code CLI, gh, oxlint, gitleaks, jq, fzf, TPM + 16 plugins, baseline `~/.tmux.conf`, the WSL session launcher, the token-counter status script, **and the `memory-keeper` MCP server (user-level)**. Idempotent. | First time on a new machine (WSL / Linux / macOS) |
-| **`install.sh`** | Project-level file drop: hooks, commands, settings template, hookify rules, scripts, templates, plugins. | Every time you want the toolkit added to a specific project |
+> **Two installers, separate concerns:**
+> - `install.sh` → Claude Code hooks/commands/templates into `.claude/` (per project)
+> - `install-git-hooks.sh` → Optional git hooks (e.g. `pre-push-review-reminder`) into `.git/hooks/` (per clone). Run after `install.sh` if you want them.
 
 ### Quick paths
 
@@ -633,12 +630,12 @@ git clone git@github.com:zanebarker-ops/claude-dev-toolkit.git ~/claude-dev-tool
 ```
 
 The installer:
-1. Copies 14 hooks to `.claude/hooks/`
+1. Copies all 18 hooks to `.claude/hooks/` (sets executable bit)
 2. Copies 23 agent commands to `.claude/commands/`
 3. Creates `.claude/settings.json` with hook registrations (won't overwrite existing)
 4. Copies `.oxlintrc.json` to project root (won't overwrite existing)
-5. Copies 3 scripts to `scripts/` (lint, deploy, session manager)
-6. Copies 11 hookify rules to `.claude/` (won't overwrite existing)
+5. Copies 4 scripts to `scripts/` (lint, deploy, session manager)
+6. Copies 15 hookify rules to `.claude/` (won't overwrite existing)
 7. Copies reference templates to `.claude/templates/`
 8. Installs PR review toolkit to `.claude/plugins/`
 9. Generates a starter `CLAUDE.md` (won't overwrite existing)
@@ -671,7 +668,7 @@ Hooks are shell scripts that run automatically before/after Claude Code tool cal
 | `gitleaks-scan.sh` | Bash (git commit) | Scans staged files for secrets/credentials via gitleaks |
 | `warn-pr-to-main.sh` | Bash (gh pr create) | Warns when creating a PR directly to main/master |
 | `block-env-read.sh` | Read | Blocks reading .env files to prevent credential exposure |
-| `security-check.sh` | Edit, Write | Flags dangerous patterns (secrets, SQL injection, etc.) |
+| `security-check.sh` | **opt-in** (Bash, git commit) | Pre-commit checks: RLS on migrations, no secret keys in client code, auth on API routes. **Not registered by default** — checks are tech-stack-specific (Supabase RLS, Next.js API routes). Register manually in `.claude/settings.json` after customizing the script for your project. |
 | `database-context-injector.sh` | Edit, Write | Adds database schema context when editing SQL files |
 
 ### PostToolUse Hooks (run AFTER a tool executes)
@@ -690,7 +687,7 @@ Hooks are shell scripts that run automatically before/after Claude Code tool cal
 | `remind-success-prompt.sh` | Always | Reminds about success criteria |
 | `qa-review-prompt.sh` | Always | Reminds about QA review before PR |
 | `agent-review-reminder.sh` | Always | Reminds to run review agents before PR |
-| `pre-push-review-reminder` | Bash (git push) | Reminds to run code review before pushing |
+| `pre-push-review-reminder` | **git hook** (not Claude Code) | Reminds to run review skills on `git push` — installed via `install-git-hooks.sh` (see Installation) |
 
 ### How Hooks Work
 

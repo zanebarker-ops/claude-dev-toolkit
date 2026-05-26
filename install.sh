@@ -50,13 +50,23 @@ for dir in .claude/hooks .claude/commands .claude/plugins .claude/templates scri
   info "$dir/"
 done
 
-section "Installing hooks (18 files)"
-cp "$TOOLKIT_DIR/hooks/"* "$TARGET/.claude/hooks/"
-info "Hooks installed to .claude/hooks/"
+section "Installing hooks"
+# Copy only the hook files (skip README); set executable bit for direct
+# invocation by Claude Code (settings.json invokes them as .claude/hooks/foo.sh).
+cp "$TOOLKIT_DIR/hooks/"*.sh "$TARGET/.claude/hooks/"
+chmod +x "$TARGET/.claude/hooks/"*.sh
+hook_count=$(find "$TARGET/.claude/hooks/" -maxdepth 1 -type f ! -name "README.md" | wc -l)
+info "Hooks installed to .claude/hooks/ ($hook_count files, all executable)"
 
-section "Installing agent commands (26 files)"
-cp "$TOOLKIT_DIR/commands/"* "$TARGET/.claude/commands/"
-info "Commands installed to .claude/commands/"
+section "Installing agent commands"
+# cp without -r fails on subdirectories (e.g. commands/ux-hcd-designer/).
+# Copy top-level .md files first, then any reference subdirs separately.
+cp "$TOOLKIT_DIR/commands/"*.md "$TARGET/.claude/commands/"
+for d in "$TOOLKIT_DIR/commands/"*/; do
+  [ -d "$d" ] && cp -r "$d" "$TARGET/.claude/commands/"
+done
+cmd_count=$(find "$TARGET/.claude/commands/" -maxdepth 1 -name "*.md" | wc -l)
+info "Commands installed to .claude/commands/ ($cmd_count files)"
 
 section "Installing hookify rules"
 RULES_COPIED=0

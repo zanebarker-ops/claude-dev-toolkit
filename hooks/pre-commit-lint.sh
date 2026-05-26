@@ -2,7 +2,7 @@
 # Claude Code Hook: Run ESLint before git commit
 # This runs before tool execution to catch lint errors before commits
 #
-# Expects a lint script at: scripts/lint-worktree.sh (in the main repo root)
+# Expects a lint script at: scripts/lint-changed.sh (in the main repo root)
 # This script resolves lint tools from the main repo's node_modules,
 # so it works from any worktree without needing a separate install.
 #
@@ -12,7 +12,7 @@
 #   0 - Allow the tool call
 #   2 - Block the tool call (stderr sent to Claude as feedback)
 
-LINT_SCRIPT_NAME="scripts/lint-worktree.sh"
+LINT_SCRIPT_NAME="scripts/lint-changed.sh"
 
 # Read the tool input from stdin
 INPUT=$(cat)
@@ -27,21 +27,21 @@ if echo "$COMMAND" | grep -q "git commit"; then
   LINT_SCRIPT="$MAIN_REPO/$LINT_SCRIPT_NAME"
 
   if [ -f "$LINT_SCRIPT" ]; then
-    echo "Running ESLint check before commit..." >&2
+    echo "Running lint check before commit..." >&2
 
-    LINT_OUTPUT=$("$LINT_SCRIPT" eslint 2>&1)
+    LINT_OUTPUT=$("$LINT_SCRIPT" 2>&1)
     LINT_EXIT=$?
 
     if [ $LINT_EXIT -ne 0 ]; then
       echo "" >&2
       echo "========================================" >&2
-      echo "  BLOCKED: ESLint errors found" >&2
+      echo "  BLOCKED: Lint errors found" >&2
       echo "========================================" >&2
       echo "" >&2
       echo "$LINT_OUTPUT" >&2
       echo "" >&2
       echo "  Fix the errors above before committing." >&2
-      echo "  Run: $LINT_SCRIPT eslint --fix" >&2
+      echo "  Run: $LINT_SCRIPT --fix" >&2
       echo "" >&2
       exit 2
     fi
