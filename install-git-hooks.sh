@@ -32,31 +32,23 @@ if [ ! -d "$TARGET" ]; then
   exit 1
 fi
 
-# Resolve the git hooks directory. This must be the worktree's .git/hooks/
-# OR the shared hooks dir if core.hooksPath is set.
-GITDIR=$(cd "$TARGET" && git rev-parse --git-dir 2>/dev/null || echo "")
-if [ -z "$GITDIR" ]; then
+# Resolve the git hooks directory the way git itself would. Use
+# `git rev-parse --git-path hooks` instead of `--git-dir + /hooks` because:
+# - For LINKED WORKTREES, --git-dir returns .git/worktrees/<name> (per-worktree
+#   admin), but git reads hooks from the COMMON hooks path shared with the
+#   main worktree. --git-path hooks resolves to the right one.
+# - It also honors core.hooksPath when set, so we don't need to handle that
+#   special case ourselves.
+if ! (cd "$TARGET" && git rev-parse --git-dir >/dev/null 2>&1); then
   error "Target is not a git repo: $TARGET"
   exit 1
 fi
-
-# Absolute path (git rev-parse --git-dir returns relative)
-GITDIR=$(cd "$TARGET" && cd "$GITDIR" && pwd)
-
-# Respect core.hooksPath if set — git ignores .git/hooks/ when this is
-# configured. Resolve relative to the target worktree so the path is correct
-# whether it's absolute or relative.
-CUSTOM_HOOKS_PATH=$(cd "$TARGET" && git config --get core.hooksPath 2>/dev/null || true)
-if [ -n "$CUSTOM_HOOKS_PATH" ]; then
-  # If absolute, use as-is; otherwise resolve relative to TARGET.
-  case "$CUSTOM_HOOKS_PATH" in
-    /*) HOOKS_DIR="$CUSTOM_HOOKS_PATH" ;;
-    *)  HOOKS_DIR="$TARGET/$CUSTOM_HOOKS_PATH" ;;
-  esac
-  HOOKS_DIR=$(cd "$HOOKS_DIR" 2>/dev/null && pwd || echo "$HOOKS_DIR")
-else
-  HOOKS_DIR="$GITDIR/hooks"
-fi
+HOOKS_DIR_REL=$(cd "$TARGET" && git rev-parse --git-path hooks 2>/dev/null)
+# --git-path returns a path relative to the worktree; resolve to absolute.
+case "$HOOKS_DIR_REL" in
+  /*) HOOKS_DIR="$HOOKS_DIR_REL" ;;
+  *)  HOOKS_DIR="$TARGET/$HOOKS_DIR_REL" ;;
+esac
 mkdir -p "$HOOKS_DIR"
 
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
@@ -78,14 +70,35 @@ if [ ! -f "$SRC" ]; then
 fi
 
 if [ -f "$DEST" ] && ! cmp -s "$SRC" "$DEST"; then
-  warn "$DEST already exists and differs from the toolkit version."
-  warn "Backed up existing hook to $DEST.backup"
-  cp "$DEST" "$DEST.backup"
+  # An existing pre-push hook is present and differs from the toolkit version.
+  # Refuse to overwrite — could silently disable Husky, custom CI checks, etc.
+  # User must explicitly remove or chain.
+  error "Existing pre-push hook found at $DEST (differs from the toolkit version)."
+  echo "" >&2
+  echo "  This installer will NOT overwrite an existing pre-push hook." >&2
+  echo "" >&2
+  echo "  Options:" >&2
+  echo "    A) Remove the existing hook (if you don't need it):" >&2
+  echo "         rm $DEST" >&2
+  echo "         bash $0 $TARGET" >&2
+  echo "" >&2
+  echo "    B) Chain manually (run both hooks): edit $DEST and add this" >&2
+  echo "       at the end (or at the top, depending on desired order):" >&2
+  echo "         bash $SRC" >&2
+  echo "" >&2
+  echo "    C) Use a hook framework like Husky or pre-commit (recommended" >&2
+  echo "       for projects that have multiple hooks)." >&2
+  echo "" >&2
+  exit 1
 fi
 
-cp "$SRC" "$DEST"
-chmod +x "$DEST"
-info "Installed pre-push-review-reminder → $DEST"
+if [ -f "$DEST" ] && cmp -s "$SRC" "$DEST"; then
+  info "$DEST already matches the toolkit version — skipping."
+else
+  cp "$SRC" "$DEST"
+  chmod +x "$DEST"
+  info "Installed pre-push-review-reminder → $DEST"
+fi
 
 echo ""
 echo -e "${GREEN}Done.${NC} Git pre-push hook is active for this repo."
