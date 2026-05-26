@@ -223,7 +223,7 @@ cmd_codex_classification() {
 #   codex run` returns the whole thing. For `bash -lc '…'` wrappers, descends
 #   one level into the quoted body. Empty output (return 1) if no spending sub.
 #
-#   GH-3590: scopes task-id extraction to the codex sub-command rather than the
+#   scopes task-id extraction to the codex sub-command rather than the
 #   whole compound — `cd /tmp/T-99 && codex run T-42` must yield T-42, not T-99,
 #   when grepped for `T-[0-9]+`.
 cmd_codex_extract_subcmd() {

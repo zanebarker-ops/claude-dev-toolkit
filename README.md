@@ -820,7 +820,7 @@ A plugin with 6 specialized review agents that run before PR creation.
 
 A binding-review layer that adds OpenAI **Codex** as an independent **cross-vendor** reviewer of your Claude Code work. Claude runs your existing workflow end-to-end (plan, implement, your review skills); Codex performs **one final binding review** on the complete PR before merge.
 
-> **Why this matters:** Same-vendor review has blind spots. When Claude's review skills (`bug-finder`, `code-reviewer`, `security-auditor` — same model, same training, same priors) approve a PR, they tend to miss the same classes of bug. A different vendor with different priors catches those gaps. In the project that produced this code, 18 Claude-skill reviews across 6 PRs missed a regex bug that one Codex review (~65s, $0 on Pro plan) caught immediately.
+> **Why this matters:** Same-vendor review has blind spots. When Claude's review skills (`bug-finder`, `code-reviewer`, `security-auditor` — same model, same training, same priors) approve a PR, they tend to miss the same classes of bug. A different vendor with different priors catches those gaps. A single Codex review (~65s, $0 on Pro plan) is enough to surface real bugs that same-vendor reviews missed.
 
 ### How the loop works
 

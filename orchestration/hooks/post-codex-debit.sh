@@ -54,7 +54,7 @@ mock_tid="$(echo "$last" | jq -r '.task_id // empty' 2>/dev/null || true)"
 mock_outcome="$(echo "$last" | jq -r '.outcome // empty' 2>/dev/null || true)"
 
 # Path 2: real codex NDJSON. task id is not in the output; extract from cmdline.
-# GH-3590: scope tid extraction to the codex sub-command so compound commands
+# scope tid extraction to the codex sub-command so compound commands
 # like `cd /tmp/T-99 && codex run T-42` debit T-42, not T-99.
 codex_sub="$(cmd_codex_extract_subcmd "$cmd" || true)"
 real_tid="$(echo "$codex_sub" | { grep -oE 'T-[0-9]+' || true; } | head -1)"

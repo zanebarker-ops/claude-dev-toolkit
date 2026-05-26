@@ -1,5 +1,5 @@
 {
-  "_comment": "Codex CLI pricing data, consumed by post-codex-debit.sh to convert NDJSON usage events into ledger cents. Rates are PLACEHOLDER and MUST be verified against https://openai.com/api/pricing/ before binding-mode rollout (PR-E activation). Cents-per-1k-tokens; the post-hook computes: cents = round((input_tokens * input_cents_per_1k + output_tokens * output_cents_per_1k) / 1000).",
+  "_comment": "Codex CLI pricing data, consumed by post-codex-debit.sh to convert NDJSON usage events into ledger cents. Rates are PLACEHOLDER and MUST be verified against https://openai.com/api/pricing/ before binding-mode rollout (this iteration activation). Cents-per-1k-tokens; the post-hook computes: cents = round((input_tokens * input_cents_per_1k + output_tokens * output_cents_per_1k) / 1000).",
   "_schema_version": 1,
   "_verified_at": null,
   "_verified_source": "PLACEHOLDER — NOT verified against pricing page",

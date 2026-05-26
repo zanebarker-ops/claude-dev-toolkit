@@ -2,7 +2,7 @@
 
 A binding-review layer that adds OpenAI **Codex** as an **independent cross-vendor reviewer** of your Claude Code work. The lead Claude session runs your existing workflow end-to-end (planning, implementing, your own review skills), then Codex performs ONE final binding review on the complete PR before merge.
 
-> **Why this exists:** Same-vendor review has blind spots. When Claude's own review skills (bug-finder, code-reviewer, security-auditor — all the same model, same training, same priors) approve a PR, they tend to miss the same classes of bug. A different vendor with different priors catches those gaps. This was demonstrated empirically: in the project that produced this code, 18 Claude-skill reviews across 6 PRs approved a regex bug that one Codex review (~65s, $0 on Pro plan) caught immediately.
+> **Why this exists:** Same-vendor review has blind spots. When Claude's own review skills (bug-finder, code-reviewer, security-auditor — all the same model, same training, same priors) approve a PR, they tend to miss the same classes of bug. A different vendor with different priors catches those gaps. A single ~65s Codex review on Pro plan is enough to surface real bugs that same-vendor reviews missed.
 
 ## Table of contents
 
@@ -314,4 +314,4 @@ A: Set `CDT_REQUIRED_REVIEWERS` to your agent names. The trailer check is fully 
 A: Currently the only enforced cross-check is "schema-glob → ref-arch doc." Extending the script with more checks is straightforward — patches welcome.
 
 **Q: What's the design background?**
-A: The pattern is documented in [`docs/reference/decisions/ADR-056-codex-binding-review-loop.md`](https://github.com/safegamer-ai/safegamer-ai/blob/main/docs/reference/decisions/ADR-056-codex-binding-review-loop.md) (in the project that produced this code), including alternatives considered and convergence learnings from a 20-round spike review.
+A: The pattern is an independent-cross-vendor-review loop. The lead does all implementation + its own review agents; the second-vendor reviewer runs only at the very end as a binding gate. Single decision point per PR; lower latency; the second vendor reviews the *complete* artifact (including the first vendor's review trailers) rather than partial states.

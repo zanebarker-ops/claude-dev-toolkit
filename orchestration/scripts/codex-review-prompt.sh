@@ -4,7 +4,7 @@
 #
 #   1. Pre-flight checks (cheap, no Codex tokens spent):
 #      - HEAD commit MUST carry Reviewed-By: bug-finder, code-reviewer, and
-#        security-auditor trailers (convention from PR-C #3601).
+#        security-auditor trailers (convention from this iteration #3601).
 #      - If the diff vs base touches schema migrations (active, not archived),
 #        the diff MUST also touch docs/architecture/database.md.
 #
@@ -96,7 +96,7 @@ case "${CDT_USE_CODEX_REVIEW:-shadow}" in
 esac
 
 # ---- Optional: clean-tree assertion for binding mode ----
-# Per PR-D security-auditor finding: binding mode should not be bypass-able
+# Per finding: binding mode should not be bypass-able
 # by uncommitted local edits. Default off (local dev-friendly); binding
 # rollouts should pass --require-clean-tree.
 if (( require_clean_tree == 1 )); then

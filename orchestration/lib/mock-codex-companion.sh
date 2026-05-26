@@ -3,12 +3,12 @@
 # expects from the real codex CLI. Two output modes:
 #
 #   Default — single-line JSON: {task_id, tier, outcome, cents, summary}
-#     The spike-mock shape. Used by hello-world.sh and PR-A's test (path 1
+#     The spike-mock shape. Used by hello-world.sh and this iteration's test (path 1
 #     in post-codex-debit.sh).
 #
 #   --ndjson — NDJSON event stream: thread.started / turn.started /
 #     item.completed / turn.completed (last contains usage tokens + model).
-#     Mirrors the real `codex --json` output shape so PR-C's test exercises
+#     Mirrors the real `codex --json` output shape so this iteration's test exercises
 #     the NDJSON parse path in post-codex-debit.sh.
 #
 # Usage:

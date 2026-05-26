@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-review-log.sh — Phase 2 PR-B regression test.
+# test-review-log.sh — Phase 2 this iteration regression test.
 #
 # Validates:
 #   - state_record_review appends a structured entry to .review_log[]

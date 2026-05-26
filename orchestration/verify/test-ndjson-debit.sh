@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-ndjson-debit.sh — Phase 2 PR-C regression test.
+# test-ndjson-debit.sh — Phase 2 this iteration regression test.
 #
 # Validates the NDJSON parse path in post-codex-debit.sh:
 #   - Known model (gpt-5.5) → cents computed from codex-pricing.json
@@ -23,7 +23,7 @@ source "$ORCH/lib/state-helper.sh"
 fail() { printf '\033[31m[FAIL]\033[0m %s\n' "$*" >&2; exit 1; }
 ok()   { printf '\033[32m[ OK ]\033[0m %s\n' "$*"; }
 
-# Pricing rates from PR-B's codex-pricing.json: gpt-5.5 input=2.0, output=8.0
+# Pricing rates from this iteration's codex-pricing.json: gpt-5.5 input=2.0, output=8.0
 # cents per 1k tokens. For 1000-in + 500-out tokens:
 #   (1000*2.0 + 500*8.0) / 1000 = (2000 + 4000) / 1000 = 6 cents
 EXPECTED_CENTS_1000_500=6

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# test-task-id-scoping.sh — GH-3590 regression test.
+# test-task-id-scoping.sh — regression test.
 #
 # Bug: pre-codex-budget-cap.sh and post-codex-debit.sh extracted the task id
 # from the WHOLE compound command. `cd /tmp/T-99 && codex run T-42` charged
