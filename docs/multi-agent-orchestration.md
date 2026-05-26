@@ -2,6 +2,8 @@
 
 A binding-review layer that adds OpenAI **Codex** as an **independent cross-vendor reviewer** of your Claude Code work. The lead Claude session runs your existing workflow end-to-end (planning, implementing, your own review skills), then Codex performs ONE final binding review on the complete PR before merge.
 
+> **Prerequisite reading:** [`docs/primitives.md`](./primitives.md) — covers the four Claude Code primitives (skills, agents, MCPs, workflows) and the soft-vs-hard enforcement model. This doc assumes you understand those.
+
 > **Why this exists:** Same-vendor review has blind spots. When Claude's own review skills (bug-finder, code-reviewer, security-auditor — all the same model, same training, same priors) approve a PR, they tend to miss the same classes of bug. A different vendor with different priors catches those gaps. A single ~65s Codex review on Pro plan is enough to surface real bugs that same-vendor reviews missed.
 
 ## Table of contents
@@ -315,3 +317,11 @@ A: Currently the only enforced cross-check is "schema-glob → ref-arch doc." Ex
 
 **Q: What's the design background?**
 A: The pattern is an independent-cross-vendor-review loop. The lead does all implementation + its own review agents; the second-vendor reviewer runs only at the very end as a binding gate. Single decision point per PR; lower latency; the second vendor reviews the *complete* artifact (including the first vendor's review trailers) rather than partial states.
+
+---
+
+## See also
+
+- [`docs/primitives.md`](./primitives.md) — Skills · Agents · MCPs · Workflows + enforcement model
+- [`orchestration/README.md`](../orchestration/README.md) — file-by-file reference for the shipped scripts
+- [`hooks/README.md`](../hooks/README.md) — hook catalog this loop builds on top of
