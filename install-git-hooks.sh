@@ -95,7 +95,10 @@ fi
 if [ -f "$DEST" ] && cmp -s "$SRC" "$DEST"; then
   info "$DEST already matches the toolkit version — skipping."
 else
-  cp "$SRC" "$DEST"
+  # Normalize line endings during copy — defense in depth in case the source
+  # ever sneaks back into CRLF (e.g. Windows-cloned repo with autocrlf=true).
+  # Git on Linux/macOS rejects '#!/bin/bash' as a shebang.
+  tr -d '' < "$SRC" > "$DEST"
   chmod +x "$DEST"
   info "Installed pre-push-review-reminder → $DEST"
 fi
