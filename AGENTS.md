@@ -3,6 +3,8 @@
 This file is written for AI coding assistants (Claude Code, Cursor, etc.) to read
 and execute the full installation of the Claude Dev Toolkit on behalf of a user.
 
+> **Conceptual background** (read first if you have time): [`docs/primitives.md`](docs/primitives.md) — explains the four primitives this toolkit ships (skills, agents, MCPs, workflows) and how to enforce them via hooks. Helpful context for understanding *why* each install step matters.
+
 Follow the steps below in order. Do not skip, reorder, or substitute commands
 unless the user explicitly tells you to.
 

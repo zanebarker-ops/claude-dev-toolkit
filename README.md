@@ -129,6 +129,14 @@ Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at
 
 ---
 
+## Concepts: Skill · Agent · MCP · Workflow
+
+Before diving in, read **[`docs/primitives.md`](docs/primitives.md)** — a 400-line explainer covering the four building blocks of Claude Code (what each one is, where it lives, how the agent gets it) and the **soft-vs-hard enforcement model** (when to use CLAUDE.md prose vs hooks vs a hybrid).
+
+If you're new to Claude Code or have ever wondered *"why didn't the agent do the thing I told it to?"* — that's the doc.
+
+---
+
 ## Prerequisites
 
 ### GitHub Account Setup (start here if new to GitHub)
@@ -645,6 +653,8 @@ The installer:
 
 ## Hooks Reference
 
+> Hooks are the **hard-enforcement** primitive — they intercept tool calls and can block, modify, or augment them. See [`docs/primitives.md`](docs/primitives.md) for how hooks fit alongside skills, agents, and MCPs.
+
 Hooks are shell scripts that run automatically before/after Claude Code tool calls. They enforce workflow rules without you having to remember them.
 
 > **Full reference:** [`hooks/README.md`](hooks/README.md) — explains the 4 event types, the block-vs-inform model, per-hook details, customization, debugging.
@@ -726,6 +736,8 @@ Hookify rules are lightweight markdown files that define pattern-matching rules.
 ---
 
 ## Agent Commands Reference
+
+> Agent commands (a.k.a. skills) are reusable prompt templates. The full conceptual breakdown — skills vs subagents vs MCPs vs workflows — is in [`docs/primitives.md`](docs/primitives.md).
 
 Agent commands are specialized AI prompts invoked via `/command-name` in Claude Code. Each agent has deep domain knowledge for its area.
 

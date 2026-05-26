@@ -2,6 +2,8 @@
 
 This project uses specialized AI agents for different tasks. **Use agents proactively based on the task type.**
 
+> **Conceptual reference:** [`docs/primitives.md`](https://github.com/zanebarker-ops/claude-dev-toolkit/blob/master/docs/primitives.md) covers how Skills (slash commands), Agents (subagents), MCPs (external tool servers), and Workflows differ — and when to reach for each. Worth reading before customizing the agent list below.
+
 ## When to Use Which Agent
 
 | Task Type | Agent | Example |
