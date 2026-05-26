@@ -98,12 +98,11 @@ if [ -f "$DEST" ] && cmp -s "$SRC" "$DEST"; then
   chmod +x "$DEST"
   info "$DEST already matches the toolkit version — skipping (exec bit ensured)."
 else
-  # Normalize line endings during copy — defense in depth in case the source
-  # ever sneaks back into CRLF (e.g. Windows-cloned repo with autocrlf=true).
-  # Git on Linux/macOS rejects '#!/bin/bash
-' as a shebang.
-  tr -d '
-' < "$SRC" > "$DEST"
+  # Normalize line endings during copy — defense in depth for repos that
+  # may have CRLF endings (Windows-cloned, autocrlf=true). Git rejects
+  #  at end of shebang as bad interpreter. tr removes carriage returns
+  # only; newlines are preserved.
+  tr -d "" < "$SRC" > "$DEST"
   chmod +x "$DEST"
   info "Installed pre-push-review-reminder → $DEST"
 fi
