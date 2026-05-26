@@ -1,0 +1,3 @@
+
+# Multi-vendor review loop runtime state (gets created by orchestration/hooks)
+.orchestration/

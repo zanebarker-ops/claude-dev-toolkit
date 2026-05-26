@@ -125,6 +125,7 @@ Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at
 | **Scripts** | 4 | Lint runner, deploy checker, session manager, ext4 migration |
 | **Templates** | 9 | CLAUDE.md, worktree workflow, model selection, agents, PRP, hookify docs, coordination system |
 | **Config** | 2 | `.oxlintrc.json`, `settings.json` template |
+| **Multi-Vendor Review** | 13 files | Codex-based binding review loop (hooks + scripts + lib + verify tests) |
 
 ---
 
@@ -812,6 +813,82 @@ A plugin with 6 specialized review agents that run before PR creation.
 /pr-review-toolkit:review-pr              # Full review
 /pr-review-toolkit:review-pr security     # Security focus
 ```
+
+---
+
+## Multi-Vendor Review Loop (Claude + Codex)
+
+A binding-review layer that adds OpenAI **Codex** as an independent **cross-vendor** reviewer of your Claude Code work. Claude runs your existing workflow end-to-end (plan, implement, your review skills); Codex performs **one final binding review** on the complete PR before merge.
+
+> **Why this matters:** Same-vendor review has blind spots. When Claude's review skills (`bug-finder`, `code-reviewer`, `security-auditor` — same model, same training, same priors) approve a PR, they tend to miss the same classes of bug. A different vendor with different priors catches those gaps. A single Codex review (~65s, $0 on Pro plan) is enough to surface real bugs that same-vendor reviews missed.
+
+### How the loop works
+
+```
+Claude implements + runs its own review skills
+              ↓
+       "PR ready" signal
+              ↓
+Codex independent binding review (single gate)
+              ↓
+   APPROVE → merge   |   REDO → back to Claude with feedback
+```
+
+### Components shipped here
+
+| Path | Purpose |
+|------|---------|
+| `orchestration/hooks/*` | 4 Claude Code hooks: budget cap, tier cap, ledger debit, sb-commit recorder |
+| `orchestration/lib/state-helper.sh` | flock-guarded atomic state.json writer |
+| `orchestration/lib/codex-pricing.json` | gpt-5.5 token rates (verify before binding mode) |
+| `orchestration/scripts/codex-review-prompt.sh` | THE gate — emits `SKIP` / `REDO` / `PROMPT` verdict |
+| `orchestration/scripts/dynamic-round-cap.sh` | Recommends review-round cap from diff size |
+| `orchestration/verify/*` | 7 test scripts (race tests, regression tests, end-to-end acceptance) |
+
+### Kill switch
+
+Everything is governed by `CDT_USE_CODEX_REVIEW` (per-developer env var, no repo change needed to flip):
+
+| Value | Behavior |
+|---|---|
+| `off` | Pre-flight emits `SKIP` immediately; existing flow untouched. |
+| `shadow` (default) | Pre-flight runs and Codex is called, but verdict is logged + **non-binding**. |
+| `binding-dev` | Codex's `REDO` blocks merge for dev-branch PRs. |
+| `binding-all` | Codex's `REDO` blocks merge for all PRs. |
+
+**Recommended rollout:** `shadow` for 5–10 PRs to calibrate noise → `binding-dev` → `binding-all`.
+
+### Quick start
+
+```bash
+# 1. Install Codex CLI (Pro plan covers usage; OPENAI_API_KEY fallback)
+npm i -g @openai/codex
+codex login --device-auth                 # WSL-friendly device-flow auth
+
+# 2. Copy orchestration/ into your project (skip if bootstrap.sh already did)
+cp -r orchestration /path/to/your-project/
+echo '.orchestration/' >> /path/to/your-project/.gitignore
+
+# 3. Verify the install — 7 scripts, all should PASS in <2 seconds total
+cd /path/to/your-project
+for t in orchestration/scripts/hello-world.sh          orchestration/verify/test-*.sh; do
+  bash "$t" >/dev/null 2>&1 && echo "PASS  $t" || echo "FAIL  $t"
+done
+
+# 4. Wire the hooks into .claude/settings.json (see docs for the JSON skeleton)
+# 5. Set policy env vars in your shell rc (CDT_REQUIRED_REVIEWERS, etc.)
+# 6. Restart your Claude Code session so the new hooks load
+```
+
+### Full docs
+
+See [`docs/multi-agent-orchestration.md`](docs/multi-agent-orchestration.md) for:
+- Full architecture + design rationale
+- Complete env-var reference
+- Hook wiring (JSON skeleton)
+- Usage walkthrough (`SKIP` / `REDO` / `PROMPT` dispatch)
+- Troubleshooting + FAQ
+- Cost model
 
 ---
 
