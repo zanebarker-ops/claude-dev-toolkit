@@ -1,0 +1,15 @@
+{
+  "_comment": "Codex CLI pricing data, consumed by post-codex-debit.sh to convert NDJSON usage events into ledger cents. Rates are PLACEHOLDER and MUST be verified against https://openai.com/api/pricing/ before binding-mode rollout (PR-E activation). Cents-per-1k-tokens; the post-hook computes: cents = round((input_tokens * input_cents_per_1k + output_tokens * output_cents_per_1k) / 1000).",
+  "_schema_version": 1,
+  "_verified_at": null,
+  "_verified_source": "PLACEHOLDER — NOT verified against pricing page",
+  "default_model": "gpt-5.5",
+  "models": {
+    "gpt-5.5": {
+      "_note": "Codex CLI 0.133.0 default model as of 2026-05. PLACEHOLDER rates pitched conservatively high so an under-debit during shadow rollout deny-trips early rather than late.",
+      "input_cents_per_1k_tokens": 2.0,
+      "output_cents_per_1k_tokens": 8.0,
+      "cached_input_cents_per_1k_tokens": 0.5
+    }
+  }
+}
