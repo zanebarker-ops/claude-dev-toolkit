@@ -119,13 +119,13 @@ Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at
 | Category | Count | Description |
 |----------|-------|-------------|
 | **Hooks** | 18 | Event-driven scripts that enforce workflow rules |
-| **Hookify Rules** | 13 | Markdown-based rules for blocking/warning on patterns |
+| **Hookify Rules** | 15 | Markdown-based rules for blocking/warning on patterns |
 | **Agent Commands** | 26 | Specialized AI agent prompts (`/start-task`, `/security-auditor`, etc.) |
 | **PR Review Toolkit** | 6 agents | Automated multi-agent code review before PRs |
-| **Scripts** | 4 | Lint runner, deploy checker, session manager, ext4 migration |
+| **Scripts** | 5 | Lint runner, deploy checker, session manager, ext4 migration |
 | **Templates** | 9 | CLAUDE.md, worktree workflow, model selection, agents, PRP, hookify docs, coordination system |
 | **Config** | 2 | `.oxlintrc.json`, `settings.json` template |
-| **Multi-Vendor Review** | 13 files | Codex-based binding review loop (hooks + scripts + lib + verify tests) |
+| **Multi-Vendor Review** | 18 files | Codex-based binding review loop (hooks + scripts + lib + verify tests) |
 
 ---
 
@@ -633,12 +633,12 @@ git clone git@github.com:zanebarker-ops/claude-dev-toolkit.git ~/claude-dev-tool
 ```
 
 The installer:
-1. Copies 14 hooks to `.claude/hooks/`
+1. Copies all 18 hooks to `.claude/hooks/` (sets executable bit)
 2. Copies 23 agent commands to `.claude/commands/`
 3. Creates `.claude/settings.json` with hook registrations (won't overwrite existing)
 4. Copies `.oxlintrc.json` to project root (won't overwrite existing)
-5. Copies 3 scripts to `scripts/` (lint, deploy, session manager)
-6. Copies 11 hookify rules to `.claude/` (won't overwrite existing)
+5. Copies 5 scripts to `scripts/` (lint, deploy, session manager)
+6. Copies 15 hookify rules to `.claude/` (won't overwrite existing)
 7. Copies reference templates to `.claude/templates/`
 8. Installs PR review toolkit to `.claude/plugins/`
 9. Generates a starter `CLAUDE.md` (won't overwrite existing)

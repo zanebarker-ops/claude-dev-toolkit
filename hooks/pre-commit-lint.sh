@@ -2,7 +2,7 @@
 # Claude Code Hook: Run ESLint before git commit
 # This runs before tool execution to catch lint errors before commits
 #
-# Expects a lint script at: scripts/lint-worktree.sh (in the main repo root)
+# Expects a lint script at: scripts/lint-changed.sh (in the main repo root)
 # This script resolves lint tools from the main repo's node_modules,
 # so it works from any worktree without needing a separate install.
 #
@@ -12,7 +12,7 @@
 #   0 - Allow the tool call
 #   2 - Block the tool call (stderr sent to Claude as feedback)
 
-LINT_SCRIPT_NAME="scripts/lint-worktree.sh"
+LINT_SCRIPT_NAME="scripts/lint-changed.sh"
 
 # Read the tool input from stdin
 INPUT=$(cat)

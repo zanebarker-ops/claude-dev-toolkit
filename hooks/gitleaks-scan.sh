@@ -9,7 +9,7 @@ set -euo pipefail
 
 # Only run on git commit commands
 INPUT=$(cat)
-COMMAND=$(echo "$INPUT" | python3 -c "import json,sys; print(json.load(sys.stdin).get('input',{}).get('command',''))" 2>/dev/null || echo "")
+COMMAND=$(echo "$INPUT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command') or d.get('input',{}).get('command',''))" 2>/dev/null || echo "")
 
 if ! echo "$COMMAND" | grep -qE "git\s+commit"; then
   exit 0

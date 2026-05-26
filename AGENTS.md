@@ -187,8 +187,8 @@ Run these from `$TARGET` and report the results:
 
 ```bash
 cd "$TARGET"
-ls .claude/hooks/ | wc -l           # expect ~18
-ls .claude/commands/*.md | wc -l    # expect ~26
+find .claude/hooks/ -maxdepth 1 -type f ! -name "README.md" | wc -l  # expect 18
+find .claude/commands/ -maxdepth 1 -name "*.md" | wc -l                  # expect 26
 test -f .claude/settings.json && echo "settings: ok"
 test -f .oxlintrc.json && echo "oxlint: ok"
 test -f CLAUDE.md && echo "CLAUDE.md: ok"
