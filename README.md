@@ -122,7 +122,7 @@ Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at
 | **Hookify Rules** | 15 | Markdown-based rules for blocking/warning on patterns |
 | **Agent Commands** | 26 | Specialized AI agent prompts (`/start-task`, `/security-auditor`, etc.) |
 | **PR Review Toolkit** | 6 agents | Automated multi-agent code review before PRs |
-| **Scripts** | 5 | Lint runner, deploy checker, session manager, ext4 migration |
+| **Scripts** | 4 (installed) | Lint runner, deploy checker, session manager, ext4 migration |
 | **Templates** | 9 | CLAUDE.md, worktree workflow, model selection, agents, PRP, hookify docs, coordination system |
 | **Config** | 2 | `.oxlintrc.json`, `settings.json` template |
 | **Multi-Vendor Review** | 18 files | Codex-based binding review loop (hooks + scripts + lib + verify tests) |
@@ -637,7 +637,7 @@ The installer:
 2. Copies 23 agent commands to `.claude/commands/`
 3. Creates `.claude/settings.json` with hook registrations (won't overwrite existing)
 4. Copies `.oxlintrc.json` to project root (won't overwrite existing)
-5. Copies 5 scripts to `scripts/` (lint, deploy, session manager)
+5. Copies 4 scripts to `scripts/` (lint, deploy, session manager)
 6. Copies 15 hookify rules to `.claude/` (won't overwrite existing)
 7. Copies reference templates to `.claude/templates/`
 8. Installs PR review toolkit to `.claude/plugins/`

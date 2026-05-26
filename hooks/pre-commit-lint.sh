@@ -27,21 +27,21 @@ if echo "$COMMAND" | grep -q "git commit"; then
   LINT_SCRIPT="$MAIN_REPO/$LINT_SCRIPT_NAME"
 
   if [ -f "$LINT_SCRIPT" ]; then
-    echo "Running ESLint check before commit..." >&2
+    echo "Running lint check before commit..." >&2
 
-    LINT_OUTPUT=$("$LINT_SCRIPT" eslint 2>&1)
+    LINT_OUTPUT=$("$LINT_SCRIPT" 2>&1)
     LINT_EXIT=$?
 
     if [ $LINT_EXIT -ne 0 ]; then
       echo "" >&2
       echo "========================================" >&2
-      echo "  BLOCKED: ESLint errors found" >&2
+      echo "  BLOCKED: Lint errors found" >&2
       echo "========================================" >&2
       echo "" >&2
       echo "$LINT_OUTPUT" >&2
       echo "" >&2
       echo "  Fix the errors above before committing." >&2
-      echo "  Run: $LINT_SCRIPT eslint --fix" >&2
+      echo "  Run: $LINT_SCRIPT --fix" >&2
       echo "" >&2
       exit 2
     fi
