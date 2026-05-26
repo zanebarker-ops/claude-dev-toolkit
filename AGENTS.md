@@ -187,7 +187,7 @@ Run these from `$TARGET` and report the results:
 
 ```bash
 cd "$TARGET"
-find .claude/hooks/ -maxdepth 1 -type f ! -name "README.md" | wc -l  # expect 18
+find .claude/hooks/ -maxdepth 1 -type f ! -name "README.md" | wc -l  # expect 17 (git-hooks installed separately via install-git-hooks.sh)
 find .claude/commands/ -maxdepth 1 -name "*.md" | wc -l                  # expect 26
 test -f .claude/settings.json && echo "settings: ok"
 test -f .oxlintrc.json && echo "oxlint: ok"

@@ -42,7 +42,21 @@ fi
 
 # Absolute path (git rev-parse --git-dir returns relative)
 GITDIR=$(cd "$TARGET" && cd "$GITDIR" && pwd)
-HOOKS_DIR="$GITDIR/hooks"
+
+# Respect core.hooksPath if set — git ignores .git/hooks/ when this is
+# configured. Resolve relative to the target worktree so the path is correct
+# whether it's absolute or relative.
+CUSTOM_HOOKS_PATH=$(cd "$TARGET" && git config --get core.hooksPath 2>/dev/null || true)
+if [ -n "$CUSTOM_HOOKS_PATH" ]; then
+  # If absolute, use as-is; otherwise resolve relative to TARGET.
+  case "$CUSTOM_HOOKS_PATH" in
+    /*) HOOKS_DIR="$CUSTOM_HOOKS_PATH" ;;
+    *)  HOOKS_DIR="$TARGET/$CUSTOM_HOOKS_PATH" ;;
+  esac
+  HOOKS_DIR=$(cd "$HOOKS_DIR" 2>/dev/null && pwd || echo "$HOOKS_DIR")
+else
+  HOOKS_DIR="$GITDIR/hooks"
+fi
 mkdir -p "$HOOKS_DIR"
 
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
