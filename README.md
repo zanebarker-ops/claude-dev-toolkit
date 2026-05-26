@@ -668,7 +668,7 @@ Hooks are shell scripts that run automatically before/after Claude Code tool cal
 | `gitleaks-scan.sh` | Bash (git commit) | Scans staged files for secrets/credentials via gitleaks |
 | `warn-pr-to-main.sh` | Bash (gh pr create) | Warns when creating a PR directly to main/master |
 | `block-env-read.sh` | Read | Blocks reading .env files to prevent credential exposure |
-| `security-check.sh` | Bash (git commit) | Pre-commit checks: RLS on migrations, no secret keys in client code, auth on API routes |
+| `security-check.sh` | **opt-in** (Bash, git commit) | Pre-commit checks: RLS on migrations, no secret keys in client code, auth on API routes. **Not registered by default** — checks are tech-stack-specific (Supabase RLS, Next.js API routes). Register manually in `.claude/settings.json` after customizing the script for your project. |
 | `database-context-injector.sh` | Edit, Write | Adds database schema context when editing SQL files |
 
 ### PostToolUse Hooks (run AFTER a tool executes)
