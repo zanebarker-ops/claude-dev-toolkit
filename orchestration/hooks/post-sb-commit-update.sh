@@ -9,7 +9,9 @@ set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 ORCH_LIB="$ROOT/orchestration/lib"
-ORCHESTRATION_DIR="$ROOT/.orchestration"
+# Respect a caller-set ORCHESTRATION_DIR (e.g., from a verification
+# script using mktemp -d). Default to the repo-local .orchestration/.
+ORCHESTRATION_DIR="${ORCHESTRATION_DIR:-$ROOT/.orchestration}"
 export ORCHESTRATION_DIR
 
 source "$ORCH_LIB/state-helper.sh" 2>/dev/null || exit 0
@@ -24,7 +26,32 @@ if ! cmd_is_sb_commit_invocation "$cmd"; then
   exit 0
 fi
 
-tid="$(echo "$cmd" | grep -oE 'T-[0-9]+' | head -1 || true)"
+# Scope task-id extraction to the sb-commit sub-command, not the whole compound.
+# Caught by codex review: `cd /tmp/T-99 && bash sb-commit.sh T-42` formerly
+# greped the entire compound and matched T-99, recording the attempt against
+# the wrong task. This mirrors the same fix the codex hooks got earlier.
+#
+# Split on shell connectives (&&, ||, ;, |) and find the first sub-command
+# whose stripped binary is sb-commit.sh.
+sb_sub=""
+splits="$(printf '%s\n' "$cmd" | sed -E 's/(\|\||&&|;|\|)/\n/g')"
+while IFS= read -r sub; do
+  [[ -z "${sub//[[:space:]]/}" ]] && continue
+  stripped="$(echo "$sub" | sed -E 's/^[[:space:]]+//')"
+  prev=""
+  while [[ "$prev" != "$stripped" ]]; do
+    prev="$stripped"
+    stripped="$(echo "$stripped" | sed -E 's/^[A-Za-z_][A-Za-z0-9_]*=[^[:space:]]* +//')"
+    stripped="$(echo "$stripped" | sed -E 's/^(sudo|env|nice|nohup|time|timeout[[:space:]]+[0-9]+[smhd]?|bash|sh|zsh)[[:space:]]+//')"
+  done
+  first="$(echo "$stripped" | awk '{print $1}')"
+  if [[ "${first##*/}" == "sb-commit.sh" ]]; then
+    sb_sub="$sub"
+    break
+  fi
+done <<<"$splits"
+
+tid="$(echo "$sb_sub" | grep -oE 'T-[0-9]+' | head -1 || true)"
 [[ -z "$tid" ]] && exit 0
 
 # Claude Code's Bash tool_response surface varies — exit_code may be absent;

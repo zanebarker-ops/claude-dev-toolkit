@@ -32,7 +32,9 @@ set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 ORCH_LIB="$ROOT/orchestration/lib"
-ORCHESTRATION_DIR="$ROOT/.orchestration"
+# Respect a caller-set ORCHESTRATION_DIR (e.g., from a verification
+# script using mktemp -d). Default to the repo-local .orchestration/.
+ORCHESTRATION_DIR="${ORCHESTRATION_DIR:-$ROOT/.orchestration}"
 export ORCHESTRATION_DIR
 
 source "$ORCH_LIB/state-helper.sh" 2>/dev/null || { echo '{}'; exit 0; }

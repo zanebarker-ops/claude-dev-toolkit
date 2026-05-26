@@ -20,12 +20,15 @@ set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 ORCH="$ROOT/orchestration"
-ORCHESTRATION_DIR="$ROOT/.orchestration"
-export ORCHESTRATION_DIR
 
-# Fresh state.json + ledger for each run.
-rm -rf "$ORCHESTRATION_DIR"
-mkdir -p "$ORCHESTRATION_DIR"
+# Use an isolated temp dir for ORCHESTRATION_DIR so this verification script
+# never touches a user's real .orchestration/ state (cost ledger + review log).
+# Caught by codex review: prior version did `rm -rf "$ROOT/.orchestration"`
+# which would silently delete a user's live data when they ran the documented
+# install verification step in their own project.
+ORCHESTRATION_DIR="$(mktemp -d -t cdt-hello-world-XXXXXX)"
+export ORCHESTRATION_DIR
+trap 'rm -rf "$ORCHESTRATION_DIR"' EXIT
 
 # Budget for this spike: 10 cents.
 export CDT_CODEX_CAP_CENTS=10

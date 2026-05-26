@@ -73,7 +73,8 @@ Everything is governed by `CDT_USE_CODEX_REVIEW`:
 
 ### One-time setup (copy the toolkit into your project)
 
-If you're using `claude-dev-toolkit`'s `install.sh`, the orchestration files come along automatically. Otherwise, copy them manually:
+`claude-dev-toolkit`'s `install.sh` does NOT yet copy the `orchestration/`
+tree into target projects (planned follow-up). For now, copy it manually:
 
 ```bash
 # From the root of your project:
@@ -83,7 +84,9 @@ cp -r /path/to/claude-dev-toolkit/orchestration .
 # state — ledger, locks, review log — is per-worktree and gitignored)
 echo '.orchestration/' >> .gitignore
 
-# Verify the install — should pass 15/15 in <1s with no live API calls
+# Verify the install — should pass 15/15 in <1s with no live API calls.
+# (The script uses an isolated temp dir for state; safe to run in any project,
+#  including one where the hooks are already producing real telemetry.)
 bash orchestration/scripts/hello-world.sh
 ```
 

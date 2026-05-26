@@ -6,7 +6,7 @@
 set -euo pipefail
 
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
-ORCHESTRATION_DIR="$ROOT/.orchestration"
+ORCHESTRATION_DIR="${ORCHESTRATION_DIR:-$ROOT/.orchestration}"
 export ORCHESTRATION_DIR
 source "$ROOT/orchestration/lib/state-helper.sh"
 
