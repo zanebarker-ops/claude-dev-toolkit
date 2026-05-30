@@ -144,18 +144,16 @@ Core:
 
 ```yaml
 Branching:
-  - main: Production
-  - dev: Staging/integration
+  - main: Production (only long-lived branch)
   - feature/GH-###-description: Feature work
 
 Worktree Rule:
-  - NEVER work directly on dev or main
+  - NEVER work directly on main
   - Every task in its own worktree
   - One Claude session = one worktree = one issue
 
 Deployment:
   - Push triggers CI/CD preview
-  - Merge to dev → staging
   - Merge to main → production
 ```
 

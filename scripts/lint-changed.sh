@@ -14,7 +14,7 @@ set -euo pipefail
 
 # ─── Configuration ────────────────────────────────────────────────────
 # Override these via environment variables or edit directly
-BASE_BRANCH="${LINT_BASE_BRANCH:-dev}"          # Branch to diff against
+BASE_BRANCH="${LINT_BASE_BRANCH:-main}"         # Branch to diff against
 SRC_DIR="${LINT_SRC_DIR:-src}"                  # Source directory to lint
 FILE_EXTENSIONS="${LINT_EXTENSIONS:-ts,tsx,js,jsx}"  # File extensions to lint
 

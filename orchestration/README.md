@@ -28,7 +28,7 @@ before merge.
 
 | Env var | Default | Purpose |
 |---|---|---|
-| `CDT_USE_CODEX_REVIEW` | `shadow` | `off` skips entirely; `shadow` non-binding; `binding-dev` binds for dev PRs; `binding-all` binds everywhere |
+| `CDT_USE_CODEX_REVIEW` | `shadow` | `off` skips entirely; `shadow` non-binding; `binding-main` binds for main PRs; `binding-all` binds everywhere |
 | `CDT_CODEX_CAP_CENTS` | `10` | Monthly Codex spend cap in cents. Production target: `5000` ($50/mo) |
 | `CDT_CODEX_TIER_CAP` | `1` | Per-task cap on Codex attempts. Prevents one task burning the monthly budget |
 | `CDT_TASK_ID` | unset | Sentinel for orchestration-tagged tool calls (or use `T-NN` in the prompt) |

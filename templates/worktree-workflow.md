@@ -1,6 +1,6 @@
 # Worktree-First Workflow
 
-**EVERY request, feature, task, or bug fix MUST follow this workflow. NEVER work directly on `dev` or `main`.**
+**EVERY request, feature, task, or bug fix MUST follow this workflow. NEVER work directly on `main`.**
 
 ## MANDATORY: Security Review Before Presenting Code
 
@@ -57,8 +57,8 @@ PROJECT=$(basename $(git rev-parse --show-toplevel))
 gh issue list --state open
 
 # 2. CREATE ISOLATED WORKSPACE FIRST
-git pull origin dev
-# git worktree add ../$PROJECT-wt/GH-NNN-desc -b feature/GH-NNN-desc dev
+git pull origin main
+# git worktree add ../$PROJECT-wt/GH-NNN-desc -b feature/GH-NNN-desc main
 
 # 3. Create GitHub issue
 gh issue create --title "Title" --body "## Overview"
@@ -73,9 +73,9 @@ gh issue create --title "Title" --body "## Overview"
 # 7. Commit with references
 git commit -m "Description (GH-NNN)"
 
-# 8. MANDATORY: Rebase from dev BEFORE push/PR
+# 8. MANDATORY: Rebase from main BEFORE push/PR
 git fetch origin
-git rebase origin/dev
+git rebase origin/main
 
 # 9. MANDATORY: Run lint and typecheck AFTER rebase
 scripts/lint-changed.sh
@@ -84,7 +84,7 @@ scripts/lint-changed.sh
 git push -u origin feature/GH-NNN-desc
 
 # 11. Create PR (only after CI/CD succeeds)
-gh pr create --base dev --body "## Summary"
+gh pr create --base main --body "## Summary"
 
 # 12. Cleanup after merge
 ```
@@ -164,7 +164,7 @@ npx tsc --noEmit
 ## Directory Structure
 
 ```
-~/repos/your-project/                   # Main repo (ALWAYS on dev branch!)
+~/repos/your-project/                   # Main repo (ALWAYS on main branch!)
 ~/repos/your-project-wt/                # Isolated workspaces
   GH-123-feature-name/                 # One per issue
   GH-456-another-feature/
@@ -230,13 +230,13 @@ After editing:
 
 1. **File ownership** - If you're working on a file, note it in your issue/PR description
 2. **Early commits** - Commit and push early so other agents can see your changes
-3. **Rebase before PR** - Always rebase from dev before creating PR
+3. **Rebase before PR** - Always rebase from main before creating PR
 4. **Communicate** - If another agent is touching the same files, coordinate
 
 ## Conflict Resolution
 
 If you discover a conflict:
 1. **Don't force-push** - This destroys other agents' work
-2. **Rebase first** - git pull --rebase origin dev
+2. **Rebase first** - git pull --rebase origin main
 3. **Resolve surgically** - Fix only the conflict, don't refactor
 4. **Re-run tests** - Verify nothing broke after resolution

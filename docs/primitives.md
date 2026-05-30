@@ -292,7 +292,7 @@ Encode it as a numbered step in the canonical PR workflow:
 ```markdown
 ## PR workflow
 
-1. Create branch from dev
+1. Create branch from main
 2. Implement changes
 3. Run /security-auditor — verdict required before proceeding
 4. Run /code-reviewer — verdict required before proceeding
