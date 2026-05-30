@@ -15,11 +15,20 @@ fi
 # Read JSON input from stdin
 INPUT=$(cat)
 
-# Extract file_path using grep (jq not available)
-TARGET_FILE=$(echo "$INPUT" | grep -oP '"file_path"\s*:\s*"\K[^"]+' | head -1)
+# Extract file_path from the JSON tool input. Use POSIX sed (BRE) so this works
+# on both GNU and BSD/macOS grep+sed. The previous `grep -oP '...\K...'` relied
+# on PCRE, which errors on macOS's default grep — yielding an empty match and
+# silently ALLOWING the write, defeating containment (fail-open).
+TARGET_FILE=$(printf '%s' "$INPUT" | sed -n 's/.*"file_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
 
 if [ -z "$TARGET_FILE" ]; then
-  exit 0  # No file path in input, allow
+  # Fail CLOSED: if the payload carries a file_path we couldn't parse, block
+  # rather than allow — a parser miss must never become a containment bypass.
+  if printf '%s' "$INPUT" | grep -q '"file_path"'; then
+    echo "BLOCKED: check-cross-worktree could not parse file_path; failing closed." >&2
+    exit 2
+  fi
+  exit 0  # No file_path in this tool call — nothing to contain, allow.
 fi
 
 # Convert to absolute path if relative
