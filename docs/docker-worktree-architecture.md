@@ -123,6 +123,15 @@ Install the toolkit inside the image (or bake it into the worktree) so hooks run
 - **main-only branch model** is preserved: `worktree-up.sh` branches from `main`,
   and PRs target `main`.
 
+> **Threat-layer defense in depth (optional).** The container isolates the
+> *filesystem*; it does not by itself stop Claude from running a destructive
+> command *inside* the worktree (`rm -rf`, `bash -c`, secret exfil). Pair the
+> image with the [claude-code-guardrails](https://github.com/uaziz1/claude-code-guardrails)
+> companion (MIT) — its Python hooks scan the full command and fire even under
+> `--dangerously-skip-permissions`. Bake its hooks into the image alongside the
+> toolkit so both the workflow and threat layers run in-container. See the
+> *Threat-Level Guardrails* section of the root README.
+
 ---
 
 ## 6. Prerequisites
