@@ -1,5 +1,15 @@
 # Hookify Rules
 
+> ⚠️ **These rules are NOT active out of the box.** They are *declarative
+> descriptions* that only do something when a **loader** (wired into
+> `settings.json`) reads and applies them on each tool call. **This repo does not
+> ship that loader**, and the installed `settings.json` does not reference one — so
+> by default these files are documentation, not enforcement. The two important
+> protections (`block-direct-main`, `block-cross-worktree`) are already enforced by
+> the equivalent **shell hooks** in [`../hooks/`](../hooks/); everything else here
+> is inert until you supply a loader or port the rule to a shell hook. See
+> [How they get loaded](#how-they-get-loaded) below.
+
 **Declarative pattern-matching rules** that fire on Claude Code events. Markdown files with YAML frontmatter — no shell scripts to write. Good for "if Claude tries to do X, block it / warn about it" type policies.
 
 > **Hookify vs. shell hooks:** [shell hooks](../hooks/) are scripts that run arbitrary code. Hookify rules are declarative — you describe the trigger and action in YAML. Use hookify when a regex check is enough; use a shell hook when you need real logic.

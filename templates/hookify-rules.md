@@ -1,5 +1,11 @@
 # Hookify Rules
 
+> ⚠️ **Not active by default.** These rules only run if a **loader** (wired into
+> `settings.json`) reads and applies them. This toolkit does **not** ship that
+> loader, so the rules below are documentation of intent, not live enforcement,
+> until you supply one. The `block-direct-main` and `block-cross-worktree`
+> protections are enforced independently by shell hooks; the rest are inert.
+
 This document describes hookify rules that can be configured to enforce coding standards and prevent common mistakes.
 
 ## Overview

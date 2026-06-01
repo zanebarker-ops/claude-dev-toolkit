@@ -87,13 +87,21 @@ cp -r "$TOOLKIT_DIR/plugins/pr-review-toolkit" "$TARGET/.claude/plugins/"
 info "PR review toolkit installed to .claude/plugins/pr-review-toolkit/"
 
 section "Installing settings"
+SETTINGS_SKIPPED=0
 if [ -f "$TARGET/.claude/settings.json" ]; then
-  warn "Skipped .claude/settings.json (already exists)"
-  warn "  Review template at: .claude/templates/settings.json.template"
+  SETTINGS_SKIPPED=1
   cp "$TOOLKIT_DIR/config/settings.json.template" "$TARGET/.claude/templates/"
+  error "Did NOT touch existing .claude/settings.json"
+  warn "  ┌─────────────────────────────────────────────────────────────────┐"
+  warn "  │  ENFORCEMENT IS NOT WIRED.                                       │"
+  warn "  │  The hook FILES were installed, but none are registered, so NO  │"
+  warn "  │  hooks will run until you merge the 'hooks' block from:          │"
+  warn "  │    .claude/templates/settings.json.template                      │"
+  warn "  │  into your existing .claude/settings.json.                       │"
+  warn "  └─────────────────────────────────────────────────────────────────┘"
 else
   cp "$TOOLKIT_DIR/config/settings.json.template" "$TARGET/.claude/settings.json"
-  info "Created .claude/settings.json"
+  info "Created .claude/settings.json (hooks wired)"
 fi
 
 section "Installing lint config"
@@ -147,18 +155,36 @@ else
   info "Created CLAUDE.md (customize it for your project!)"
 fi
 
-section "Checking prerequisites"
-command -v oxlint &>/dev/null && info "oxlint installed" || warn "oxlint not found. Install: npm install -g oxlint"
-command -v claude &>/dev/null && info "Claude Code CLI installed" || warn "Claude Code CLI not found. Install: npm install -g @anthropic-ai/claude-code"
-command -v gh &>/dev/null && info "GitHub CLI installed" || warn "GitHub CLI not found. Install: https://cli.github.com"
-command -v tmux &>/dev/null && info "tmux installed" || warn "tmux not found. Install: sudo apt install tmux"
-command -v gitleaks &>/dev/null && info "gitleaks installed" || warn "gitleaks not found (optional). Install: brew install gitleaks"
-command -v jq &>/dev/null && info "jq installed" || warn "jq not found (needed for crash recovery). Install: sudo apt install jq"
+section "Checking prerequisites (and the consequence of each gap)"
+# State the CONSEQUENCE of a missing tool, not just its absence — hooks that
+# depend on a missing tool fail OPEN (skip silently), so a clean-looking install
+# can still have inactive enforcement. See README 'Platform support' section.
+command -v claude   &>/dev/null && info "claude   — Claude Code CLI present" || error "claude NOT found → the toolkit cannot run. Install: npm install -g @anthropic-ai/claude-code"
+command -v git      &>/dev/null && info "git      — present" || error "git NOT found → ALL hooks and the worktree workflow are inoperable."
+command -v bash     &>/dev/null && info "bash     — present (hooks can execute)" || error "bash NOT found → NO hooks will run (all hooks are bash). On Windows, use WSL2/Git Bash."
+command -v oxlint   &>/dev/null && info "oxlint   — present (lint gate active)" || warn "oxlint NOT found → pre-commit lint gate is INACTIVE (fails open). Install: npm install -g oxlint"
+command -v gitleaks &>/dev/null && info "gitleaks — present (secret scan active)" || warn "gitleaks NOT found → secret-scan gate is INACTIVE (fails open). Install: brew install gitleaks"
+command -v jq       &>/dev/null && info "jq       — present (crash recovery active)" || warn "jq NOT found → crash-recovery hook is DEGRADED/INACTIVE. Install: sudo apt install jq | brew install jq"
+command -v tmux     &>/dev/null && info "tmux     — present (crash-proof sessions available)" || warn "tmux NOT found → crash-proof sessions (claude-session.sh) UNAVAILABLE. Install: brew install tmux (no native Windows build — use WSL2)"
+command -v gh       &>/dev/null && info "gh       — present (PR/issue automation active)" || warn "gh NOT found → PR creation + worktree-cleanup issue closing INACTIVE. Install: https://cli.github.com"
+command -v python3  &>/dev/null && info "python3  — present" || warn "python3 NOT found → gitleaks-scan & warn-pr-to-main hooks cannot parse input (skip). Install python3."
+case "$(uname -s 2>/dev/null)" in
+  MINGW*|MSYS*|CYGWIN*) warn "Native Windows detected → whether Claude Code runs the .sh hooks here is NOT guaranteed. Run the toolkit inside WSL2 for reliable enforcement (see README 'Platform support').";;
+esac
 
 echo ""
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
-echo -e "${GREEN}  Installation complete!${NC}"
+echo -e "${GREEN}  Files installed.${NC}  (Installed ≠ active — see prerequisite report above.)"
 echo -e "${BLUE}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
+echo ""
+if [ "$SETTINGS_SKIPPED" = "1" ]; then
+  error "  ACTION REQUIRED: hooks are NOT wired (existing settings.json left intact)."
+  echo  "    Merge the 'hooks' block from .claude/templates/settings.json.template"
+  echo  "    into .claude/settings.json, or no enforcement will run."
+  echo  ""
+fi
+echo "  See the README 'Platform support & what's actually active' section to confirm"
+echo "  which hooks actually run on your OS/toolchain."
 echo ""
 echo "  Next steps:"
 echo "    1. Edit CLAUDE.md with your project details"
