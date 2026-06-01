@@ -63,7 +63,7 @@ The model can never bypass a `block`. You don't have to remember the policy — 
 | `gitleaks-scan.sh` | `PreToolUse:Bash` | Runs `gitleaks` before `git commit` — blocks if secrets are detected |
 | `security-check.sh` | `PreToolUse:Bash` (**opt-in**) | Pre-commit checks: RLS on migrations, no service-role keys in client code, auth on API routes. **Not registered by default** in `settings.json.template` — the checks assume Supabase + Next.js conventions; customize the script + register manually. |
 | `check-ci-before-pr.sh` | `PreToolUse:Bash` | Blocks `gh pr create` unless a CI/CD verification marker file exists |
-| `warn-pr-to-main.sh` | `PreToolUse:Bash` | When opening a PR to `main`/`master`, warns to consider staging branch first |
+| `warn-pr-to-main.sh` | `PreToolUse:Bash` | On a PR to `main`/`master`, prints a production-safety nudge (PR-to-main is the normal path; not a block) |
 
 > **Note:** `pre-push-review-reminder` used to live here but was always a **git** hook (server-side, runs on `git push`), not a Claude Code hook. It now lives in [`git-hooks/`](../git-hooks/) and is installed separately via `bash install-git-hooks.sh /path/to/project`. See the toolkit root README for details.
 

@@ -120,7 +120,7 @@ Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at
 
 | Category | Count | Description |
 |----------|-------|-------------|
-| **Hooks** | 18 | Event-driven scripts that enforce workflow rules |
+| **Hooks** | 17 | Event-driven scripts that enforce workflow rules |
 | **Hookify Rules** | 15 | Markdown-based rules for blocking/warning on patterns |
 | **Agent Commands** | 26 | Specialized AI agent prompts (`/start-task`, `/security-auditor`, etc.) |
 | **PR Review Toolkit** | 6 agents | Automated multi-agent code review before PRs |
@@ -696,7 +696,7 @@ git clone git@github.com:zanebarker-ops/claude-dev-toolkit.git ~/claude-dev-tool
 ```
 
 The installer:
-1. Copies all 18 hooks to `.claude/hooks/` (sets executable bit)
+1. Copies all 17 hooks to `.claude/hooks/` (sets executable bit)
 2. Copies 23 agent commands to `.claude/commands/`
 3. Creates `.claude/settings.json` with hook registrations (won't overwrite existing)
 4. Copies `.oxlintrc.json` to project root (won't overwrite existing)
@@ -732,7 +732,7 @@ Hooks are shell scripts that run automatically before/after Claude Code tool cal
 | `pre-commit-lint.sh` | Bash (git commit) | Runs lint before allowing git commit |
 | `check-ci-before-pr.sh` | Bash (gh pr create) | Blocks PR creation unless CI/CD deployment verified |
 | `gitleaks-scan.sh` | Bash (git commit) | Scans staged files for secrets/credentials via gitleaks |
-| `warn-pr-to-main.sh` | Bash (gh pr create) | Warns when creating a PR directly to main/master |
+| `warn-pr-to-main.sh` | Bash (gh pr create) | Production-safety nudge on a PR to main/master (warn-only, not a block) |
 | `block-env-read.sh` | Read | Blocks reading .env files to prevent credential exposure |
 | `security-check.sh` | **opt-in** (Bash, git commit) | Pre-commit checks: RLS on migrations, no secret keys in client code, auth on API routes. **Not registered by default** — checks are tech-stack-specific (Supabase RLS, Next.js API routes). Register manually in `.claude/settings.json` after customizing the script for your project. |
 | `database-context-injector.sh` | Edit, Write | Adds database schema context when editing SQL files |
