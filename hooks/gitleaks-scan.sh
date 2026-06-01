@@ -16,6 +16,15 @@ if ! echo "$COMMAND" | grep -qE "git\s+commit"; then
 fi
 
 if ! command -v gitleaks &>/dev/null; then
+  # Fail open — but SAY SO, so the user knows the secret-scan gate is off rather
+  # than assuming a silent pass means "clean". Noticed at most once per day
+  # (keyed by a marker in the temp dir) to avoid nagging on every commit.
+  _flag="${TMPDIR:-/tmp}/.cdt-gitleaks-missing-$(date +%Y%m%d 2>/dev/null || echo today)"
+  if [ ! -f "$_flag" ]; then
+    echo "[cdt guardrail OFF] gitleaks not installed — commits are NOT scanned for secrets." >&2
+    echo "                    Install to enable: brew install gitleaks (or see https://github.com/gitleaks/gitleaks)" >&2
+    : > "$_flag" 2>/dev/null || true
+  fi
   exit 0
 fi
 
