@@ -2,7 +2,7 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-> **Conceptual reference:** See [`docs/primitives.md`](https://github.com/zanebarker-ops/claude-dev-toolkit/blob/master/docs/primitives.md) in the toolkit for an in-depth explanation of skills, agents, MCPs, and workflows — and how to enforce critical steps via hooks. Read it before customizing the rules below.
+> **Conceptual reference:** See [`docs/primitives.md`](https://github.com/zanebarker-ops/claude-dev-toolkit/blob/main/docs/primitives.md) in the toolkit for an in-depth explanation of skills, agents, MCPs, and workflows — and how to enforce critical steps via hooks. Read it before customizing the rules below.
 
 ## Project
 

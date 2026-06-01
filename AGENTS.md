@@ -117,7 +117,7 @@ the user.
 
 The installer creates:
 
-- `$TARGET/.claude/hooks/` — 18 workflow hooks
+- `$TARGET/.claude/hooks/` — 17 workflow hooks
 - `$TARGET/.claude/commands/` — 26 agent command prompts
 - `$TARGET/.claude/plugins/pr-review-toolkit/` — PR review agents
 - `$TARGET/.claude/templates/` — reference docs
@@ -125,7 +125,7 @@ The installer creates:
 - `$TARGET/.claude/settings.json` — hook registrations (if absent)
 - `$TARGET/.oxlintrc.json` — lint config (if absent)
 - `$TARGET/scripts/` — `lint-changed.sh`, `check-deploy.sh`,
-  `claude-session.sh`, `migrate-to-ext4.sh`
+  `claude-session.sh`, `migrate-to-ext4.sh`, `doctor.sh`
 - `$TARGET/CLAUDE.md` — starter project instructions (if absent)
 
 ---
