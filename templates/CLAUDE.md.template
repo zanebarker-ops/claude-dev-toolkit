@@ -11,7 +11,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Development Workflow
 
 **Primary workflow: Feature branches + worktrees**
-- EVERY change goes through a feature branch (never commit directly to main or dev)
+- EVERY change goes through a feature branch (never commit directly to main)
 - Use git worktrees for parallel work isolation
 - Push to branch, verify CI/CD passes, then create PR
 
@@ -19,9 +19,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 | Rule | Enforcement |
 |------|-------------|
-| Never commit to main/dev directly | Hooks block this |
-| Feature branches from dev | Use git worktree add |
-| PR to dev only | Never PR directly to main |
+| Never commit to main directly | Hooks block this |
+| Feature branches from main | Use git worktree add |
+| PR to main via feature branch | Never commit straight to main |
 | CI must pass before PR | check-ci-before-pr hook enforces this |
 
 ## Security
@@ -40,7 +40,7 @@ scripts/lint-changed.sh --fix    # Auto-fix
 
 ## Non-Negotiable Rules
 
-1. Rebase from dev before PR
+1. Rebase from main before PR
 2. Zero lint errors before PR
 3. CI/CD must pass before PR
 4. Never bypass git hooks

@@ -21,7 +21,7 @@ the user's answer is ambiguous, ask a follow-up before acting on it.
 Examples of moments that require a prompt:
 
 - `$TARGET` path wasn't provided, or the one provided doesn't exist
-- The base branch isn't stated and isn't obviously `dev` or `main`
+- The base branch isn't stated and isn't obviously `main`
 - A prerequisite is missing and you'd need to install it
 - `CLAUDE.md` has placeholders and you don't know the product name,
   tech stack, or conventions
@@ -37,8 +37,9 @@ Before running anything, confirm with the user:
 
 1. The **absolute path** to the target project they want the toolkit installed
    into (e.g. `/home/alice/repos/my-app`). Call this `$TARGET`.
-2. Whether their git base branch is `dev` (default) or something else
-   (e.g. `main`). Call this `$BASE_BRANCH`.
+2. The toolkit standardizes on a single long-lived branch named `main`. Only
+   ask about the base branch if theirs is named differently (e.g. `master` or
+   `trunk`); otherwise assume `main`. Call this `$BASE_BRANCH`.
 
 If the user has not provided these, ask for them before proceeding. Do not
 guess. Do not install into the current working directory unless the user
@@ -152,9 +153,11 @@ grep -rl '\[YOUR_PRODUCT\]' . | xargs sed -i "s/\[YOUR_PRODUCT\]/<product-name>/
 
 Substitute `<product-name>` with the value the user provided. Do not guess.
 
-### 5c. Configure the base branch (if not `dev`)
+### 5c. Configure the base branch (only if not `main`)
 
-If `$BASE_BRANCH` is not `dev`, set it as an env var in the user's shell rc:
+The toolkit defaults to `main`. Skip this step unless `$BASE_BRANCH` is something
+other than `main` (e.g. `master` or `trunk`), in which case set it as an env var
+in the user's shell rc:
 
 ```bash
 # Detect shell rc
@@ -164,11 +167,12 @@ RC="$HOME/.bashrc"
 echo "export LINT_BASE_BRANCH=$BASE_BRANCH" >> "$RC"
 ```
 
-Also scan hooks for hardcoded `dev` references and report them to the user
-(do not auto-edit — some references are intentional):
+The hooks hardcode `main` as the protected branch. If the base branch has a
+different name, scan and report the references to the user (do not auto-edit —
+some references are intentional):
 
 ```bash
-grep -l 'dev' "$TARGET/.claude/hooks/"*.sh
+grep -l 'main' "$TARGET/.claude/hooks/"*.sh
 ```
 
 ### 5d. Review `.claude/settings.json`

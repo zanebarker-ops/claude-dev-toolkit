@@ -22,7 +22,7 @@ if echo "$USER_MESSAGE" | grep -qiE '\b(create pr|make pr|push.*pr|open.*pr|pr.*
   echo "DO NOT skip this step."
   echo ""
   echo "4. Include a '## Files Changed' section in the PR body listing ALL changed files."
-  echo "   Run: git diff \$(git merge-base HEAD origin/dev) --name-only"
+  echo "   Run: git diff \$(git merge-base HEAD origin/main) --name-only"
   echo "   Format each file as a bullet point with a brief description of what changed."
   echo ""
   echo "5. CI/CD DEPLOYMENT CHECK (BLOCKING)"

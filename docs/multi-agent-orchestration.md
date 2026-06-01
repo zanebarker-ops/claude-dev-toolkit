@@ -58,10 +58,10 @@ Everything is governed by `CDT_USE_CODEX_REVIEW`:
 |---|---|
 | `off` | `codex-review-prompt.sh` emits `SKIP` immediately. Existing flow runs untouched. |
 | `shadow` (DEFAULT) | Pre-flight runs and Codex is called, but the verdict is LOGGED and **non-binding** — lead may still merge. |
-| `binding-dev` | Codex's REDO **blocks merge** for PRs targeting your dev branch. Use `--require-clean-tree` to prevent local-edit bypass. |
+| `binding-main` | Codex's REDO **blocks merge** for PRs targeting your `main` branch. Use `--require-clean-tree` to prevent local-edit bypass. |
 | `binding-all` | Codex's REDO blocks merge for all PRs. |
 
-**Recommended rollout:** ship in `shadow` for 5–10 PRs to calibrate the noise floor, then flip to `binding-dev`, then `binding-all`. Activation is per-developer (in your shell rc), not repo-wide — no commit needed to flip.
+**Recommended rollout:** ship in `shadow` for 5–10 PRs to calibrate the noise floor, then flip to `binding-main`, then `binding-all`. Activation is per-developer (in your shell rc), not repo-wide — no commit needed to flip.
 
 ## Install
 
@@ -182,7 +182,7 @@ See `orchestration/README.md` for the complete env-var reference. Key vars:
 
 | Env var | Required | Default | What it does |
 |---|---|---|---|
-| `CDT_USE_CODEX_REVIEW` | No | `shadow` | Kill switch (`off` / `shadow` / `binding-dev` / `binding-all`) |
+| `CDT_USE_CODEX_REVIEW` | No | `shadow` | Kill switch (`off` / `shadow` / `binding-main` / `binding-all`) |
 | `CDT_CODEX_CAP_CENTS` | No | `10` | Monthly Codex spend ceiling (runaway guard) |
 | `CDT_CODEX_TIER_CAP` | No | `1` | Per-task Codex attempt cap |
 | `CDT_REQUIRED_REVIEWERS` | No | empty | Space-separated agent names whose `Reviewed-By:` trailers must be on HEAD |

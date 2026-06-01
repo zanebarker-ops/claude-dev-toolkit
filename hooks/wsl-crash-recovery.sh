@@ -122,7 +122,7 @@ fi
 
 # Get task description from branch name
 CUR_TASK=""
-if [ -n "$CUR_BRANCH" ] && [ "$CUR_BRANCH" != "dev" ] && [ "$CUR_BRANCH" != "main" ] && [ "$CUR_BRANCH" != "master" ]; then
+if [ -n "$CUR_BRANCH" ] && [ "$CUR_BRANCH" != "main" ] && [ "$CUR_BRANCH" != "master" ]; then
   CUR_TASK=$(echo "$CUR_BRANCH" | sed 's|feature/||;s|-| |g;s|GH [0-9]* ||')
 fi
 

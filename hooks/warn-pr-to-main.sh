@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
-# warn-pr-to-main.sh — Warns when creating a PR directly to main/master.
-# Reminds the user to consider whether the change is safe for production
-# or should go through a staging branch first.
+# warn-pr-to-main.sh — Warns when creating a PR to main/master.
+# In a main-only model, PRs to main ARE the normal path — this is not a block.
+# It's a production-safety nudge: confirm the change is safe to ship, and for
+# risky logic changes make sure review/CI has run first.
 
 set -euo pipefail
 
@@ -12,24 +13,25 @@ COMMAND=$(echo "$INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); p
 if echo "$COMMAND" | grep -qE 'gh pr create' && echo "$COMMAND" | grep -qE '\-\-base (main|master)|\-\-base=(main|master)'; then
     cat >&2 << 'WARN'
 
-  PR TARGET: main/master (PRODUCTION)
+  PR TARGET: main (PRODUCTION)
 
-  You are creating a PR directly to the production branch.
+  main is the only long-lived branch, so this is the normal PR target.
+  Before merging, double-check the change is safe to ship:
 
-  This is appropriate for:
+  Low-risk (merge once CI is green):
     - Copy / verbiage changes
     - Image updates
     - Documentation changes
     - Simple non-destructive SQL
 
-  This is NOT appropriate for:
+  Higher-risk (get review + green CI first):
     - Auth / session / OAuth changes
     - New feature implementations
     - API route or data model changes
     - Schema migrations with destructive ops
 
-  If your change includes logic changes, consider using
-  a staging branch (e.g. dev) instead.
+  If your change includes risky logic, make sure it has been reviewed
+  and CI has passed before you merge to production.
 
 WARN
 fi

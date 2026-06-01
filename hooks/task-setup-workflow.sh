@@ -25,10 +25,10 @@ REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 PROJECT_NAME=$(basename "$REPO_ROOT" 2>/dev/null)
 WORKTREES_DIR="${PROJECT_NAME}-worktrees"
 
-# Check if we're in main repo on dev/main branch (not in a worktree)
+# Check if we're in the main repo on the main branch (not in a worktree)
 # Detects main repo by checking if .git is a directory (not a file, as in worktrees)
 IN_MAIN_REPO=false
-if [ -d "$REPO_ROOT/.git" ] && [ "$BRANCH" = "dev" -o "$BRANCH" = "main" ]; then
+if [ -d "$REPO_ROOT/.git" ] && [ "$BRANCH" = "main" ]; then
   IN_MAIN_REPO=true
 fi
 
@@ -74,7 +74,7 @@ Before starting this work, you MUST create:
 
 3. **Worktree + Branch** (for isolated workspace):
    \`\`\`bash
-   git worktree add ../${WORKTREES_DIR}/GH-###-description -b feature/GH-###-description dev
+   git worktree add ../${WORKTREES_DIR}/GH-###-description -b feature/GH-###-description main
    cd ../${WORKTREES_DIR}/GH-###-description
    \`\`\`
 
@@ -102,7 +102,7 @@ Before starting this work, you MUST create:
 
 2. **Worktree + Branch** (for isolated workspace):
    \`\`\`bash
-   git worktree add ../${WORKTREES_DIR}/GH-###-description -b feature/GH-###-description dev
+   git worktree add ../${WORKTREES_DIR}/GH-###-description -b feature/GH-###-description main
    cd ../${WORKTREES_DIR}/GH-###-description
    \`\`\`
 

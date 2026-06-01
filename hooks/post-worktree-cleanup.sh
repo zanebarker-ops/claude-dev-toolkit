@@ -2,7 +2,7 @@
 # Claude Code Hook: Post-worktree cleanup automation
 # Triggers after `git worktree remove` to:
 # 1. Close the associated GitHub issue (if GH-### pattern found in path)
-# 2. Sync all remaining worktrees with origin/dev
+# 2. Sync all remaining worktrees with origin/main
 #
 # Exit codes:
 #   0 - Success (always returns 0 for PostToolUse)
@@ -52,11 +52,11 @@ See the merged PR for details of changes made." 2>/dev/null
 fi
 
 # =============================================================================
-# STEP 2: Sync all remaining worktrees with origin/dev
+# STEP 2: Sync all remaining worktrees with origin/main
 # =============================================================================
 
 echo ""
-echo "Syncing all worktrees with origin/dev..."
+echo "Syncing all worktrees with origin/main..."
 
 # First, fetch latest from origin in main repo
 cd "$MAIN_REPO" 2>/dev/null
@@ -78,9 +78,9 @@ if [ -d "$WORKTREES_DIR" ]; then
         # Check if there are uncommitted changes
         if git diff --quiet 2>/dev/null && git diff --cached --quiet 2>/dev/null; then
           # No uncommitted changes, safe to merge
-          git merge origin/dev --no-edit --quiet 2>/dev/null
+          git merge origin/main --no-edit --quiet 2>/dev/null
           if [ $? -eq 0 ]; then
-            echo "  ✓ Updated with latest from dev"
+            echo "  ✓ Updated with latest from main"
           else
             echo "  ⚠ Merge conflict - manual resolution needed"
           fi

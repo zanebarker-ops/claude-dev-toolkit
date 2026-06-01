@@ -1,0 +1,9 @@
+# The build context is the docker/ dir (only the Dockerfile + entrypoint are
+# needed). These patterns keep the context minimal if it ever widens.
+**/node_modules
+**/.git
+**/dist
+**/build
+**/.next
+**/coverage
+**/*.log

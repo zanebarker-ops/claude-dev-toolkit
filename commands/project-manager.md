@@ -31,21 +31,21 @@ For any feature, follow this 8-phase approach:
 
 ## Worktree Setup
 
-**CRITICAL**: All work must happen in worktrees, never directly on `dev` or `main`.
+**CRITICAL**: All work must happen in worktrees, never directly on `main`.
 
 ```bash
 # 1. Create GitHub issue first
 gh issue create --title "Feature: [description]" --body "..." --label "feature"
 
 # 2. Create worktree
-git worktree add ../${PROJECT_NAME}-worktrees/GH-###-description -b feature/GH-###-description dev
+git worktree add ../${PROJECT_NAME}-worktrees/GH-###-description -b feature/GH-###-description main
 
 # 3. Work in worktree
 cd ../${PROJECT_NAME}-worktrees/GH-###-description
 
 # 4. When complete
 git push -u origin feature/GH-###-description
-gh pr create --base dev --title "..." --body "..."
+gh pr create --base main --title "..." --body "..."
 ```
 
 ## Task Breakdown Template

@@ -35,7 +35,7 @@ Use this template to create a comprehensive Product Requirements Plan for new <y
 
 ```bash
 # Create feature branch and worktree
-git worktree add ../<repo>-worktrees/GH-###-feature-name -b feature/GH-###-feature-name dev
+git worktree add ../<repo>-worktrees/GH-###-feature-name -b feature/GH-###-feature-name main
 
 # Navigate to worktree
 cd ../<repo>-worktrees/GH-###-feature-name
@@ -402,7 +402,7 @@ npx pnpm run test
 ### Deployment Checklist
 
 - [ ] All validation gates pass
-- [ ] PR created to `dev`
+- [ ] PR created to `main`
 - [ ] Preview deployment works
 - [ ] Manual testing complete
 

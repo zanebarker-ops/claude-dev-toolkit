@@ -14,8 +14,8 @@ Rules are markdown files with YAML frontmatter stored in `.claude/hookify.*.loca
 
 | Rule | File | Event | Description |
 |------|------|-------|-------------|
-| **Branch Protection** | `hookify.block-direct-main-dev.local.md` | bash | Blocks direct commits/pushes to `main` or `dev` |
-| **Branch Protection (Edit/Write)** | `check-worktree.sh` via `settings.json` | edit, write | Blocks Edit/Write tool calls on `main` or `dev` in main repo |
+| **Branch Protection** | `hookify.block-direct-main.local.md` | bash | Blocks direct commits/pushes to `main` |
+| **Branch Protection (Edit/Write)** | `check-worktree.sh` via `settings.json` | edit, write | Blocks Edit/Write tool calls on `main` in main repo |
 | **Push Without Lint** | `hookify.block-push-without-lint.local.md` | bash | Blocks `git push` to feature branches without lint/typecheck |
 | **Hook Bypass** | `hookify.block-hook-bypass.local.md` | bash | Blocks bypassing git hooks (`--no-verify`, `core.hooksPath`) |
 | **Env Protection** | `hookify.block-env-modification.local.md` | file | Blocks modifications to `.env` files |
@@ -39,20 +39,20 @@ Rules are markdown files with YAML frontmatter stored in `.claude/hookify.*.loca
 
 ## Rule Details
 
-### Block: Direct Main/Dev Commits
+### Block: Direct Main Commits
 
-**Trigger:** `git push/commit` to `main` or `dev`, or `git checkout main`
+**Trigger:** `git push/commit` to `main`
 
 **Why:** CLAUDE.md mandates all work through feature branches and PRs.
 
 **Correct workflow:**
 ```bash
 PROJECT_NAME=$(basename $(git rev-parse --show-toplevel))
-git worktree add ../${PROJECT_NAME}-worktrees/GH-###-desc -b feature/GH-###-desc dev
+git worktree add ../${PROJECT_NAME}-worktrees/GH-###-desc -b feature/GH-###-desc main
 cd ../${PROJECT_NAME}-worktrees/GH-###-desc
 # ... work ...
 git push -u origin feature/GH-###-desc
-gh pr create --base dev
+gh pr create --base main
 ```
 
 ---
@@ -133,7 +133,7 @@ git push -u origin feature/GH-###-description
 ```bash
 git push -u origin feature/GH-###-description
 scripts/check-ci-deploy.sh $(git rev-parse HEAD)  # Wait for deployment
-gh pr create --base dev --title "..." --body "..."
+gh pr create --base main --title "..." --body "..."
 ```
 
 ---

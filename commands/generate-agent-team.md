@@ -299,7 +299,7 @@ Triggers before file edits. Checks for:
 - Auth bypass patterns
 
 #### 3. `enforce-worktree-path.sh` (PreToolUse - Edit/Write)
-Triggers before file edits. Ensures edits only happen in worktrees (not directly on dev/main branches). Derives project name dynamically from git root.
+Triggers before file edits. Ensures edits only happen in worktrees (not directly on the main branch). Derives project name dynamically from git root.
 
 #### 4. `agent-review-reminder.sh` (PostToolUse - Bash)
 Triggers after git push. Reminds to:
