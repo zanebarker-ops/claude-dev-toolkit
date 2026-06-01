@@ -6,7 +6,7 @@ name: Deploy demo slides to GitHub Pages
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     paths:
       - '.github/workflows/deploy-slides.yml'
   workflow_dispatch:
