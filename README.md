@@ -124,7 +124,7 @@ Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at
 | **Hookify Rules** | 15 | Markdown-based rules for blocking/warning on patterns |
 | **Agent Commands** | 26 | Specialized AI agent prompts (`/start-task`, `/security-auditor`, etc.) |
 | **PR Review Toolkit** | 6 agents | Automated multi-agent code review before PRs |
-| **Scripts** | 4 (installed) | Lint runner, deploy checker, session manager, ext4 migration |
+| **Scripts** | 5 (installed) | Lint runner, deploy checker, session manager, ext4 migration, **doctor** (health check) |
 | **Templates** | 9 | CLAUDE.md, worktree workflow, model selection, agents, PRP, hookify docs, coordination system |
 | **Config** | 2 | `.oxlintrc.json`, `settings.json` template |
 | **Multi-Vendor Review** | 18 files | Codex-based binding review loop (hooks + scripts + lib + verify tests) |
@@ -181,8 +181,17 @@ Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at
    but registers **zero** hooks. You must merge the template's `hooks` block
    yourself, or no enforcement runs. The installer warns loudly when this happens.
 
-To see what's active on **your** machine, read the prerequisite report `install.sh`
-prints at the end — it now states the consequence of each missing tool.
+**Check your own machine in one command.** After installing, run the bundled
+health check — it reports, on whatever machine it runs, which enforcement is
+ACTIVE vs OFF (fail-open tools, hook wiring, platform caveats) and changes
+nothing:
+
+```bash
+./scripts/doctor.sh
+```
+
+`install.sh` also prints a prerequisite report at the end stating the consequence
+of each missing tool.
 
 ---
 

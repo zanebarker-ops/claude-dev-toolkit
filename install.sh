@@ -113,7 +113,7 @@ else
 fi
 
 section "Installing scripts"
-for script in lint-changed.sh check-deploy.sh claude-session.sh migrate-to-ext4.sh; do
+for script in lint-changed.sh check-deploy.sh claude-session.sh migrate-to-ext4.sh doctor.sh; do
   if [ -f "$TARGET/scripts/$script" ]; then
     warn "Skipped scripts/$script (already exists)"
   else
@@ -183,8 +183,9 @@ if [ "$SETTINGS_SKIPPED" = "1" ]; then
   echo  "    into .claude/settings.json, or no enforcement will run."
   echo  ""
 fi
-echo "  See the README 'Platform support & what's actually active' section to confirm"
-echo "  which hooks actually run on your OS/toolchain."
+echo "  Confirm what's actually active on THIS machine — run the health check:"
+echo "       ./scripts/doctor.sh"
+echo "  (Also see the README 'Platform support & what's actually active' section.)"
 echo ""
 echo "  Next steps:"
 echo "    1. Edit CLAUDE.md with your project details"
