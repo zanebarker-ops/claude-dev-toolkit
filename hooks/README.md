@@ -89,6 +89,18 @@ The model can never bypass a `block`. You don't have to remember the policy — 
 |---|---|---|
 | `wsl-crash-recovery.sh` | `UserPromptSubmit` | On every prompt, detects stale state from crashed sessions and outputs continuation prompts. Also writes the current session's state for future detection. |
 
+### Companion: threat-level command guardrails (external, optional)
+
+The hooks above are **workflow-shaped** — none of them block a *destructive
+command* (`rm -rf` in a chain, `bash -c`, `curl | sh`, reads of `~/.ssh`/`~/.aws`).
+For that threat layer, pair the toolkit with
+[**claude-code-guardrails**](https://github.com/uaziz1/claude-code-guardrails) (MIT):
+its Python `bash-guard.py` / `edit-write-guard.py` / `audit.py` / `session-start.py`
+hooks scan the *full command* and fire even under `--dangerously-skip-permissions`.
+Merge-ready hook entries live in
+[`config/settings.guardrails.json`](../config/settings.guardrails.json); see the
+**Threat-Level Guardrails** section of the [root README](../README.md#threat-level-guardrails-optional-companion).
+
 ---
 
 ## Customizing
