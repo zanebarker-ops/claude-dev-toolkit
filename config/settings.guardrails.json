@@ -1,0 +1,33 @@
+{
+  "__comment": "OPT-IN OVERLAY — not installed by default. Merge these hook entries into your .claude/settings.json AFTER installing claude-code-guardrails (https://github.com/uaziz1/claude-code-guardrails, MIT). These four Python hooks add threat-level command/secret guardrails that fire even under `claude --dangerously-skip-permissions` (which the toolkit's claude-session.sh uses). See the 'Threat-level guardrails' section of README.md. Do NOT copy guardrails' `permissions` block or `disableBypassPermissionsMode` here — they are bypassed under skip-permissions mode and the latter breaks claude-session.sh. The $HOME/.claude/hooks/*.py paths assume guardrails' own install.sh, which installs to ~/.claude/hooks/.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          { "type": "command", "command": "$HOME/.claude/hooks/bash-guard.py" }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          { "type": "command", "command": "$HOME/.claude/hooks/edit-write-guard.py" }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          { "type": "command", "command": "$HOME/.claude/hooks/audit.py" }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          { "type": "command", "command": "$HOME/.claude/hooks/session-start.py" }
+        ]
+      }
+    ]
+  }
+}

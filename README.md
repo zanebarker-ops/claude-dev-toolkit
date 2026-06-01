@@ -40,6 +40,7 @@ The arc:
 - [Installation](#installation)
 - [Hooks Reference](#hooks-reference)
 - [Hookify Rules Reference](#hookify-rules-reference)
+- [Threat-Level Guardrails (Optional Companion)](#threat-level-guardrails-optional-companion)
 - [Agent Commands Reference](#agent-commands-reference)
 - [PR Review Toolkit](#pr-review-toolkit)
 - [Linting (oxlint)](#linting-oxlint)
@@ -729,6 +730,56 @@ Hookify rules are lightweight markdown files that define pattern-matching rules.
 | Migration Duplicates | `hookify.warn-migration-duplicate-fields.local.md` | Duplicate field patterns in migrations |
 | Migration Docs | `hookify.warn-migration-undocumented.local.md` | Undocumented database migrations |
 | Orphaned Tables | `hookify.warn-migration-orphaned-tables.local.md` | CREATE TABLE duplicating existing concepts |
+
+---
+
+## Threat-Level Guardrails (Optional Companion)
+
+This toolkit's enforcement is **workflow-shaped** — it keeps you on `main`, inside
+worktrees, linted, and reviewed. It does **not** stop Claude from running a
+*destructive command* (e.g. `cd /tmp && rm -rf x`). That's a different threat
+model, and it's exactly what [**claude-code-guardrails**](https://github.com/uaziz1/claude-code-guardrails)
+(MIT, © 2026 Umair Aziz) covers. The two layer cleanly:
+
+| Layer | This toolkit | claude-code-guardrails |
+|---|---|---|
+| Focus | Workflow (branches, worktrees, lint, PR gating) | Threats (dangerous commands, secret exfil, credential writes) |
+| Catches | Wrong-branch commits, cross-worktree edits, unlinted pushes | `rm -rf`/destructive git in **chains/wrappers/subshells**, `bash -c`/`curl\|sh`, reads of `~/.ssh` `~/.aws` `.env`, credential content in edits |
+| Mechanism | Bash hooks + (inert) hookify rules | Python hooks: `bash-guard.py`, `edit-write-guard.py`, `audit.py`, `session-start.py` |
+| Audit log | none | PostToolUse JSONL in `~/.claude/session-logs/` |
+
+### Why hooks, not its permissions block
+
+`claude-session.sh` launches Claude with `--dangerously-skip-permissions`, which
+**bypasses the `permissions` allow/deny/ask system entirely**. Guardrails' *hooks*
+still fire (hooks are independent of permission mode) — so under this toolkit's
+default workflow the value comes from the four hooks, **not** from guardrails'
+`permissions` block. Do **not** copy guardrails' `permissions` block or its
+`disableBypassPermissionsMode: "disable"` into your settings: the former is inert
+under skip-permissions, and the latter **breaks `claude-session.sh`**. (If you run
+*without* skip-permissions, the permission lists do apply — your call.)
+
+### Install (alongside, not vendored)
+
+```bash
+# 1. Install guardrails' Python hooks into ~/.claude/hooks/
+git clone https://github.com/uaziz1/claude-code-guardrails.git
+cd claude-code-guardrails && ./install.sh && ./tests/run.sh   # 126 self-tests
+
+# 2. Merge the hook entries from this repo's overlay into your project's
+#    .claude/settings.json (append to the matching PreToolUse/PostToolUse arrays):
+#      config/settings.guardrails.json
+```
+
+The overlay ([`config/settings.guardrails.json`](config/settings.guardrails.json))
+contains **only** the four hook registrations, ready to merge — multiple hooks per
+matcher run in sequence, so they coexist with this toolkit's own hooks. Requires
+`python3` (already assumed by `gitleaks-scan.sh` / crash recovery).
+
+> This fits the toolkit's [soft-vs-hard enforcement model](docs/primitives.md):
+> guardrails is a **hard** security layer that complements the **hard** workflow
+> layer here. It's referenced as an external companion, not bundled — so it stays
+> on its own release cadence.
 
 ---
 

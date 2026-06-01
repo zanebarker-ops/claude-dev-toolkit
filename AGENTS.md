@@ -179,6 +179,25 @@ match what the user expects. If the user had a pre-existing
 the template at `$TARGET/.claude/templates/settings.json.template` and
 ask whether they want to merge hook entries in.
 
+### 5e. (Optional) Offer threat-level guardrails
+
+The toolkit's hooks enforce *workflow*, not *command safety*. If the user wants
+hard protection against dangerous commands and secret exfiltration, point them to
+the optional [claude-code-guardrails](https://github.com/uaziz1/claude-code-guardrails)
+companion (MIT). Do **not** install it automatically — it adds Python hooks to
+`~/.claude/hooks/` and is the user's choice. If they opt in:
+
+1. They run guardrails' own installer:
+   `git clone https://github.com/uaziz1/claude-code-guardrails.git && cd claude-code-guardrails && ./install.sh`
+2. Merge the four hook entries from `config/settings.guardrails.json` into
+   `$TARGET/.claude/settings.json` (append to the matching `PreToolUse`/`PostToolUse`
+   arrays).
+3. **Do not** copy guardrails' `permissions` block or `disableBypassPermissionsMode`
+   — both are bypassed under `--dangerously-skip-permissions` (which
+   `claude-session.sh` uses) and the latter breaks that launcher.
+
+See the **Threat-Level Guardrails** section of the root README for the rationale.
+
 ---
 
 ## 6. Verify the install

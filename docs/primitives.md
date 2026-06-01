@@ -258,6 +258,13 @@ Hard enforcement requires writing a **shell hook** that:
 
 See [`hooks/README.md`](../hooks/README.md) for the existing hook catalog and [`hookify-rules/`](../hookify-rules/) for declarative rules.
 
+> **Two flavors of hard enforcement.** The toolkit's hooks are *workflow* hard
+> enforcement (right branch, right worktree, lint/CI gates). They do **not** block
+> *dangerous commands* (`rm -rf` in a chain, `bash -c`, secret exfil) — that's a
+> separate threat model handled by the optional
+> [claude-code-guardrails](https://github.com/uaziz1/claude-code-guardrails)
+> companion. See [Threat-Level Guardrails](../README.md#threat-level-guardrails-optional-companion).
+
 ---
 
 ## Same goal, three enforcement options
@@ -403,5 +410,6 @@ That's a feature. The friction of writing a hook is exactly what stops you from 
 - [`hookify-rules/`](../hookify-rules/) — declarative rules for common block/warn patterns
 - [`commands/`](../commands/) — the shipped skills (slash commands) you can copy/customize
 - [`docs/multi-agent-orchestration.md`](./multi-agent-orchestration.md) — the multi-vendor binding review loop (Claude + Codex), which combines all four primitives + hard enforcement
+- [Threat-Level Guardrails](../README.md#threat-level-guardrails-optional-companion) — optional [claude-code-guardrails](https://github.com/uaziz1/claude-code-guardrails) companion: hard enforcement against *dangerous commands / secret exfil* (the threat layer the toolkit's workflow hooks don't cover)
 - [`AGENTS.md`](../AGENTS.md) — agent system overview
 - [`templates/CLAUDE.md.template`](../templates/CLAUDE.md.template) — starting point for your own CLAUDE.md
