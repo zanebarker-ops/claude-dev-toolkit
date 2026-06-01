@@ -29,6 +29,7 @@ The arc:
 - [Demo](#demo)
 - [Lighter setups for non-SaaS projects](#lighter-setups-for-non-saas-projects)
 - [What's Included](#whats-included)
+- [Platform support & what's actually active](#platform-support--whats-actually-active)
 - [Prerequisites](#prerequisites)
   - [GitHub Account Setup (start here if new to GitHub)](#github-account-setup-start-here-if-new-to-github)
   - [WSL2 Setup (Windows)](#wsl2-setup-windows)
@@ -127,6 +128,61 @@ Until then — stay lighter. The heavy toolkit's costs (3.5–4B tokens/month at
 | **Templates** | 9 | CLAUDE.md, worktree workflow, model selection, agents, PRP, hookify docs, coordination system |
 | **Config** | 2 | `.oxlintrc.json`, `settings.json` template |
 | **Multi-Vendor Review** | 18 files | Codex-based binding review loop (hooks + scripts + lib + verify tests) |
+
+> The **Hookify Rules** count above is "shipped", not "active" — those rules need
+> a loader this repo does not include. See
+> [Platform support & what's actually active](#platform-support--whats-actually-active).
+
+---
+
+## Platform support & what's actually active
+
+> **Read this before installing.** The toolkit's enforcement is built from **bash
+> hooks** plus optional CLI tools. What is actually *active* depends on your OS,
+> your shell, and which tools you have installed. `install.sh` never installs
+> system tools, and any hook whose tool is missing **fails open** (skips silently)
+> unless noted below. This section is here so you don't assume a protection is on
+> when it isn't.
+
+### By platform
+
+| Platform | Do the hooks fire? | Notes |
+|---|---|---|
+| **macOS / Linux** | ✅ Yes, natively | The intended environment. Bash hooks run reliably; just install the optional CLI tools below for full coverage. |
+| **Windows + WSL2** | ✅ Yes | Run the toolkit *inside* WSL. This is the supported path on Windows. |
+| **Windows (native)** | ⚠️ Not guaranteed | Hooks are `.sh` files; whether Claude Code's Windows hook runner executes them through Git Bash varies by version/config. `install.sh` itself needs Git Bash or WSL to run, and `tmux` (crash-proof sessions) has no native Windows build. **Treat enforcement as off until you verify it** — or just use WSL2. |
+
+### By feature (assuming the hook fires on your platform)
+
+| Feature | Hook / script | Requires | If the requirement is missing |
+|---|---|---|---|
+| Worktree gating & containment | `check-worktree`, `check-cross-worktree`, `enforce-worktree-path` | bash, git | Hook can't run → **no gating** |
+| Lint gate before commit | `pre-commit-lint` | **oxlint** + `scripts/lint-changed.sh` | **Fails open** — commit proceeds unchecked |
+| Secret scan before commit | `gitleaks-scan` | **gitleaks** + python3 | **Fails open** — no secret scanning |
+| `.env` read block | `block-env-read` | bash | Hook can't run → no block |
+| CI gate / PR-to-`main` nudge | `check-ci-before-pr`, `warn-pr-to-main` | bash, python3 | Hook can't run → no gate/nudge |
+| Crash recovery | `wsl-crash-recovery` | **jq** | Degraded or no recovery prompts |
+| Crash-proof sessions | `scripts/claude-session.sh` | **tmux** | Unavailable |
+| Codex review loop (opt-in) | `orchestration/` | jq + Codex CLI | Loop disabled |
+| Docker-per-worktree (opt-in) | `docker/` | docker + bash | Unavailable |
+| Threat-level guardrails (opt-in) | external companion | python3 | See its README |
+
+### Two silent gotchas worth knowing up front
+
+1. **Hookify rules are not active by default.** The 15 `hookify.*.local.md` rules are
+   declarative markdown that needs a **loader this repo does not ship**, and
+   `settings.json` never references them. Their two important protections
+   (no-direct-`main`, worktree containment) are **duplicated by shell hooks**, so
+   you're covered there — but the other ~13 (RLS / console.log / migration
+   warnings, etc.) do nothing until you supply a loader. See
+   [Hookify Rules Reference](#hookify-rules-reference).
+2. **Installing over an existing `settings.json` wires nothing.** `install.sh` will
+   not overwrite an existing `.claude/settings.json` — it copies the hook *files*
+   but registers **zero** hooks. You must merge the template's `hooks` block
+   yourself, or no enforcement runs. The installer warns loudly when this happens.
+
+To see what's active on **your** machine, read the prerequisite report `install.sh`
+prints at the end — it now states the consequence of each missing tool.
 
 ---
 
@@ -704,9 +760,19 @@ Hooks are registered in `.claude/settings.json`. Each hook:
 
 Hookify rules are lightweight markdown files that define pattern-matching rules. They complement hooks with simpler, declarative checks.
 
+> ⚠️ **Not active by default.** Hookify rules are *declarative descriptions* — they
+> only fire if you wire a **loader** into `settings.json` that reads and applies
+> them. **This repo does not ship that loader**, and the installed `settings.json`
+> does not reference one. So the rules below are **documentation of intent, not
+> live enforcement**, until you supply a loader (or port a rule to a shell hook).
+> The two that matter — `block-direct-main` and `block-cross-worktree` — are
+> already enforced independently by the **shell** hooks (`check-worktree.sh`,
+> `check-cross-worktree.sh`), so those protections are live regardless. The rest
+> are inert until wired. See [`hookify-rules/README.md`](hookify-rules/README.md).
+
 > **Full reference:** [`hookify-rules/README.md`](hookify-rules/README.md) — full YAML schema, per-rule details, loader wiring, customization.
 
-### Block Rules (P0 — Critical)
+### Block Rules (P0 — Critical) — *require a loader; see the warning above*
 
 | Rule | File | What It Catches |
 |------|------|----------------|
