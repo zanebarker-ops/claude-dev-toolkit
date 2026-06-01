@@ -44,7 +44,7 @@ if echo "$COMMAND" | grep -q "git worktree add"; then
   echo "    ../${EXPECTED_DIR}/" >&2
   echo "" >&2
   echo "  Correct format:" >&2
-  echo "    git worktree add ../${EXPECTED_DIR}/GH-###-name -b feature/GH-###-name dev" >&2
+  echo "    git worktree add ../${EXPECTED_DIR}/GH-###-name -b feature/GH-###-name main" >&2
   echo "" >&2
   exit 2
 fi

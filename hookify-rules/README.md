@@ -14,7 +14,7 @@ The `.local.md` suffix marks them as project-local rules (not shared upstream).
 
 ```yaml
 ---
-name: block-direct-main-dev          # unique identifier
+name: block-direct-main              # unique identifier
 enabled: true                        # quick toggle
 priority: 100                        # higher = evaluated first
 event: bash                          # which Claude Code event to hook
@@ -49,7 +49,7 @@ message: |
 
 | Rule | Triggers when... | Why |
 |---|---|---|
-| `block-direct-main-dev` | `git push` or `git commit` to `main`/`dev`, or `git checkout main` | Forces feature branches and PRs — no direct work on protected branches |
+| `block-direct-main` | `git push` or `git commit` to `main` | Forces feature branches and PRs — no direct work on the protected branch |
 | `block-credentials-in-client` | Edit/write a client-side file containing service-role keys | Service-role keys must never be in client code; they grant full DB access |
 | `block-cross-worktree` | Edit/write a file in a worktree other than the current one | Prevents one Claude session from clobbering work in another |
 | `block-env-modification` | Edit/write to a `.env*` file | `.env` files contain secrets — must be edited by humans |

@@ -56,7 +56,7 @@ This skill achieves 80% of the value in 20% of the time/cost by combining all re
 
 ```bash
 # Step 1: Get the diff
-git diff origin/dev...HEAD
+git diff origin/main...HEAD
 
 # Step 2: Analyze the diff for all criteria
 # (Single pass through the changes)

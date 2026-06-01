@@ -15,8 +15,8 @@ Before writing ANY code, complete these steps in order:
 2. **Create Worktree:**
    ```bash
    PROJECT_NAME=$(basename $(git rev-parse --show-toplevel))
-   git pull origin dev
-   git worktree add ../${PROJECT_NAME}-worktrees/GH-###-description -b feature/GH-###-description dev
+   git pull origin main
+   git worktree add ../${PROJECT_NAME}-worktrees/GH-###-description -b feature/GH-###-description main
    cd ../${PROJECT_NAME}-worktrees/GH-###-description
    ```
 
@@ -82,7 +82,7 @@ If `/security-auditor` outputs `❌ SECURITY BLOCK` → fix ALL issues and re-ru
 4. **Commits include refs:** `"Description (GH-###)"`
 5. **Push:** `git push -u origin feature/GH-###-description`
 6. **Wait for CI/CD** to pass on preview deployment
-7. **PR to dev:** `gh pr create --base dev --title "..." --body "..."`
+7. **PR to main:** `gh pr create --base main --title "..." --body "..."`
 
 ## TASK DESCRIPTION
 

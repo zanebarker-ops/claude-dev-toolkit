@@ -6,7 +6,7 @@
 #   0 - Allow the tool call
 #   2 - Block the tool call (stderr sent to Claude as feedback)
 #
-# Exceptions (allowed on dev):
+# Exceptions (allowed on main):
 #   - Success prompts: .claude/prompts/success-*.md
 
 # Detect if we're in the main repo vs a worktree using git internals.
@@ -29,10 +29,10 @@ fi
 # We're in the main repo (.git is a directory) - check branch
 BRANCH=$(git branch --show-current 2>/dev/null)
 
-# Block if on main or dev branch
-if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "dev" ]; then
+# Block if on the protected main branch
+if [ "$BRANCH" = "main" ]; then
 
-  # Exception: Allow success prompts to be committed directly to dev
+  # Exception: Allow success prompts to be committed directly to main
   # Check if only success prompt files are being modified
   STAGED=$(git diff --cached --name-only 2>/dev/null)
   UNSTAGED=$(git diff --name-only 2>/dev/null)
@@ -67,11 +67,11 @@ if [ "$BRANCH" = "main" ] || [ "$BRANCH" = "dev" ]; then
   echo "" >&2
   echo "  You MUST use a worktree for feature work:" >&2
   echo "" >&2
-  echo "    git worktree add ../${WORKTREES_DIR}/GH-XXX-name -b feature/GH-XXX-name dev" >&2
+  echo "    git worktree add ../${WORKTREES_DIR}/GH-XXX-name -b feature/GH-XXX-name main" >&2
   echo "    cd ../${WORKTREES_DIR}/GH-XXX-name" >&2
   echo "" >&2
   echo "  Exception: Success prompts (.claude/prompts/success-*.md) can be" >&2
-  echo "  committed directly to dev without a worktree." >&2
+  echo "  committed directly to main without a worktree." >&2
   echo "" >&2
   exit 2  # Exit code 2 blocks the tool call in Claude Code
 fi

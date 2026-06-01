@@ -25,7 +25,7 @@
 #   dynamic-round-cap.sh --from-git [--base BRANCH]
 #
 # --from-git computes both values from `git diff --stat --diff-filter=...`
-# against the given base (default: dev).
+# against the given base (default: main).
 #
 # Output: a single integer to stdout. Exit codes:
 #   0   ok
@@ -46,7 +46,7 @@ USAGE
 diff_lines=""
 net_new=""
 from_git=0
-base="dev"
+base="main"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in

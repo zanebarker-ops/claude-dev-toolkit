@@ -67,20 +67,20 @@ VOTE GUIDELINES:
 ## Execution Flow
 
 ```bash
-# Step 0: MANDATORY pre-flight — verify branch is rebased on dev
+# Step 0: MANDATORY pre-flight — verify branch is rebased on main
 # Stale worktrees silently overwrite other PRs' changes (no conflict warning).
 # This caused repeated billing page regressions. See ADR #62.
-git fetch origin dev --quiet
-MERGE_BASE=$(git merge-base HEAD origin/dev)
-DEV_TIP=$(git rev-parse origin/dev)
-if [ "$MERGE_BASE" != "$DEV_TIP" ]; then
-  echo "BLOCKED: Branch is behind origin/dev. Run: git rebase origin/dev"
+git fetch origin main --quiet
+MERGE_BASE=$(git merge-base HEAD origin/main)
+MAIN_TIP=$(git rev-parse origin/main)
+if [ "$MERGE_BASE" != "$MAIN_TIP" ]; then
+  echo "BLOCKED: Branch is behind origin/main. Run: git rebase origin/main"
   echo "Do NOT proceed to voting until rebased. Rule #1."
   exit 1
 fi
 
 # Step 1: Get changed files
-git diff --name-only origin/dev...HEAD
+git diff --name-only origin/main...HEAD
 
 # Step 2: Read each changed file for context
 
@@ -186,7 +186,7 @@ After fixing, run `/vote-for-pr` again.
 ```
 
 This will:
-1. Analyze all changes on current branch vs dev
+1. Analyze all changes on current branch vs main
 2. Run 5 voting agents in parallel
 3. Output aggregated vote summary
 4. If approved, you can proceed to create PR

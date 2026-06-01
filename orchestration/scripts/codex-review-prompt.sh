@@ -22,13 +22,13 @@
 #   case "$verdict" in
 #     SKIP)   echo "Codex review skipped (kill switch off)"; exit 0 ;;
 #     REDO)   reason="$(echo "$out" | jq -r .reason)" ; abort "$reason" ;;
-#     PROMPT) prompt="$(echo "$out" | jq -r .prompt) "; codex review --base dev <<<"$prompt" ;;
+#     PROMPT) prompt="$(echo "$out" | jq -r .prompt) "; codex review --base main <<<"$prompt" ;;
 #   esac
 #
 # Kill switch: CDT_USE_CODEX_REVIEW (default: shadow)
 #   off          — emit SKIP verdict immediately (no pre-flight, no Codex)
 #   shadow       — pre-flight runs; Codex called but verdict NOT binding (lead may override)
-#   binding-dev  — pre-flight runs; Codex verdict binding ONLY for PRs targeting dev
+#   binding-main — pre-flight runs; Codex verdict binding ONLY for PRs targeting main
 #   binding-all  — pre-flight runs; Codex verdict binding for all PRs
 #
 # Note: the binding semantics (REDO blocks merge) is a workflow rule enforced
@@ -38,11 +38,11 @@
 # script trivially testable without OpenAI auth.
 #
 # Usage:
-#   codex-review-prompt.sh [--base BRANCH]   # base defaults to "dev"
+#   codex-review-prompt.sh [--base BRANCH]   # base defaults to "main"
 
 set -euo pipefail
 
-base="dev"
+base="main"
 require_clean_tree=0
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -87,10 +87,10 @@ case "${CDT_USE_CODEX_REVIEW:-shadow}" in
   off)
     emit_skip "CDT_USE_CODEX_REVIEW=off — Codex final-gate review disabled"
     ;;
-  shadow|binding-dev|binding-all)
+  shadow|binding-main|binding-all)
     ;;  # fall through to pre-flight checks
   *)
-    echo "invalid CDT_USE_CODEX_REVIEW='${CDT_USE_CODEX_REVIEW}' (expected: off|shadow|binding-dev|binding-all)" >&2
+    echo "invalid CDT_USE_CODEX_REVIEW='${CDT_USE_CODEX_REVIEW}' (expected: off|shadow|binding-main|binding-all)" >&2
     exit 2
     ;;
 esac

@@ -256,7 +256,7 @@ Close the test issue afterwards (`gh issue close 1 --repo <your-username>/my-fir
 - **SSH keys** — not strictly required to start. The toolkit works fine over HTTPS. Set these up later via [VS Code + GitHub Setup](#vs-code--github-setup) when you're comfortable.
 - **Organizations / teams** — only needed if you're collaborating with others under a shared GitHub org.
 - **GitHub Actions / CI config** — the toolkit ships its own CI templates; you don't need to author workflows by hand to get started.
-- **Branch protection rules** — recommended later for `main`/`dev`, but the toolkit's confidence gate already enforces most of what branch protection covers.
+- **Branch protection rules** — recommended later for `main`, but the toolkit's confidence gate already enforces most of what branch protection covers.
 
 You're done with the GitHub side. Continue with the platform-specific setup below.
 
@@ -645,7 +645,7 @@ The installer:
 1. Edit `CLAUDE.md` with your project details
 2. Review `.claude/settings.json` hook configuration
 3. Replace `[YOUR_PRODUCT]` in `.claude/commands/*.md` with your product name
-4. Set `LINT_BASE_BRANCH` env var if your base branch isn't `dev`
+4. Set `LINT_BASE_BRANCH` env var if your base branch isn't `main`
 
 ---
 
@@ -661,7 +661,7 @@ Hooks are shell scripts that run automatically before/after Claude Code tool cal
 
 | Hook | Trigger | What It Does |
 |------|---------|-------------|
-| `check-worktree.sh` | Edit, Write, Bash | Blocks operations in main repo on main/dev — forces worktree usage |
+| `check-worktree.sh` | Edit, Write, Bash | Blocks operations in main repo on `main` — forces worktree usage |
 | `check-cross-worktree.sh` | Edit, Write | Blocks editing files outside the current worktree |
 | `enforce-worktree-path.sh` | Bash | Ensures Bash commands target the correct worktree |
 | `pre-commit-lint.sh` | Bash (git commit) | Runs lint before allowing git commit |
@@ -710,7 +710,7 @@ Hookify rules are lightweight markdown files that define pattern-matching rules.
 
 | Rule | File | What It Catches |
 |------|------|----------------|
-| Branch Protection | `hookify.block-direct-main-dev.local.md` | Direct commits/pushes to main/dev |
+| Branch Protection | `hookify.block-direct-main.local.md` | Direct commits/pushes to `main` |
 | Env Protection | `hookify.block-env-modification.local.md` | Modifications to `.env` files |
 | Hook Bypass | `hookify.block-hook-bypass.local.md` | `--no-verify`, `core.hooksPath` bypass attempts |
 | Push Without Lint | `hookify.block-push-without-lint.local.md` | `git push` without running lint first |
@@ -913,10 +913,10 @@ Everything is governed by `CDT_USE_CODEX_REVIEW` (per-developer env var, no repo
 |---|---|
 | `off` | Pre-flight emits `SKIP` immediately; existing flow untouched. |
 | `shadow` (default) | Pre-flight runs and Codex is called, but verdict is logged + **non-binding**. |
-| `binding-dev` | Codex's `REDO` blocks merge for dev-branch PRs. |
+| `binding-main` | Codex's `REDO` blocks merge for `main`-targeting PRs. |
 | `binding-all` | Codex's `REDO` blocks merge for all PRs. |
 
-**Recommended rollout:** `shadow` for 5–10 PRs to calibrate noise → `binding-dev` → `binding-all`.
+**Recommended rollout:** `shadow` for 5–10 PRs to calibrate noise → `binding-main` → `binding-all`.
 
 ### Quick start
 
@@ -959,7 +959,7 @@ See [`docs/multi-agent-orchestration.md`](docs/multi-agent-orchestration.md) for
 ### Usage
 
 ```bash
-# Lint only files changed vs base branch (default: dev)
+# Lint only files changed vs base branch (default: main)
 scripts/lint-changed.sh
 
 # Lint all files
@@ -993,7 +993,7 @@ The `.oxlintrc.json` file controls which rules are active:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `LINT_BASE_BRANCH` | `dev` | Branch to diff against for changed files |
+| `LINT_BASE_BRANCH` | `main` | Branch to diff against for changed files |
 | `LINT_SRC_DIR` | `src` | Source directory to lint |
 | `LINT_EXTENSIONS` | `ts,tsx,js,jsx` | File extensions to include |
 
@@ -1030,7 +1030,7 @@ scripts/check-deploy.sh
 scripts/check-deploy.sh abc123def456...
 
 # Now create PR (hook will allow it)
-gh pr create --base dev
+gh pr create --base main
 ```
 
 ### Compatibility
@@ -1252,6 +1252,12 @@ Git worktrees give you **isolated copies** of your repo — one per feature/bug.
 - **Clean separation** — changes in one feature can't accidentally affect another
 - **No stale state** — every worktree starts fresh from the base branch
 
+> **Stronger isolation (optional):** run each worktree inside its own Docker
+> container with Claude Code *inside* the container, so a session can't touch the
+> host, the main repo, or sibling worktrees. See
+> [`docs/docker-worktree-architecture.md`](docs/docker-worktree-architecture.md)
+> and the [`docker/`](docker/) wrapper scripts.
+
 ### Full Lifecycle
 
 ```bash
@@ -1260,8 +1266,8 @@ gh issue create --title "Add dark mode" --body "..." --label "enhancement"
 # Returns: GH-123
 
 # 2. Create worktree (isolated workspace)
-git pull origin dev
-git worktree add ../your-project-worktrees/GH-123-dark-mode -b feature/GH-123-dark-mode dev
+git pull origin main
+git worktree add ../your-project-worktrees/GH-123-dark-mode -b feature/GH-123-dark-mode main
 
 # 3. (Optional) Create bead for persistent tracking
 bd create "Add dark mode (GH-123)" -p 2
@@ -1274,8 +1280,8 @@ cd ../your-project-worktrees/GH-123-dark-mode
 # 6. Implement, commit frequently
 git add -A && git commit -m "feat: add dark mode toggle (GH-123)"
 
-# 7. Rebase from dev BEFORE pushing
-git fetch origin && git rebase origin/dev
+# 7. Rebase from main BEFORE pushing
+git fetch origin && git rebase origin/main
 
 # 8. Lint + typecheck
 scripts/lint-changed.sh
@@ -1285,7 +1291,7 @@ git push -u origin feature/GH-123-dark-mode
 scripts/check-deploy.sh
 
 # 10. Create PR (after deployment succeeds)
-gh pr create --base dev --title "feat: add dark mode" --body "Closes #123"
+gh pr create --base main --title "feat: add dark mode" --body "Closes #123"
 
 # 11. After merge, cleanup
 git worktree remove ../your-project-worktrees/GH-123-dark-mode
@@ -1337,21 +1343,23 @@ Templates are installed to `.claude/templates/` for reference:
 
 ### Changing the Base Branch
 
-If your base branch is `main` instead of `dev`:
+The toolkit assumes a single long-lived branch named `main`. If yours is named
+differently (e.g. `master` or `trunk`):
 
 ```bash
 # For linting
-export LINT_BASE_BRANCH=main
+export LINT_BASE_BRANCH=master
 
 # Or add to your .bashrc / .zshrc
-echo 'export LINT_BASE_BRANCH=main' >> ~/.bashrc
+echo 'export LINT_BASE_BRANCH=master' >> ~/.bashrc
 ```
 
-Several hooks also reference `dev` — search and replace:
+A few hooks hardcode `main` as the protected branch — search and replace if your
+base branch has a different name:
 ```bash
 cd .claude/hooks/
-grep -l "dev" *.sh
-# Edit each file to use your base branch
+grep -l "main" *.sh
+# Edit each file to use your base branch name
 ```
 
 ### Adding Project-Specific Hooks
@@ -1444,7 +1452,7 @@ oxlint --version
 ```bash
 cd ../your-project-worktrees/GH-123-feature
 git fetch origin
-git rebase origin/dev
+git rebase origin/main
 # Resolve conflicts if any, then:
 git rebase --continue
 ```

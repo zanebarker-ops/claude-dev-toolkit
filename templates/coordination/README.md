@@ -19,7 +19,7 @@ When multiple Claude Code sessions work in parallel on different worktrees, they
 
 ### Session Registration
 When a Claude Code session starts, it MUST:
-1. Pull latest from dev to get current state.json
+1. Pull latest from main to get current state.json
 2. Read state.json to see what other agents are doing
 3. Register itself with worktree name and planned work
 4. Update heartbeat every 5 minutes
