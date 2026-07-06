@@ -141,7 +141,7 @@ Configured in `.mcp.json` at the project root (or `~/.claude/mcp_settings.json` 
   "mcpServers": {
     "memory-keeper": {
       "command": "npx",
-      "args": ["-y", "memory-keeper"]
+      "args": ["-y", "mcp-memory-keeper"]
     },
     "betterstack": {
       "command": "npx",
@@ -339,7 +339,7 @@ Register in `.claude/settings.json`:
       "matcher": "Bash",
       "hooks": [{
         "type": "command",
-        "command": ".claude/hooks/check-security-before-pr.sh",
+        "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-security-before-pr.sh",
         "timeout": 5
       }]
     }]

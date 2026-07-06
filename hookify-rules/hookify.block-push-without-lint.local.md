@@ -20,10 +20,10 @@ Before pushing to a feature branch, you MUST run:
 
 ```bash
 # Run lint check (works from any worktree - no pnpm install needed)
-scripts/lint-worktree.sh eslint
+scripts/lint-changed.sh
 
 # Run type check
-scripts/lint-worktree.sh typecheck
+npx tsc --noEmit
 ```
 
 **Both commands must pass with zero errors before pushing.**

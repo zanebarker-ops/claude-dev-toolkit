@@ -657,20 +657,20 @@ After `bootstrap.sh` finishes:
 
 ### MCP servers configured by `bootstrap.sh`
 
-`bootstrap.sh` also wires up the [`memory-keeper`](https://www.npmjs.com/package/memory-keeper) MCP server at the **user level** (in `~/.claude.json`), so it's available to Claude Code across every project on the box.
+`bootstrap.sh` also wires up the [`memory-keeper`](https://www.npmjs.com/package/mcp-memory-keeper) MCP server at the **user level** (in `~/.claude.json`), so it's available to Claude Code across every project on the box.
 
 ```json
 {
   "mcpServers": {
     "memory-keeper": {
       "command": "npx",
-      "args": ["-y", "memory-keeper"]
+      "args": ["-y", "mcp-memory-keeper"]
     }
   }
 }
 ```
 
-What it does: persists facts between Claude conversations (e.g. "engineer X is on PTO this week", "this repo's lint runner lives at scripts/lint-worktree.sh"). Cross-session memory.
+What it does: persists facts between Claude conversations (e.g. "engineer X is on PTO this week", "this repo's lint runner lives at scripts/lint-changed.sh"). Cross-session memory.
 
 The merge into `~/.claude.json` is **idempotent** — re-running `bootstrap.sh` won't duplicate the entry, and won't touch any other MCP servers you've added manually. The actual `memory-keeper` package is lazy-installed by Claude Code via `npx` the first time you use it; you don't need to `npm install` it yourself.
 
@@ -679,7 +679,7 @@ To add other MCP servers later, edit `~/.claude.json` directly. Common patterns:
 ```json
 {
   "mcpServers": {
-    "memory-keeper": { "command": "npx", "args": ["-y", "memory-keeper"] },
+    "memory-keeper": { "command": "npx", "args": ["-y", "mcp-memory-keeper"] },
     "my-other-mcp":  { "command": "npx", "args": ["-y", "@some-org/some-mcp"] }
   }
 }
@@ -1089,7 +1089,7 @@ The deploy gate prevents creating PRs before the CI/CD preview deployment succee
 
 1. You push your branch
 2. Run `scripts/check-deploy.sh` — it polls the GitHub Deployments API
-3. When deployment succeeds, it writes a marker file: `/tmp/<project>-ci-verified-<SHA>`
+3. When deployment succeeds, it writes a marker file: `~/.cache/claude-dev-toolkit/<project>-ci-verified-<SHA>`
 4. The `check-ci-before-pr.sh` hook checks for this marker before allowing `gh pr create`
 
 ### Usage
@@ -1450,7 +1450,7 @@ Create new hooks in `.claude/hooks/` and register them in `.claude/settings.json
         "hooks": [
           {
             "type": "command",
-            "command": ".claude/hooks/my-custom-hook.sh",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/my-custom-hook.sh",
             "timeout": 5
           }
         ]

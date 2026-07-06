@@ -121,8 +121,8 @@ CREATE POLICY "users_select_own" ON feature_table
 
 **Correct workflow:**
 ```bash
-scripts/lint-worktree.sh eslint      # Or: npm run lint
-scripts/lint-worktree.sh typecheck   # Or: npx tsc --noEmit
+scripts/lint-changed.sh      # Or: npm run lint
+npx tsc --noEmit   # Or: npx tsc --noEmit
 # Both must pass with zero errors
 git push -u origin feature/GH-###-description
 ```
@@ -133,7 +133,7 @@ git push -u origin feature/GH-###-description
 
 **Trigger:** `gh pr create`
 
-**Why:** PRs must only be created after the CI/CD preview deployment succeeds. Creates a marker file `/tmp/${PROJECT_NAME}-ci-verified-${SHA}` when deployment passes.
+**Why:** PRs must only be created after the CI/CD preview deployment succeeds. Creates a marker file `~/.cache/claude-dev-toolkit/${PROJECT_NAME}-ci-verified-${SHA}` when deployment passes.
 
 **Correct workflow:**
 ```bash

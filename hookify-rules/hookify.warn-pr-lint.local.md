@@ -12,8 +12,8 @@ Before creating a PR, you MUST run:
 
 ```bash
 # Works from any worktree - no pnpm install needed
-scripts/lint-worktree.sh eslint
-scripts/lint-worktree.sh typecheck
+scripts/lint-changed.sh
+npx tsc --noEmit
 ```
 
 **If either fails, fix the errors before creating the PR.**
