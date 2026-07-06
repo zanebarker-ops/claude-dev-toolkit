@@ -43,7 +43,7 @@ tid="$(echo "$prompt" | grep -oE 'T-[0-9]+' | head -1 || true)"
 [[ -z "$tid" ]] && { echo '{}'; exit 0; }
 
 # Hard floor 1: tasks in terminal `failed` status must never accept new Agent calls.
-status="$(state_read ".tasks[\"$tid\"].status // \"pending\"")"
+status="$(state_read '.tasks[$tid].status // "pending"' --arg tid "$tid")"
 if [[ "$status" == "failed" ]]; then
   jq -n --arg tid "$tid" '{
     hookSpecificOutput: {
@@ -55,8 +55,8 @@ if [[ "$status" == "failed" ]]; then
   exit 0
 fi
 
-tier="$(state_read ".tasks[\"$tid\"].tier // \"sonnet\"")"
-attempts="$(state_read ".tasks[\"$tid\"].attempts[\"$tier\"] // 0")"
+tier="$(state_read '.tasks[$tid].tier // "sonnet"' --arg tid "$tid")"
+attempts="$(state_read '.tasks[$tid].attempts[$tier] // 0' --arg tid "$tid" --arg tier "$tier")"
 
 # Caps per tier (matches epic's escalation ladder).
 # `failed` is intentionally not in CAPS — Step above blocks it. If a brand-new
