@@ -12,8 +12,8 @@ Full design: [`../docs/docker-worktree-architecture.md`](../docs/docker-worktree
 |---|---|
 | `worktree.Dockerfile` | Base image: git, gh, ripgrep, Node, Claude Code CLI, oxlint. Customize the toolchain layer for your stack. |
 | `entrypoint.sh` | Trusts the mounted worktree, verifies git resolved, launches Claude. |
-| `worktree-up.sh` | Create a worktree (off `main`) + start its container. |
-| `worktree-down.sh` | Remove the container + the worktree (fires the cleanup hook). |
+| `worktree-up.sh` | Create a worktree (off `origin/main`) + start its container. Masks the shared `.git`'s `config`/`hooks` read-only so the container can't plant code that executes on the host. |
+| `worktree-down.sh` | Remove the container + the worktree. Refuses if the worktree is dirty (unless `--force`); runs the project's `post-worktree-cleanup.sh` directly (host-run scripts don't fire Claude Code hooks). |
 
 ## Prerequisites
 
