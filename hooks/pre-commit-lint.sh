@@ -17,8 +17,13 @@ LINT_SCRIPT_NAME="scripts/lint-changed.sh"
 # Read the tool input from stdin
 INPUT=$(cat)
 
-# Extract the command from JSON input (allow optional whitespace after colon)
-COMMAND=$(echo "$INPUT" | grep -oP '"command"\s*:\s*"\K[^"]*')
+# Extract the command from JSON input. python3 parses real JSON (handles
+# escaped quotes); the sed fallback is POSIX BRE so it also works on macOS,
+# where the previous `grep -oP` errored and silently disabled this gate.
+COMMAND=$(echo "$INPUT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command') or d.get('command',''))" 2>/dev/null || true)
+if [ -z "$COMMAND" ]; then
+  COMMAND=$(printf '%s' "$INPUT" | sed -n 's/.*"command"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
+fi
 
 # Check if this is a git commit command
 if echo "$COMMAND" | grep -q "git commit"; then

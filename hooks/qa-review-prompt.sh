@@ -5,7 +5,15 @@
 # Exit codes:
 #   0 - Continue (message passed to stdout as instruction to Claude)
 
-USER_MESSAGE="$CLAUDE_USER_MESSAGE"
+# UserPromptSubmit hooks receive JSON on STDIN with the prompt in `.prompt` —
+# the previously-used $CLAUDE_USER_MESSAGE env var is never set by Claude Code,
+# which left this hook permanently inert. Env var kept as manual-run fallback.
+INPUT=""
+if [ ! -t 0 ]; then
+  INPUT=$(cat)
+fi
+USER_MESSAGE=$(echo "$INPUT" | python3 -c "import json,sys; print(json.load(sys.stdin).get('prompt',''))" 2>/dev/null || true)
+[ -z "$USER_MESSAGE" ] && USER_MESSAGE="${CLAUDE_USER_MESSAGE:-}"
 
 # Check if message is asking to commit
 if echo "$USER_MESSAGE" | grep -qiE '\b(commit|push|create pr|make pr|submit)\b'; then
