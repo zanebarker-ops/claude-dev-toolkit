@@ -37,16 +37,19 @@ if [ -z "$OXLINT_BIN" ]; then
 fi
 
 # ─── Resolve repo root ───────────────────────────────────────────────
-REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
+# `|| true` so set -e doesn't kill the script before the friendly error prints
+REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || true)
 if [ -z "$REPO_ROOT" ]; then
   echo "ERROR: Not in a git repository" >&2
   exit 1
 fi
 
 # ─── Find oxlint config ──────────────────────────────────────────────
-# Check current directory, then repo root, then main repo (for worktrees)
+# Check current directory, then repo root, then main repo (for worktrees).
+# Paths must be ABSOLUTE — we `cd "$REPO_ROOT"` before running oxlint, which
+# would break a config resolved relative to the original cwd.
 OXLINT_CONFIG=""
-for candidate in "./.oxlintrc.json" "$REPO_ROOT/.oxlintrc.json"; do
+for candidate in "$PWD/.oxlintrc.json" "$REPO_ROOT/.oxlintrc.json"; do
   if [ -f "$candidate" ]; then
     OXLINT_CONFIG="$candidate"
     break
@@ -102,24 +105,25 @@ else
 
   ALL_FILES=$(printf '%s\n%s\n%s' "$FILES" "$WORKING" "$STAGED" | sort -u | grep -E "$PATTERN" || true)
 
-  # Filter to files that exist and are under src
+  # Filter to files that exist and are under src. Array (not a space-joined
+  # string) so filenames containing spaces survive; path-PREFIX match (not
+  # substring) so e.g. `resources/x.ts` isn't linted when SRC_REL is `src`.
   SRC_REL=$(realpath --relative-to="$REPO_ROOT" "$SRC_PATH" 2>/dev/null || echo "$SRC_DIR")
-  VALID_FILES=""
+  VALID_FILES=()
   while IFS= read -r f; do
     [ -z "$f" ] && continue
-    if [[ "$f" == *"$SRC_REL"* ]] && [ -f "$REPO_ROOT/$f" ]; then
-      VALID_FILES="${VALID_FILES:+$VALID_FILES }$REPO_ROOT/$f"
+    if [[ "$f" == "$SRC_REL/"* ]] && [ -f "$REPO_ROOT/$f" ]; then
+      VALID_FILES+=("$REPO_ROOT/$f")
     fi
   done <<< "$ALL_FILES"
 
-  if [ -z "$VALID_FILES" ]; then
+  if [ ${#VALID_FILES[@]} -eq 0 ]; then
     echo "No changed .$FILE_EXTENSIONS files vs $BASE_BRANCH. Nothing to lint."
     exit 0
   fi
 
-  FILE_COUNT=$(echo "$VALID_FILES" | wc -w)
-  echo "Running oxlint on $FILE_COUNT changed file(s)..."
+  echo "Running oxlint on ${#VALID_FILES[@]} changed file(s)..."
 
   # shellcheck disable=SC2086
-  "$OXLINT_BIN" $OXLINT_ARGS $VALID_FILES
+  "$OXLINT_BIN" $OXLINT_ARGS "${VALID_FILES[@]}"
 fi

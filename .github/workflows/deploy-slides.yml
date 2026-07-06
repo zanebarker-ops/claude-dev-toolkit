@@ -14,10 +14,11 @@ on:
   repository_dispatch:
     types: [demo-source-updated]
 
+# Workflow-level permissions stay minimal; the elevated Pages permissions are
+# granted only to the deploy job, so the build job (which runs npm lifecycle
+# scripts from the checked-out tree) never holds them.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
@@ -33,6 +34,10 @@ jobs:
           repository: zanebarker-ops/toolkit-demo-private
           token: ${{ secrets.DEMO_REPO_PAT }}
           path: demo-source
+          # Don't write DEMO_REPO_PAT into demo-source/.git/config — the npm
+          # install/build steps below execute package lifecycle scripts in
+          # that tree, and a compromised dependency could read the PAT out.
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -55,6 +60,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
