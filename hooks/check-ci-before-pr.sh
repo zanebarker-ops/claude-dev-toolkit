@@ -2,18 +2,27 @@
 # Claude Code Hook: Block `gh pr create` unless CI/CD deployment has been verified
 #
 # Requires: A verification marker file written by your CI/CD check script.
-# The marker file path is: /tmp/<project-name>-ci-verified-<SHA>
+# The marker file path is:
+#   ~/.cache/claude-dev-toolkit/<project-name>-ci-verified-<SHA>
+# (user-private dir, NOT world-writable /tmp — a predictable /tmp name would
+# let any local user pre-create the marker and bypass this gate)
 #
 # To integrate with your CI/CD check script, have it write:
-#   touch "/tmp/${PROJECT_NAME}-ci-verified-${SHA}"
-# on success.
+#   touch "${XDG_CACHE_HOME:-$HOME/.cache}/claude-dev-toolkit/${PROJECT_NAME}-ci-verified-${SHA}"
+# on success. scripts/check-deploy.sh does exactly this.
 #
 # Exit codes:
 #   0 - Allow the tool call
 #   2 - Block the tool call (stderr sent to Claude as feedback)
 
 INPUT=$(cat)
-COMMAND=$(echo "$INPUT" | grep -oP '"command"\s*:\s*"\K[^"]*' | head -1)
+# Extract the command from JSON input. python3 parses real JSON (handles
+# escaped quotes); the sed fallback is POSIX BRE so it also works on macOS,
+# where the previous `grep -oP` errored and silently disabled this gate.
+COMMAND=$(echo "$INPUT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command') or d.get('command',''))" 2>/dev/null || true)
+if [ -z "$COMMAND" ]; then
+  COMMAND=$(printf '%s' "$INPUT" | sed -n 's/.*"command"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
+fi
 
 # Only intercept gh pr create commands
 if ! echo "$COMMAND" | grep -qE 'gh\s+pr\s+create'; then
@@ -33,7 +42,7 @@ if [ -z "$PROJECT_NAME" ]; then
 fi
 
 # Check for verification marker file
-MARKER_FILE="/tmp/${PROJECT_NAME}-ci-verified-${SHA}"
+MARKER_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/claude-dev-toolkit/${PROJECT_NAME}-ci-verified-${SHA}"
 if [ -f "$MARKER_FILE" ]; then
   exit 0  # Deployment verified, allow PR creation
 fi

@@ -76,8 +76,8 @@ If `/security-auditor` outputs `❌ SECURITY BLOCK` → fix ALL issues and re-ru
 
 ## MANDATORY COMPLETION SEQUENCE (never skip)
 
-1. **Lint:** `scripts/lint-worktree.sh eslint` (or `npm run lint`)
-2. **Typecheck:** `scripts/lint-worktree.sh typecheck` (or `npx tsc --noEmit`)
+1. **Lint:** `scripts/lint-changed.sh` (or `npm run lint`)
+2. **Typecheck:** `npx tsc --noEmit` (or `npx tsc --noEmit`)
 3. **Zero errors** — fix all before proceeding
 4. **Commits include refs:** `"Description (GH-###)"`
 5. **Push:** `git push -u origin feature/GH-###-description`

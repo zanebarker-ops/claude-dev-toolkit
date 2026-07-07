@@ -8,7 +8,15 @@
 # Exit codes:
 #   0 - Continue (message passed to stdout as reminder to Claude)
 
-USER_MESSAGE="$CLAUDE_USER_MESSAGE"
+# UserPromptSubmit hooks receive JSON on STDIN with the prompt in `.prompt` —
+# the previously-used $CLAUDE_USER_MESSAGE env var is never set by Claude Code,
+# which left this hook permanently inert. Env var kept as manual-run fallback.
+INPUT=""
+if [ ! -t 0 ]; then
+  INPUT=$(cat)
+fi
+USER_MESSAGE=$(echo "$INPUT" | python3 -c "import json,sys; print(json.load(sys.stdin).get('prompt',''))" 2>/dev/null || true)
+[ -z "$USER_MESSAGE" ] && USER_MESSAGE="${CLAUDE_USER_MESSAGE:-}"
 
 # Check if message contains confirmation phrases
 if echo "$USER_MESSAGE" | grep -qiE '\b(merged|looks good|that works|perfect|lgtm|ship it|approved)\b'; then

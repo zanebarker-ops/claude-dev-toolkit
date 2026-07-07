@@ -16,8 +16,23 @@ fi
 PROJECT_NAME=$(basename "$MAIN_REPO" 2>/dev/null)
 WORKTREES_DIR="$(dirname "$MAIN_REPO")/${PROJECT_NAME}-worktrees"
 
-# Get the tool input (the worktree path being removed)
-TOOL_INPUT="$CLAUDE_TOOL_INPUT"
+# Get the tool input (the worktree path being removed). Claude Code passes the
+# tool call as JSON on STDIN — the previously-used $CLAUDE_TOOL_INPUT env var is
+# never set by Claude Code, which left this hook permanently inert. Keep the env
+# var as a fallback for direct invocation (e.g. docker/worktree-down.sh).
+INPUT=""
+if [ ! -t 0 ]; then
+  INPUT=$(cat)
+fi
+TOOL_INPUT=$(echo "$INPUT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command') or d.get('command',''))" 2>/dev/null || true)
+[ -z "$TOOL_INPUT" ] && TOOL_INPUT="${CLAUDE_TOOL_INPUT:-}"
+
+# Registered with matcher "Bash" (matchers only match the TOOL NAME — the old
+# "Bash(git worktree remove:*)" permission-rule syntax never matched anything),
+# so filter for the command we care about here.
+if ! echo "$TOOL_INPUT" | grep -qE 'git\s+worktree\s+remove'; then
+  exit 0
+fi
 
 # =============================================================================
 # STEP 1: Close GitHub issue
@@ -58,9 +73,11 @@ fi
 echo ""
 echo "Syncing all worktrees with origin/main..."
 
-# First, fetch latest from origin in main repo
+# First, fetch latest from origin in main repo (main-only model — we merge
+# origin/main below, so that is what must be fetched; "origin dev" was a
+# leftover from the pre-rename dev-branch model and left origin/main stale)
 cd "$MAIN_REPO" 2>/dev/null
-git fetch origin dev --quiet 2>/dev/null
+git fetch origin main --quiet 2>/dev/null
 
 # Get list of worktree directories (excluding main repo)
 if [ -d "$WORKTREES_DIR" ]; then
@@ -73,7 +90,7 @@ if [ -d "$WORKTREES_DIR" ]; then
         cd "$worktree" 2>/dev/null
 
         # Fetch latest
-        git fetch origin dev --quiet 2>/dev/null
+        git fetch origin main --quiet 2>/dev/null
 
         # Check if there are uncommitted changes
         if git diff --quiet 2>/dev/null && git diff --cached --quiet 2>/dev/null; then

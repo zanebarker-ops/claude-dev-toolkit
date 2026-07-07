@@ -13,8 +13,11 @@ This document is the reference architecture. The runnable skeleton lives in
 ## 1. Goals
 
 - **Hard isolation.** Each worktree's work happens in a separate container.
-  Claude cannot touch the host, the main repo's working tree, or sibling
-  worktrees — not because a hook says so, but because they aren't mounted.
+  Claude cannot touch the host's filesystem, the main repo's working tree, or
+  sibling worktrees — not because a hook says so, but because they aren't
+  mounted. The one shared surface is the main repo's `.git` (required for
+  worktrees to function); its code-execution vectors (`config`, `hooks/`) are
+  masked read-only — see [§3](#3-the-load-bearing-detail-how-git-survives-the-mount).
 - **Parallelism without collisions.** Run many worktrees at once; each is its
   own container and process tree.
 - **Same workflow, stronger walls.** The toolkit's worktree-first, main-only
@@ -51,8 +54,12 @@ HOST                                              CONTAINER (one per worktree)
    `cdt-myapp-GH-123-dark-mode`.
 3. The container's entrypoint launches `claude` in the worktree directory.
 
-`worktree-down.sh GH-123-dark-mode` removes the container, then the worktree
-(which fires the toolkit's existing `post-worktree-cleanup.sh` hook).
+`worktree-down.sh GH-123-dark-mode` refuses to proceed if the worktree has
+uncommitted changes (unless `--force`), removes the container, then the
+worktree. Because it runs on the host shell — not through Claude's Bash tool —
+no Claude Code hook fires; the script invokes the project's installed
+`post-worktree-cleanup.sh` directly to close the GH issue and sync the
+remaining worktrees.
 
 ---
 
@@ -75,10 +82,12 @@ container can't resolve that path, every git command fails. So:
 `worktree-up.sh` does exactly this:
 
 ```sh
-COMMON_GIT="$(cd "$(git -C "$WT_PATH" rev-parse --git-common-dir)" && pwd)"
+COMMON_GIT="$(cd "$WT_PATH" && cd "$(git rev-parse --git-common-dir)" && pwd)"
 docker run ... \
-  -v "${WT_PATH}:${WT_PATH}" \          # worktree at its real path
-  -v "${COMMON_GIT}:${COMMON_GIT}" \    # shared .git at its real path
+  -v "${WT_PATH}:${WT_PATH}" \                              # worktree at its real path
+  -v "${COMMON_GIT}:${COMMON_GIT}" \                        # shared .git at its real path
+  -v "${COMMON_GIT}/config:${COMMON_GIT}/config:ro" \       # mask: no host code-exec via config
+  -v "${COMMON_GIT}/hooks:${COMMON_GIT}/hooks:ro" \         # mask: no host code-exec via hooks
   -w "${WT_PATH}" ...
 ```
 
@@ -86,6 +95,15 @@ Because both paths match the host, the `gitdir:` pointer, the
 `worktrees/<name>/commondir` back-reference, and the shared object store all
 resolve. Commits write loose objects to the shared `.git/objects` and the
 per-worktree refs under `.git/worktrees/<name>/` — both mounted, so commit works.
+
+**Why the read-only masks?** The shared `.git` must be writable (refs, objects,
+locks), but a writable `.git/config` or `.git/hooks/` is a container→host
+escape: a compromised or misbehaving in-container session could set
+`core.hooksPath`/`core.fsmonitor` or drop a `post-checkout` hook that executes
+**on the host** the next time you run git in the main repo. Masking those two
+paths read-only closes the code-execution vectors while leaving normal git
+operations intact. (Ref/object writes remain possible by design — that's what
+committing *is*; protect branches server-side.)
 
 **Why not mount the whole parent directory?** It's simpler but leaks isolation:
 the container would see the main working tree and every sibling worktree. Mounting
@@ -102,7 +120,7 @@ Secrets never go in the image. `worktree-up.sh` forwards them to `docker run`:
 |---|---|---|
 | `ANTHROPIC_API_KEY` | `-e ANTHROPIC_API_KEY` (pass-through) | Required for Claude. Export it on the host first. |
 | `GH_TOKEN` | `-e GH_TOKEN` | `gh` reads it automatically. Optional but needed for PR/issue automation. |
-| Git identity | `-v ~/.gitconfig:/home/dev/.gitconfig:ro` | So commits are attributed correctly. |
+| Git identity | `-v ~/.gitconfig:/home/node/.gitconfig:ro` | So commits are attributed correctly. Mounted read-only; the image bakes `safe.directory = *` into `/etc/gitconfig` at build time so nothing ever needs to write this file. |
 
 This matches the toolkit's existing posture (`block-env-read.sh` /
 `block-env-modification` rules): credentials are runtime inputs, not artifacts.
@@ -148,12 +166,14 @@ See [`../docker/README.md`](../docker/README.md) for the copy-paste quickstart.
 
 ### Known caveats
 
-- **UID mismatch (Linux hosts).** Bind-mounted files are owned by the host UID;
-  the container's `dev` user may differ. The entrypoint runs
-  `git config --global --add safe.directory '*'` to avoid git's "dubious
-  ownership" refusal. If you hit write-permission errors, run the container with
-  `--user "$(id -u):$(id -g)"` (and mount a writable home). Docker Desktop on
-  Windows/macOS generally smooths this over via its VM.
+- **UID mismatch (Linux hosts).** Bind-mounted files are owned by the host UID.
+  The image runs as the base image's `node` user (UID **1000**) precisely
+  because that matches the default first-user UID on most Linux hosts, and it
+  bakes `safe.directory = *` into `/etc/gitconfig` at build time to avoid git's
+  "dubious ownership" refusal. If your host user isn't UID 1000 and you hit
+  write-permission errors, run the container with `--user "$(id -u):$(id -g)"`
+  (and mount a writable home). Docker Desktop on Windows/macOS generally
+  smooths this over via its VM.
 - **MCP servers.** Anything Claude reaches over MCP must be reachable from inside
   the container (network or mounted). Interactive-auth MCP servers may need their
   credentials mounted in.

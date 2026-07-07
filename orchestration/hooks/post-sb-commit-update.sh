@@ -62,7 +62,7 @@ tid="$(echo "$sb_sub" | grep -oE 'T-[0-9]+' | head -1 || true)"
 is_error="$(echo "$input" | jq -r '.tool_response.is_error // false')"
 exit_code_raw="$(echo "$input" | jq -r '.tool_response.exit_code // null')"
 stderr="$(echo "$input" | jq -r '.tool_response.stderr // empty')"
-tier="$(state_read ".tasks[\"$tid\"].tier // \"sonnet\"")"
+tier="$(state_read '.tasks[$tid].tier // "sonnet"' --arg tid "$tid")"
 
 outcome=fail
 if [[ "$is_error" != "true" ]]; then

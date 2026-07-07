@@ -12,9 +12,9 @@ Each hook is registered in `~/.claude/settings.json` (or your project's `.claude
 {
   "hooks": {
     "PreToolUse": [
-      { "matcher": "Edit|Write", "hooks": [{ "command": ".claude/hooks/check-cross-worktree.sh" }] },
-      { "matcher": "Bash",       "hooks": [{ "command": ".claude/hooks/gitleaks-scan.sh" }] },
-      { "matcher": "Read",       "hooks": [{ "command": ".claude/hooks/block-env-read.sh" }] }
+      { "matcher": "Edit|Write", "hooks": [{ "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-cross-worktree.sh" }] },
+      { "matcher": "Bash",       "hooks": [{ "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/gitleaks-scan.sh" }] },
+      { "matcher": "Read",       "hooks": [{ "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/block-env-read.sh" }] }
     ],
     "PostToolUse": [...],
     "UserPromptSubmit": [...],
@@ -59,7 +59,7 @@ The model can never bypass a `block`. You don't have to remember the policy — 
 
 | Hook | Event | What it does |
 |---|---|---|
-| `pre-commit-lint.sh` | `PreToolUse:Bash` | Runs lint via `scripts/lint-worktree.sh` before `git commit` — blocks on errors |
+| `pre-commit-lint.sh` | `PreToolUse:Bash` | Runs lint via `scripts/lint-changed.sh` before `git commit` — blocks on errors |
 | `gitleaks-scan.sh` | `PreToolUse:Bash` | Runs `gitleaks` before `git commit` — blocks if secrets are detected |
 | `security-check.sh` | `PreToolUse:Bash` (**opt-in**) | Pre-commit checks: RLS on migrations, no service-role keys in client code, auth on API routes. **Not registered by default** in `settings.json.template` — the checks assume Supabase + Next.js conventions; customize the script + register manually. |
 | `check-ci-before-pr.sh` | `PreToolUse:Bash` | Blocks `gh pr create` unless a CI/CD verification marker file exists |
@@ -77,8 +77,8 @@ The model can never bypass a `block`. You don't have to remember the policy — 
 
 | Hook | Event | What it does |
 |---|---|---|
-| `database-context-injector.sh` | `PreToolUse:Edit\|Write` | When editing schema/migration files, injects `docs/database.md` content as context |
-| `database-update-reminder.sh` | `PostToolUse:Edit\|Write` | After editing a migration, reminds to update `docs/database.md` |
+| `database-context-injector.sh` | `PreToolUse:Edit\|Write` | When editing schema/migration files, injects `.claude/database.md` content as context |
+| `database-update-reminder.sh` | `PostToolUse:Edit\|Write` | After editing a migration, reminds to update `.claude/database.md` |
 | `agent-review-reminder.sh` | `UserPromptSubmit` | When user mentions opening a PR, reminds to run security/code review agents |
 | `qa-review-prompt.sh` | `UserPromptSubmit` | When user mentions committing, prompts a QA review of the diff |
 | `remind-success-prompt.sh` | `UserPromptSubmit` | When user says "merged" / "looks good", prompts to write a success log |
@@ -117,8 +117,8 @@ Several hooks assume a specific repo layout. If you don't match these convention
 
 - Worktrees live at `../<project-name>-worktrees/<branch-name>/`
 - Branches use the pattern `feature/GH-###-description` where `GH-###` is a GitHub issue number
-- Lint is run via `scripts/lint-worktree.sh` from the repo root
-- A CI/CD verification script writes `/tmp/<project-name>-ci-verified-<SHA>` on success
+- Lint is run via `scripts/lint-changed.sh` from the repo root
+- A CI/CD verification script writes `~/.cache/claude-dev-toolkit/<project-name>-ci-verified-<SHA>` on success
 
 These are coupled with [hookify rules](../hookify-rules/) for things like blocking pushes to `main`.
 

@@ -21,6 +21,11 @@ PROJECT_DIR="$REPO_ROOT"
 WORKTREES_DIR="$(dirname "$REPO_ROOT")/${PROJECT_NAME}-worktrees"
 SESSION_PREFIX=$(echo "$PROJECT_NAME" | head -c 8 | tr '[:upper:]' '[:lower:]' | tr -cd 'a-z0-9')
 
+# Launch command for Claude inside the session. Default keeps the toolkit's
+# autonomous-session model (skip-permissions + hook guardrails); override with
+# e.g. CLAUDE_SESSION_CMD="claude" for interactive permission prompts.
+CLAUDE_CMD="${CLAUDE_SESSION_CMD:-claude --dangerously-skip-permissions}"
+
 # Colors
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'; BLUE='\033[0;34m'; NC='\033[0m'
 
@@ -49,7 +54,7 @@ verify_integrations() {
     local branch=$(git branch --show-current 2>/dev/null)
     [ -n "$branch" ] && print_status "Git branch: $branch"
     print_status "Active worktrees: $(git worktree list 2>/dev/null | wc -l)"
-    command -v bd &>/dev/null && print_status "Ready beads: $(bd ready 2>/dev/null | grep -c '^\d' || echo '0') tasks"
+    command -v bd &>/dev/null && print_status "Ready beads: $(bd ready 2>/dev/null | grep -c '^[0-9]' || echo '0') tasks"
 }
 
 list_sessions() {
@@ -68,7 +73,7 @@ signin_1password() {
     command -v op &>/dev/null || return 0
     echo -e "\n${BLUE}Signing into 1Password...${NC}"
     op account list &>/dev/null 2>&1 && op whoami &>/dev/null 2>&1 && print_status "Already signed in" && return 0
-    eval $(op signin 2>/dev/null) && print_status "1Password sign-in successful" || print_warning "1Password sign-in skipped"
+    eval "$(op signin 2>/dev/null)" && print_status "1Password sign-in successful" || print_warning "1Password sign-in skipped"
 }
 
 create_or_attach() {
@@ -82,15 +87,19 @@ create_or_attach() {
     fi
 
     if tmux has-session -t "$full_session" 2>/dev/null; then
+        # Just attach — do NOT send-keys a launch command into an existing
+        # session: if Claude is already running there, the text is submitted
+        # to it as a prompt; if another program is mid-run, it's injected as
+        # stray input.
         echo -e "\n${GREEN}Attaching to existing session: ${full_session}${NC}"
-        tmux send-keys -t "$full_session" "claude --dangerously-skip-permissions" Enter
         echo -e "${YELLOW}Tip: Ctrl+b d to detach${NC}\n"
-        sleep 1
         tmux attach-session -t "$full_session"
     else
         echo -e "\n${GREEN}Creating new session: ${full_session}${NC}"
+        # new-session -c already sets the cwd — no cd needed (interpolating
+        # $work_dir into a send-keys shell string also broke on quotes)
         tmux new-session -d -s "$full_session" -c "$work_dir"
-        tmux send-keys -t "$full_session" "cd '$work_dir' && clear" Enter
+        tmux send-keys -t "$full_session" "clear" Enter
 
         # Status banner
         tmux send-keys -t "$full_session" "echo '' && echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' && echo '  Claude Session: $full_session' && echo '  Project: $PROJECT_NAME' && echo '  Directory: $work_dir' && echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' && echo ''" Enter
@@ -100,8 +109,8 @@ create_or_attach() {
         tmux send-keys -t "$full_session" "command -v bd &>/dev/null && { echo 'Beads Ready:'; bd ready 2>/dev/null | head -5; echo ''; }" Enter
 
         # Instructions + launch
-        tmux send-keys -t "$full_session" "echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' && echo '  claude --dangerously-skip-permissions  Start Claude' && echo '  Ctrl+b d   Detach    Ctrl+b [   Scroll mode' && echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' && echo ''" Enter
-        tmux send-keys -t "$full_session" "claude --dangerously-skip-permissions" Enter
+        tmux send-keys -t "$full_session" "echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' && echo '  $CLAUDE_CMD  Start Claude' && echo '  Ctrl+b d   Detach    Ctrl+b [   Scroll mode' && echo '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━' && echo ''" Enter
+        tmux send-keys -t "$full_session" "$CLAUDE_CMD" Enter
 
         echo -e "${YELLOW}Tip: Ctrl+b d to detach${NC}\n"
         sleep 1

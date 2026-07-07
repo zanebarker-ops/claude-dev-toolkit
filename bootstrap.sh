@@ -370,8 +370,15 @@ write_tmux_claude_tokens_script() {
 # Reads the most recent Claude Code JSONL transcript and outputs total tokens
 # in a tmux-status-bar-friendly format: "🤖 12.3k"
 set -euo pipefail
-LATEST=$(find "$HOME/.claude/projects" -name '*.jsonl' -type f -printf '%T@ %p\n' 2>/dev/null \
-         | sort -nr | head -1 | awk '{$1=""; print substr($0,2)}')
+# GNU find has -printf; BSD/macOS find does not — fall back to stat -f there
+# (the old GNU-only version silently showed "🤖 ─" forever on macOS).
+if find /dev/null -printf '' >/dev/null 2>&1; then
+  LATEST=$(find "$HOME/.claude/projects" -name '*.jsonl' -type f -printf '%T@ %p\n' 2>/dev/null \
+           | sort -nr | head -1 | awk '{$1=""; print substr($0,2)}')
+else
+  LATEST=$(find "$HOME/.claude/projects" -name '*.jsonl' -type f -exec stat -f '%m %N' {} + 2>/dev/null \
+           | sort -nr | head -1 | awk '{$1=""; print substr($0,2)}')
+fi
 if [ -z "$LATEST" ] || [ ! -f "$LATEST" ]; then echo "🤖 ─"; exit 0; fi
 if command -v jq >/dev/null 2>&1; then
   TOTAL=$(jq -r '
@@ -413,7 +420,7 @@ setup_memory_keeper_mcp() {
   "mcpServers": {
     "memory-keeper": {
       "command": "npx",
-      "args": ["-y", "memory-keeper"]
+      "args": ["-y", "mcp-memory-keeper"]
     }
   }
 }
@@ -429,7 +436,7 @@ JSON
 
   info "Adding memory-keeper to existing ~/.claude.json..."
   local tmp=$(mktemp)
-  jq '.mcpServers = (.mcpServers // {}) + {"memory-keeper": {"command": "npx", "args": ["-y", "memory-keeper"]}}'      "$cfg" > "$tmp" && mv "$tmp" "$cfg"
+  jq '.mcpServers = (.mcpServers // {}) + {"memory-keeper": {"command": "npx", "args": ["-y", "mcp-memory-keeper"]}}'      "$cfg" > "$tmp" && mv "$tmp" "$cfg"
   info "memory-keeper MCP added (will be lazy-installed by Claude Code via npx on first use)"
 }
 
@@ -445,8 +452,8 @@ bootstrap_wsl_or_linux() {
     type -p curl >/dev/null
     sudo mkdir -p -m 755 /etc/apt/keyrings
     out=$(mktemp); wget -nv -O "$out" https://cli.github.com/packages/githubcli-archive-keyring.gpg
-    sudo cat "$out" | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null
-    sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    sudo install -m 0644 "$out" /etc/apt/keyrings/githubcli-archive-keyring.gpg
+    rm -f "$out"
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
     sudo apt update
     sudo apt install -y gh
@@ -457,14 +464,37 @@ bootstrap_wsl_or_linux() {
   section "gitleaks (secret scanner)"
   if ! command -v gitleaks >/dev/null; then
     local ver="8.21.2"
-    local url="https://github.com/gitleaks/gitleaks/releases/download/v${ver}/gitleaks_${ver}_linux_x64.tar.gz"
-    info "Downloading gitleaks $ver..."
-    tmp=$(mktemp -d)
-    curl -sL "$url" | tar -xz -C "$tmp"
-    sudo mv "$tmp/gitleaks" /usr/local/bin/gitleaks
-    sudo chmod +x /usr/local/bin/gitleaks
-    rm -rf "$tmp"
-    info "gitleaks $(gitleaks version)"
+    # Pick the right release asset for this CPU — the previous hardcoded
+    # linux_x64 tarball installed a binary that cannot execute on arm64
+    # (e.g. WSL/Linux on ARM laptops, Graviton).
+    local arch=""
+    case "$(uname -m)" in
+      x86_64)        arch="x64" ;;
+      aarch64|arm64) arch="arm64" ;;
+      armv7l|armv6l) arch="armv7" ;;
+      *) warn "Unsupported CPU '$(uname -m)' for gitleaks binary install — skipping (install manually)" ;;
+    esac
+    if [ -n "$arch" ]; then
+      local asset="gitleaks_${ver}_linux_${arch}.tar.gz"
+      local base="https://github.com/gitleaks/gitleaks/releases/download/v${ver}"
+      info "Downloading gitleaks $ver ($arch)..."
+      tmp=$(mktemp -d)
+      curl -fsSL -o "$tmp/$asset" "$base/$asset"
+      # Verify the download against the release's checksum manifest before
+      # installing to /usr/local/bin — guards against truncated/corrupted
+      # downloads executing as root-installed tooling.
+      if curl -fsSL -o "$tmp/checksums.txt" "$base/gitleaks_${ver}_checksums.txt" 2>/dev/null; then
+        (cd "$tmp" && grep " ${asset}\$" checksums.txt | sha256sum -c - >/dev/null) \
+          || { error "gitleaks checksum verification FAILED — not installing"; rm -rf "$tmp"; exit 1; }
+        info "checksum verified"
+      else
+        warn "could not fetch gitleaks checksum manifest — installing unverified"
+      fi
+      tar -xzf "$tmp/$asset" -C "$tmp"
+      sudo install -m 0755 "$tmp/gitleaks" /usr/local/bin/gitleaks
+      rm -rf "$tmp"
+      info "gitleaks $(gitleaks version)"
+    fi
   else
     skip "gitleaks $(gitleaks version 2>&1 | head -1)"
   fi

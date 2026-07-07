@@ -46,17 +46,10 @@ Email:
 git push origin feature/GH-###-description
 # → CI/CD creates preview URL automatically
 
-# Staging deployment
-git checkout dev
-git merge feature/GH-###-description
-git push origin dev
-# → Deploys to staging environment
-
-# Production deployment
-git checkout main
-git merge dev
-git push origin main
-# → Deploys to production
+# Production deployment (main-only model: main is the ONLY long-lived branch —
+# preview deploys on the feature branch stand in for a staging environment)
+gh pr create --base main
+# → merge after review + green CI; merging to main deploys to production
 ```
 
 ### Environment Variables

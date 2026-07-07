@@ -1,7 +1,8 @@
 #!/bin/bash
 # Git pre-push hook - PR Review Reminder
 #
-# Install: cp .claude/hooks/generic/pre-push-review-reminder .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+# Install: bash install-git-hooks.sh /path/to/project
+#   (or manually: cp git-hooks/pre-push-review-reminder .git/hooks/pre-push && chmod +x .git/hooks/pre-push)
 #
 # Shows a reminder to run PR review when pushing feature branches
 

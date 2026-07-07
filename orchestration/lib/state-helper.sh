@@ -61,16 +61,19 @@ state_apply() {
   ) 9>"$LOCK_FILE"
 }
 
-# state_read <jq-filter>
+# state_read <jq-filter> [extra jq args...]
 #   Read-only query — also takes the lock so it never reads a partial write.
+#   Extra args are forwarded to jq (e.g. --arg tid "$tid") so callers can feed
+#   dynamic strings safely instead of interpolating them into the filter.
 state_read() {
   local filter="$1"
+  shift
   (
     flock -s -w 10 9 || { echo "state-helper: lock timeout" >&2; exit 1; }
     if [[ -f "$STATE_FILE" ]]; then
-      jq -r "$filter" "$STATE_FILE"
+      jq -r "$@" "$filter" "$STATE_FILE"
     else
-      printf '%s\n' "$DEFAULT_STATE" | jq -r "$filter"
+      printf '%s\n' "$DEFAULT_STATE" | jq -r "$@" "$filter"
     fi
   ) 9>"$LOCK_FILE"
 }
@@ -78,12 +81,18 @@ state_read() {
 # state_init_task <task-id>
 state_init_task() {
   local tid="$1"
-  state_apply ".tasks[\"$tid\"] //= {
-    tier: \"sonnet\",
-    status: \"pending\",
+  # Pass the task id via --arg, NEVER by interpolating it into the filter text:
+  # tid flows from untrusted sources (codex stdout task_id, CDT_TASK_ID env in
+  # tool_input), and interpolation let a crafted id inject arbitrary jq into a
+  # WRITE filter — e.g. resetting .cost_ledger.month_total_cents to bypass the
+  # monthly budget cap. (state_debit_codex was already hardened; this sibling
+  # write on the same code path was not.)
+  state_apply '.tasks[$tid] //= {
+    tier: "sonnet",
+    status: "pending",
     attempts: {sonnet: 0, opus: 0, codex: 0},
     last_failure: null
-  }"
+  }' --arg tid "$tid"
 }
 
 # state_record_attempt <task-id> <tier> <pass|fail> [failure-reason]

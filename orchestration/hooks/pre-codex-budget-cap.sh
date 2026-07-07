@@ -103,10 +103,17 @@ CODEX_TIER_CAP="${CDT_CODEX_TIER_CAP:-1}"
 # like `cd /tmp/T-99 && codex run T-42` debit T-42, not T-99.
 codex_sub="$(cmd_codex_extract_subcmd "$cmd" || true)"
 tid="$(echo "$codex_sub" | { grep -oE 'T-[0-9]+' || true; } | head -1)"
-[[ -z "$tid" ]] && tid="$(echo "$input" | jq -r '.tool_input.env.CDT_TASK_ID // empty')"
+if [[ -z "$tid" ]]; then
+  # CDT_TASK_ID is attacker-influenceable tool input — constrain it to the
+  # T-NN shape before use. An unconstrained value interpolated into the old
+  # filter text was a jq injection; a malformed one also crashed this hook
+  # (exit 3 = non-blocking error), silently FAILING OPEN past the tier cap.
+  tid="$(echo "$input" | jq -r '.tool_input.env.CDT_TASK_ID // empty' \
+        | { grep -oE '^T-[0-9]+$' || true; } | head -1)"
+fi
 
 if [[ -n "$tid" ]]; then
-  attempts="$(state_read ".tasks[\"$tid\"].attempts.codex // 0")"
+  attempts="$(state_read '.tasks[$tid].attempts.codex // 0' --arg tid "$tid")"
   if (( attempts >= CODEX_TIER_CAP )); then
     jq -n --arg tid "$tid" --argjson att "$attempts" --argjson cap "$CODEX_TIER_CAP" '{
       hookSpecificOutput: {

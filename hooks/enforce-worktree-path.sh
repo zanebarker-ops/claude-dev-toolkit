@@ -12,8 +12,13 @@
 # Read the tool input from stdin
 INPUT=$(cat)
 
-# Extract the command from JSON input
-COMMAND=$(echo "$INPUT" | grep -o '"command":"[^"]*"' | sed 's/"command":"//;s/"$//')
+# Extract the command from JSON input. python3 parses real JSON (handles
+# escaped quotes — the old grep truncated at the first \" inside the command,
+# which could hide a `git worktree add` from this check); POSIX sed fallback.
+COMMAND=$(echo "$INPUT" | python3 -c "import json,sys; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command') or d.get('command',''))" 2>/dev/null || true)
+if [ -z "$COMMAND" ]; then
+  COMMAND=$(printf '%s' "$INPUT" | sed -n 's/.*"command"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
+fi
 
 # Only check git worktree add commands
 if echo "$COMMAND" | grep -q "git worktree add"; then
@@ -28,8 +33,9 @@ if echo "$COMMAND" | grep -q "git worktree add"; then
   PROJECT_NAME=$(basename "$REPO_ROOT" 2>/dev/null)
   EXPECTED_DIR="${PROJECT_NAME}-worktrees"
 
-  # Check if path contains the expected worktrees directory
-  if echo "$TARGET_NORMALIZED" | grep -q "$EXPECTED_DIR"; then
+  # Check the path has the expected worktrees directory as a PATH SEGMENT —
+  # an unanchored substring match would pass e.g. /tmp/<project>-worktrees-evil/x
+  if echo "$TARGET_NORMALIZED" | grep -qE "(^|/)${EXPECTED_DIR}(/|$)"; then
     exit 0
   fi
 

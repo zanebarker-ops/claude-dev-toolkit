@@ -19,7 +19,7 @@ ok()   { printf "  ${G}✓ ACTIVE${NC}   %s\n" "$1"; }
 off()  { printf "  ${Y}⚠ OFF${NC}      %s\n" "$1"; }
 bad()  { printf "  ${R}✗ BROKEN${NC}   %s\n" "$1"; }
 note() { printf "  ${DIM}· %s${NC}\n" "$1"; }
-head() { printf "\n${B}%s${NC}\n" "$1"; }
+section() { printf "\n${B}%s${NC}\n" "$1"; }
 
 have() { command -v "$1" >/dev/null 2>&1; }
 
@@ -30,7 +30,7 @@ printf "${B}  Claude Dev Toolkit — doctor (what's actually active here)${NC}\n
 printf "${B}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}\n"
 
 # ── Platform ──────────────────────────────────────────────────────────────────
-head "Platform"
+section "Platform"
 OS="$(uname -s 2>/dev/null || echo unknown)"
 case "$OS" in
   Linux*)  ok "Linux — bash hooks run natively" ;;
@@ -44,13 +44,13 @@ esac
 if grep -qiE 'microsoft|wsl' /proc/version 2>/dev/null; then note "Running inside WSL — good (supported path on Windows)."; fi
 
 # ── Core (without these, nothing works) ───────────────────────────────────────
-head "Core requirements"
+section "Core requirements"
 have bash  && ok "bash — hooks can execute"            || { bad "bash MISSING — NO hooks can run";          CRIT=$((CRIT+1)); }
 have git   && ok "git — worktree workflow available"   || { bad "git MISSING — workflow inoperable";         CRIT=$((CRIT+1)); }
 have claude&& ok "claude — Claude Code CLI present"     || { bad "claude MISSING — the toolkit cannot run";   CRIT=$((CRIT+1)); }
 
 # ── Enforcement tools (fail OPEN when missing) ────────────────────────────────
-head "Enforcement tools (hooks fail open / degrade when missing)"
+section "Enforcement tools (hooks fail open / degrade when missing)"
 have oxlint   && ok "oxlint — pre-commit lint gate works"            || { off "oxlint MISSING — lint gate INACTIVE (fails open). npm i -g oxlint"; WARN=$((WARN+1)); }
 have gitleaks && ok "gitleaks — secret-scan gate works"              || { off "gitleaks MISSING — secret scan INACTIVE (fails open). brew install gitleaks"; WARN=$((WARN+1)); }
 have python3  && ok "python3 — secret-scan/PR hooks can parse input" || { off "python3 MISSING — gitleaks-scan & warn-pr-to-main skip"; WARN=$((WARN+1)); }
@@ -60,7 +60,7 @@ have gh       && ok "gh — PR/issue automation works"                 || { off 
 have docker   && ok "docker — Docker-per-worktree available"         || note "docker not found — Docker-per-worktree (optional) unavailable."
 
 # ── Install wiring in the current project ─────────────────────────────────────
-head "This project's wiring ($(pwd))"
+section "This project's wiring ($(pwd))"
 ROOT="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
 SETTINGS="$ROOT/.claude/settings.json"
 HOOKDIR="$ROOT/.claude/hooks"
@@ -87,12 +87,12 @@ else
 fi
 
 # ── Always-true caveat ────────────────────────────────────────────────────────
-head "Known by design"
+section "Known by design"
 note "Hookify rules (.claude/hookify.*.local.md) are INERT — no loader ships."
 note "Only the equivalent shell hooks enforce (block-direct-main, cross-worktree)."
 
 # ── Summary ───────────────────────────────────────────────────────────────────
-head "Summary"
+section "Summary"
 if [ "$CRIT" -gt 0 ]; then
   printf "  ${R}%s critical problem(s)${NC} and ${Y}%s warning(s)${NC}. The toolkit will not function until the critical items are fixed.\n" "$CRIT" "$WARN"
 elif [ "$WARN" -gt 0 ]; then

@@ -9,9 +9,14 @@
 set -euo pipefail
 
 # A worktree's .git is a FILE pointing at <main>/.git/worktrees/<name>, and the
-# files are owned by the host UID. Trust everything we were given so git doesn't
-# refuse with "detected dubious ownership".
-git config --global --add safe.directory '*'
+# files are owned by the host UID. The image bakes `safe.directory = *` into
+# /etc/gitconfig at build time (see worktree.Dockerfile). Belt-and-braces for
+# custom images: also set it via environment — env-based config needs no file
+# writes, so it works even when ~/.gitconfig is a read-only bind mount (a
+# `git config --global` write here would crash the container in that case).
+if [ -z "${GIT_CONFIG_COUNT:-}" ]; then
+  export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=safe.directory GIT_CONFIG_VALUE_0='*'
+fi
 
 # Sanity check: are we actually inside a resolvable work tree?
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then

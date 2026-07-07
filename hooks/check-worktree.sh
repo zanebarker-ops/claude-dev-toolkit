@@ -39,10 +39,14 @@ if [ "$BRANCH" = "main" ]; then
   UNTRACKED=$(git ls-files --others --exclude-standard 2>/dev/null)
   ALL_CHANGES=$(printf '%s\n%s\n%s' "$STAGED" "$UNSTAGED" "$UNTRACKED" | grep -v '^$' | sort -u)
 
-  # Check if all changes are success prompts (strict name pattern)
+  # Check if all changes are success prompts (strict name pattern).
+  # Accept both layouts: .claude/prompts/success-*.md and
+  # .claude/prompts/success/success-*.md (the latter is what
+  # remind-success-prompt.sh tells you to create — the two hooks previously
+  # disagreed, so following the reminder still got you blocked here).
   ONLY_SUCCESS_PROMPTS=true
   while IFS= read -r file; do
-    if [ -n "$file" ] && ! printf '%s\n' "$file" | grep -qE '^\.claude/prompts/success-[a-zA-Z0-9_-]+\.md$'; then
+    if [ -n "$file" ] && ! printf '%s\n' "$file" | grep -qE '^\.claude/prompts/(success/)?success-[a-zA-Z0-9_.-]+\.md$'; then
       ONLY_SUCCESS_PROMPTS=false
       break
     fi
